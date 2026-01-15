@@ -380,7 +380,7 @@ class InventoryScreen {
       StatusBar,
       ScreenTitle, # Shows Player's name
       ScreenDescription, # Prints all player stat
-      Menu,  # Players items and ability to drop them
+      Menu, # Players items and ability to a) drop them (if it is not a quest item), b) consume (if it is consumable)
       EventLog
     ]
     

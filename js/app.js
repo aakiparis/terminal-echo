@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusBarContainer.innerHTML = '';
                 const newStatusBar = new StatusBar({
                     eventBus,
-                    initialState: { stats: state.player }
+                    initialState: { stats: stateManager.getEffectivePlayerStats() }
                 });
                 newStatusBar.mount(statusBarContainer);
             });
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Register Screens
             const screens = [
                 MainMenuScreen, NewGameModeScreen, NewGamePlayerNameScreen,
-                NewGamePlayerAttributesScreen, WorldMapScreen, LocationScreen, DialogueScreen
+                NewGamePlayerAttributesScreen, WorldMapScreen, LocationScreen, DialogueScreen, InventoryScreen
             ];
 
             screens.forEach(ScreenClass => {

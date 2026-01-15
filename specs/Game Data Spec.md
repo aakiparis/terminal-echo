@@ -7,7 +7,7 @@ This specification defines how to create new game content (locations, NPCs, ques
 ## 0. File Structure
 ```
 js/data/
-└── npc-data.js  # Contains NPC_DATA, LOCATION_DATA, QUEST_DATA
+└── npc-data.js
 ```
 Data defined in `npc-data.js`:
 ```javascript
@@ -56,9 +56,7 @@ Leverage location archetypes (not limits):
 
 ## 2. NPC Data
 
-NPCs have dialogue graphs, optional merchant inventories, and quest interactions.
-
-### Basic Structure
+NPCs have dialogue graphs, optional merchant inventory and quest interactions.
 
 ```javascript
 const NPC_DATA = {
@@ -76,9 +74,9 @@ const NPC_DATA = {
 };
 ```
 
-
-
 ### NPC recommendations
+Truly charesmatic characters and engaging stories are pivotal for the game, as it is the key to player conversion and time spend.
+
 Introduce the following NPC architypes:
 - **Merchant**: Trades items for Caps. Always looking for a deal. is_merchant: true
 - **Guard**: Protects a location or an individual. Suspicious of outsiders. is_merchant: false
@@ -90,11 +88,13 @@ Introduce the following NPC architypes:
 - **Hermit**: A recluse living in isolation. May be hostile or possess rare knowledge. is_merchant: false
 
 Placement logic:
-- NPC archetype must be consistent with the rules of the Location archetype.
+- NPC archetypes must be consistent with the rules of the Location archetype.
 - Each settlement should have
   - at least 6 NPCs
   - at least one Merchant, one bad and one good NPC
   - 3-4 quest-giving NPCs
+  - 4 NPCs should have their unique catchy story that can be told through dialogue with at least 4 nodes.
+  - 2 NPCs should have interconnected stories because of the same event or a relationship between them
 
 
 ## 3. Dialogue System
@@ -131,7 +131,7 @@ Array of condition objects that gate dialogue options:
 
 ```javascript
 conditions: [
-    { type: "STAT_CHECK", stat: "int", min: 7 },
+    { type: "STAT_CHECK", stat: "int", min: 7 }, // means int must be 7 or greater
     { type: "STAT_CHECK", stat: "reputation", max: -10 },
     { type: "HAVE_ITEM":  item_id: "item_id_1" },
     { type: "QUEST_STAGE", quest_id: "quest_id", stage: 1 },
@@ -165,18 +165,19 @@ outcomes: [
 - Always provide `start_first_time` for new encounters
 - Use `is_fallback: true` on the default return node
 - End conversation threads with `end_conversation` or `end_trade`
+- Always add a short prefix in text like "[INT 5]" when option has condition.
 
 **Quest Integration**
 - Set quest stage to 1 when accepted
 - Set quest stage to 100 when completed
 - Check quest stages in conditions to show appropriate dialogue
-- Use `post_quest_<name>` nodes for completion dialogues
+- Use `quest_<name>_<stage>` prefix for quest nodes
 
 **Stat Checks**
-- INT checks for clever/technical options
-- STR checks for physical/intimidation options  
-- LCK checks for chance/intuition options
-- Reputation checks for alignment-based responses
+- INT checks for clever/technical options. 
+- STR checks for physical/intimidation options.
+- LCK checks for chance/intuition options.
+- Reputation checks for alignment-based responses.
 
 **Item Management**
 - Always pair `HAVE_ITEM` conditions with `ITEM_LOSE` outcomes
@@ -215,32 +216,34 @@ const QUEST_DATA = {
 **Stages:** :
 - 0 - quest not started,
 - 1 - started
-- any other number represent any additional intermidiate steps
+- any other sequential number represents intermidiate stages (multi-step quests)
 - 100 - completed
 
 
-**Quest Examples** (not limited by the follwoing, be creative):
+**Quest Examples** (not limited by the follwoing, be creative in working out new architypes):
 1. The Missing item: NPC_A needs the player to retrieve ITEM_B from LOCATION_C. Stages:
 - "Talk to NPC_A in LOCATION_A to get the quest."
 - "Travel to LOCATION_B."
 - "Acquire ITEM_A (found in container, on a character, or requires a skill check)."
 - "Return ITEM_A to NPC_A."
-2. The Delivery: NPC_A in LOCATION_A gives the player ITEM_A to deliver to NPC_B in LOCATION_B. Stages:
+2. Build / Repair an item: NPC_A needs the player to retrieve multiple items to get the ultimate result. Optionally, some of the items can be traded, some got as a dilaogue outcome. Some of items may be in various locations.
+3. Reconstruct the story from different opinions: NPC_A tells about a story with some other NPCs. Player needs to talk to all of them to dig into the full picture.
+4. The Delivery: NPC_A in LOCATION_A gives the player ITEM_A to deliver to NPC_B in LOCATION_B. Stages:
 - "Talk to NPC_A to get the quest and ITEM_A."
 - "Travel to LOCATION_B."
 - "Give ITEM_A to NPC_B."
 - "(Optional) Return to NPC_A for a bonus reward."
-3. Eliminate someone: NPC_A wants the player to eliminate NPC_B, who is usually located in a dangerous area. Stages:
+5. Eliminate someone: NPC_A wants the player to eliminate NPC_B, who is usually located in a dangerous area. Stages:
 - "Talk to NPC_A to get the target."
 - "Travel to the target's location."
 - "Eliminate NPC_B (through dialogue, combat, or stealth)."
 - "Return to NPC_A for payment."
-4. INVESTIGATION: NPC_A asks player to investigate strange events at LOCATION_B. Requires talking to 2-3 NPCs.
-5. BARTER OR CHAT CHAIN
+6. INVESTIGATION: NPC_A asks player to investigate strange events at LOCATION_B. Requires talking to 2-3 NPCs.
+7. BARTER OR CHAT CHAIN
 - Multi-step trading: Get ITEM_A to NPC A, trade to NPC_B for ITEM_B, trade to NPC_C for ITEM_C, return ITEM_C to NPC_A.
 - Multi-step chat: Talks to NPC_A, then to NPC_B, return to NPC_A. Could be 2-3 iterations. Example: conlfict negotiation.
-6. REPUTATION UNLOCK - "Proving Your Worth" - NPC_A won't help until player completes any quest in the location
-7. MORAL CHOICE - "The Double Deal" - Two NPCs offer conflicting quests for the same objective. Player can only complete one.
+8. REPUTATION UNLOCK - "Proving Your Worth" - NPC_A won't help until player completes any quest in the location
+9. MORAL CHOICE - "The Double Deal" - Two NPCs offer conflicting quests for the same objective. Player can only complete one.
 
 
 ## Items

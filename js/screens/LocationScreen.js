@@ -42,6 +42,11 @@ class LocationScreen extends BaseScreen {
 
     // This method was missing, causing inputs to be ignored.
     handleInput(input) {
+        if (input.type === 'COMMAND' && input.command === 'INVENTORY') {
+            this.navigationManager.navigateTo({ screen: 'Inventory' });
+            return;
+        }
+
         if (this.components.menu) {
             this.components.menu.handleInput(input);
         }

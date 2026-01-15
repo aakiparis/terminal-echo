@@ -5,8 +5,9 @@ class NavigationManager {
         this.screenContainer = screenContainer;
         this.screens = {};
         this.currentScreen = null;
-
+        this.history = []; 
         this.eventBus.on('navigate', (payload) => this.navigateTo(payload));
+        this.eventBus.on('navigate_back', () => this.goBack());
     }
 
     registerScreen(screen) {
@@ -22,6 +23,11 @@ class NavigationManager {
             return;
         }
 
+        // Push the current screen to history *before* changing it
+        if (this.currentScreen && this.currentScreen.name !== screenName) {
+            this.history.push({ screen: this.currentScreen.name, params: this.currentScreen.params || {} });
+        }
+
         if (this.currentScreen) {
             this.currentScreen.exit();
         }
@@ -32,6 +38,16 @@ class NavigationManager {
         this.currentScreen.enter(params);
 
         this.renderCurrentScreen();
+    }
+    
+    goBack() {
+        const lastScreen = this.history.pop();
+        if (lastScreen) {
+            // A simple navigate call will work, as the history has already been popped.
+            this.navigateTo(lastScreen);
+        } else {
+            console.warn("Navigation history is empty. Cannot go back.");
+        }
     }
 
     renderCurrentScreen() {

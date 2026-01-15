@@ -59,8 +59,8 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
                 player: { 
                     ...playerState,
                     ...this.attributes,
-                    maxHp: 20 + (this.attributes.str * 2),
-                    hp: 20 + (this.attributes.str * 2),
+                    maxHp: 20 + (this.attributes.str-1) * 2,
+                    hp: 20 + (this.attributes.str-1) * 2
                 } 
             });
             this.eventBus.emit('log', { text: 'Character profile calibrated.' });
