@@ -10,7 +10,7 @@ class StateManager {
             player: {
                 name: 'User',
                 level: 1,
-                hp: 1,
+                hp: 20,
                 maxHp: 20,
                 xp: 0,
                 caps: 10,
@@ -19,12 +19,12 @@ class StateManager {
                 lck: 1,
                 reputation: 0, // e.g., -100 (Shady) to +100 (Honorable)
                 inventory: [],
-                //inventory: ['stim_pack', 'nano_gloves', 'scrap_metal', 'power_regulator','broken_sensor', 'data_shard_corrupt'], // Will hold item IDs
+                // inventory: ['stim_pack', 'nano_gloves'], // Will hold item IDs
                 convo_history: {},
             },
             gameMode: 'scripted',
-            currentLocation: 'aethelburg_sprawl',
-            unlocked_locations: ['aethelburg_sprawl'],
+            currentLocation: 'neon_nexus',
+            unlocked_locations: ['neon_nexus'],
             currentScreen: 'MainMenu',
             quests: {},
             eventHistory: []

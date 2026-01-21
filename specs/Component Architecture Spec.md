@@ -97,7 +97,15 @@ class Component {
 ### 5. Field input component
 **Purpose**: Player name field input
 
-### 6. EventLog Component
+
+### 6. Two Columns Layout
+**Purpose**: Allows to align sub-components in table with two columns.
+This component is designed specifically for trading screen, on which each column will contain the title and menu elements. Menu items placed in different columns remain navigable with arrows up and down, i.e. menu remains non-breakable by columns.
+
+On mobile columns are placed one by another.
+
+
+### 7. EventLog Component
 
 EventLog pinned to the bottom of all screens. Has fixed size and contain 4 last event records. Scrollable.
 New record pops up on top, each records starts with prompt-like sign ">".
@@ -346,29 +354,12 @@ class DialogueScreen {
   ...
 }
 ```
-**Menu options has**:
-- NPC's dialogue node options. Opations that doesn't meet its condition are shown but inactive
 
-### 7. Trade Screen 
-Pseudo code
-```
-class TradeScreen {
-  constructor(config) {
-  ...
-    this.components = [
-      StatusBar,
-      ScreenTitle, # shows NPC's name - Tradings
-      Menu,  # NPC's items with available actions to buy
-      Menu,  # Players items and ability to sell
-      EventLog
-    ]
-    
-  }
+Once dialogue screen has entered a dialogue node, to render it properly, the logic must:
+1. display NPC response
+2. Shape menu items from prompts of the destination nodes
+3. Those menu items which conditions are not meet must be shown but be inactive (disabled)
 
-  ...
-}
-```
-Additionally, menu allows get back to location screen.
 
 ### 8. Inventory Screen
 Pseudo code
@@ -392,7 +383,41 @@ class InventoryScreen {
 
 Additionally, menu allows get back to previous screen.
 
-### 8. Game Menu Popup
+### 9. Trading Screen 
+
+Trading screen shows items in NPCs and players inventory and allows to sell them or buy.
+As player buies an item it moves from NPCs inventory into player's and player loses appropriate amount of caps.
+As player sells and item the same is happening: item moves to NPCs inventory and player gains caps.
+
+Pseudo code
+```
+class TradeScreen {
+  constructor(config) {
+  ...
+    this.components = [
+      StatusBar,
+      ScreenTitle, # shows NPC's name - Tradings
+      TwoColumnsLayout: {
+        LeftColumn: {
+          ScreenTitle, # shows NPC's name
+          Menu,  # NPC's items with available actions to buy
+        },
+        RightColumn: {
+          ScreenTitle, # shows effective and taken inventory capacity and caps
+          Menu,  # Players items and ability to sell
+        }
+      },
+      Menu, # with only option to get back to dialogue node
+      EventLog
+    ]
+    
+  }
+  ...
+}
+```
+
+
+### 10. Game Menu Popup
 Screen that shows up ontop of the screen which handled hotkey. Visaully it makes the main screen grayed out and looks as a centered half-sized pop up.
 
 Pseudo code
@@ -416,7 +441,7 @@ class GameMenuPopup {
 - save game to a file
 - close the pop up
 
-### 9. Game Over Popup
+### 11. Game Over Popup
 Pops up when user's HP hit 0. Visaully it makes the main screen grayed out and looks as a centered half-sized pop up.
 
 Pseudo code

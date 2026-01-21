@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Register Screens
             const screens = [
-                MainMenuScreen, NewGameModeScreen, NewGamePlayerNameScreen,
-                NewGamePlayerAttributesScreen, WorldMapScreen, LocationScreen, DialogueScreen, InventoryScreen
+                MainMenuScreen, NewGameModeScreen, NewGamePlayerNameScreen, NewGamePlayerAttributesScreen,
+                WorldMapScreen, LocationScreen, DialogueScreen, InventoryScreen, TradeScreen
             ];
 
             screens.forEach(ScreenClass => {

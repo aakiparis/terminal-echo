@@ -193,6 +193,8 @@ body {
 }
 
 .screen-description {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
     margin-bottom: 25px;
     line-height: 1.4;
     padding: var(--spacing-md);
@@ -324,6 +326,34 @@ body {
     background: var(--color-bg-dark);
     box-shadow: 0 0 10px var(--color-primary);
 }
+
+
+/* === TRADING === */
+.two-columns-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 2ch;
+    width: 100%;
+    /*border-top: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);*/
+    padding: 1em 0;
+}
+
+.column {
+    width: 50%;
+    border: 1px solid var(--primary-color);
+}
+
+/* On smaller screens */
+@media (max-width: 600px) {
+    .two-columns-layout {
+        flex-direction: column;
+    }
+    .column {
+        width: 100%;
+    }
+}
+
 
 /* === EVENT LOG === */
 .event-log {
