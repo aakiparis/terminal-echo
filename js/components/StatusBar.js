@@ -11,11 +11,12 @@ class StatusBar extends BaseComponent {
                 <div class="status-left">
                     <span>NAME: ${name || 'N/A'}</span>
                     <span>HP: ${hp || 0}/${maxHp || 0}</span>
-                    <span>XP: ${xp || 0} (LVL: ${level || 1})</span>
+                    <!--<span>XP: ${xp || 0}</span>
+                    <span>XP: ${xp || 0} (LVL: ${level || 1})</span>-->
                 </div>
                 <div class="status-right">
-                    <!--<span>LVL: ${level || 1}</span>-->
-                    <span>CAPS: ${caps || 0}</span>
+                    <!--<span>LVL: ${level || 1}</span>
+                    <span>CAPS: ${caps || 0}</span>-->
                     <span>REP: ${reputation || 'Neutral'}</span>
                 </div>
             </div>
