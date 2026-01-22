@@ -48,7 +48,7 @@ class DialogueScreen extends BaseScreen {
             this.stateManager.updateState({ convo_history: { ...currentHistory, [this.npcId]: true } });
         }
         // Log the NPC's response when entering a new node
-        this.eventBus.emit('log', { text: `${this.npcData.name}: "${node.response}"`, type: 'dialogue' });
+        // this.eventBus.emit('log', { text: `${this.npcData.name}: "${node.response}"`, type: 'dialogue' });
         
         // --- Process Outcomes for the current node ---
         if (node.outcomes) {
@@ -113,7 +113,7 @@ class DialogueScreen extends BaseScreen {
         const targetNode = this.npcData.dialogue_graph[destination.node_id];
         const label = destination.prompt_replacement || targetNode?.prompt || destination.node_id;
         
-        this.eventBus.emit('log', { text: `You:  ${label}`, type: 'system' });
+        // this.eventBus.emit('log', { text: `You:  ${label}`, type: 'system' });
 
         // Handle navigation to special nodes or next dialogue node
         if (destination.node_id === 'trade') {

@@ -42,8 +42,13 @@ class InventoryScreen extends BaseScreen {
 
         // Add a back button
         menuItems.push({
+            id: 'delimiter',
+            label: `--- --- ---`,
+            disabled: true // delimiters are not selectable
+        });
+        menuItems.push({
             id: 'back',
-            label: 'Back',
+            label: '[ BACK ]',
             type: 'navigation',
             action: () => this.eventBus.emit('navigate_back')
         });

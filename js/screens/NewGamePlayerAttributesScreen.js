@@ -2,8 +2,8 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
     initComponents() {
         if (!this.attributes) {
             this.totalPoints = 15;
-            this.attributes = { str: 1, int: 7, lck: 7 };
-            this.pointsRemaining = this.totalPoints - 15;
+            this.attributes = { str: 1, int: 1, lck: 1 };
+            this.pointsRemaining = this.totalPoints - 3;
         }
         
         this.updateComponents();
@@ -18,8 +18,13 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
             { id: 'str', label: 'Strength (STR)', type: 'attribute', value: this.attributes.str, onAdjust: (val) => this.adjustAttribute('str', val) },
             { id: 'int', label: 'Intelligence (INT)', type: 'attribute', value: this.attributes.int, onAdjust: (val) => this.adjustAttribute('int', val) },
             { id: 'lck', label: 'Luck (LCK)', type: 'attribute', value: this.attributes.lck, onAdjust: (val) => this.adjustAttribute('lck', val) },
-            { id: 'confirm', label: 'Confirm', type: 'action', action: () => this.confirmAttributes(), disabled: this.pointsRemaining > 0 },
-            { id: 'back', label: 'Back', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGamePlayerName' }) },
+            {
+                id: 'delimiter',
+                label: `--- --- ---`,
+                disabled: true // delimiters are not selectable
+            },
+            { id: 'confirm', label: '[ CONFIRM ]', type: 'action', action: () => this.confirmAttributes(), disabled: this.pointsRemaining > 0 },
+            { id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGamePlayerName' }) },
         ];
         
         this.components.menu = new Menu({
@@ -63,7 +68,7 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
                     hp: 20 + (this.attributes.str-1) * 2
                 } 
             });
-            this.eventBus.emit('log', { text: 'Character profile calibrated.' });
+            this.eventBus.emit('log', { text: `Welcome to the world of Echo, ${playerState.name}` });
             this.navigationManager.navigateTo({ screen: 'WorldMap' });
         } else {
             this.eventBus.emit('log', { text: `You must allocate all remaining points.`, type: 'error' });

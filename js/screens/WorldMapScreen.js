@@ -17,13 +17,18 @@ class WorldMapScreen extends BaseScreen {
         });
 
         // Add static options as per the spec
-        menuItems.push(
-            {
-                id: 'inventory', label: 'Inventory (i)', type: 'action', action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
-            }
-        ); 
-        // menuItems.push({ id: 'inventory', label: 'Inventory (i)', type: 'action', disabled: true }); 
-        menuItems.push({ id: 'game-menu', label: 'Game Menu (m)', type: 'action', disabled: true }); // Not implemented yet
+        menuItems.push({
+            id: 'delimiter',
+            label: `--- --- ---`,
+            disabled: true // delimiters are not selectable
+        });
+        menuItems.push({
+            id: 'inventory',
+            label: '[ INVENTORY ]',
+            type: 'action',
+            action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
+        }); 
+        menuItems.push({ id: 'game-menu', label: ' [ GAME MENU ] ( cooming soon )', type: 'action', disabled: true }); // Not implemented yet
 
         this.components.menu = new Menu({
             items: menuItems,
@@ -36,6 +41,7 @@ class WorldMapScreen extends BaseScreen {
     travelTo(locationId) {
         this.stateManager.updateState({ currentLocation: locationId });
         this.navigationManager.navigateTo({ screen: 'Location', params: { id: locationId } });
+        this.eventBus.emit('log', { text: `You've arrived to ${locationId}` });
     }
 
     // This method handles arrow keys and enter.

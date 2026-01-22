@@ -2,7 +2,7 @@ class NewGamePlayerNameScreen extends BaseScreen {
     initComponents() {
         this.playerName = this.stateManager.getState().player.name || 'User';
         this.components.title = new ScreenTitle({ text: 'Character Creation' });
-        this.components.description = new ScreenDescription({ text: 'Enter your designation.', centered: true });
+        this.components.description = new ScreenDescription({ text: 'Enter your name', centered: true });
 
         const menuItems = [
             { 
@@ -11,8 +11,13 @@ class NewGamePlayerNameScreen extends BaseScreen {
                 type: 'input',
                 value: this.playerName,
             },
-            { id: 'confirm', label: 'Confirm', type: 'action', action: () => this.confirmName() },
-            { id: 'back', label: 'Back', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGameMode' }) },
+            {
+                id: 'delimiter',
+                label: `--- --- ---`,
+                disabled: true // delimiters are not selectable
+            },
+            { id: 'confirm', label: '[ CONFIRM ]', type: 'action', action: () => this.confirmName() },
+            { id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGameMode' }) },
         ];
 
         this.components.menu = new Menu({
@@ -33,11 +38,10 @@ class NewGamePlayerNameScreen extends BaseScreen {
             this.stateManager.updateState({ player: { name: this.playerName } });
             this.navigationManager.navigateTo({ screen: 'NewGamePlayerAttributes' });
         } else {
-            this.eventBus.emit('log', { text: 'Designation cannot be empty.', type: 'error' });
+            this.eventBus.emit('log', { text: 'Name cannot be empty.', type: 'error' });
         }
     }
     
-    // === THIS METHOD WAS MISSING ===
     handleInput(input) {
         // Special case for the 'Confirm' button on this screen
         if (input.type === 'COMMAND' && input.command === 'SELECT' && this.components.menu.focusedIndex === 1) {

@@ -64,9 +64,14 @@ class TradeScreen extends BaseScreen {
 
         // 5. Add the "Finish Trading" option
         menuItems.push({
+            id: 'delimiter',
+            label: `--- --- ---`,
+            disabled: true // delimiters are not selectable
+        });
+        menuItems.push({
             id: 'action_exit',
             source: 'exit',
-            label: 'Finish Trading',
+            label: '[ FINISH TRADING ]',
             actionText: '[ EXIT ]'
         });
 

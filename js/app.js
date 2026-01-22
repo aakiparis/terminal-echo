@@ -63,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Start the game
             navigationManager.navigateTo({ screen: 'MainMenu' });
-            eventBus.emit('log', { text: 'System boot complete. Welcome to Terminal Echo.' });
+            eventBus.emit('log', { text: 'POST checks.' });
+            eventBus.emit('log', { text: 'Welcome to Terminal Echo. v1-26.' });
         }
     }
 

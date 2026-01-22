@@ -26,7 +26,27 @@ class LocationScreen extends BaseScreen {
             };
         });
 
-        menuItems.push({ id: 'travel', label: 'Travel', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'WorldMap' }) });
+        // Add static options as per the spec
+        menuItems.push({
+            id: 'delimiter',
+            label: `--- --- ---`,
+            disabled: true // delimiters are not selectable
+        });
+        menuItems.push({
+            id: 'inventory',
+            label: '[ INVENTORY ]',
+            type: 'action',
+            action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
+        });
+        menuItems.push({
+            id: 'travel',
+            label: '[ WORLD MAP ]',
+            type: 'navigation',
+            action: () => {
+                this.navigationManager.navigateTo({ screen: 'WorldMap' })
+                this.eventBus.emit('log', { text: `You've leaved ${locationId}` });
+            }
+        });
         
         this.components.menu = new Menu({
             items: menuItems,
@@ -38,6 +58,7 @@ class LocationScreen extends BaseScreen {
     
     talkTo(locationId, npcId) {
         this.navigationManager.navigateTo({ screen: 'Dialogue', params: { locationId, npcId } });
+        this.eventBus.emit('log', { text: `You're talking to ${npcId}` });
     }
 
     // This method was missing, causing inputs to be ignored.

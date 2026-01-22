@@ -34,9 +34,9 @@ body {
     font-family: var(--font-primary);
     font-size: var(--font-size-base);
     color: var(--color-text);
-    overflow:  hidden;
-    /*cursor: none; /* Hide cursor */
-    user-select: none;
+    /*overflow:  scroll;*/
+    cursor: none; /* Hide cursor */
+    /*user-select: none;*/
     letter-spacing: 1px;
 }
 
@@ -79,6 +79,7 @@ body {
     z-index: 2;
     background-size: 100% 4px, 6px 100%;
     pointer-events: none;
+
     animation: flicker 0.8s infinite;
 }
 
@@ -293,9 +294,10 @@ body {
     border-color: var(--color-text-inverse);
 }
 
-.attribute-button:hover {
+/*.attribute-button:hover {
     background: var(--color-disabled);
 }
+*/
 
 .attribute-value {
     font-size: var(--font-size-base);
@@ -425,14 +427,26 @@ body {
 
 @media (max-width:  768px) {
     :root {
-        --font-size-base: 20px;
+        --font-size-base: 22px;
         --spacing-sm: 5px;
         --spacing-md: 10px;
         --spacing-lg: 10px;
+
+        cursor: pointer;
+        user-select: all;
     }
 
+    .terminal-frame {
+        max-height: calc(100vh - 40px); /*space for safari non-hiding address menu*/
+    }
+    .terminal-frame::before {
+        background-size: 100% 3px, 5px 100%;
+    }
     .terminal-header {
         height: 40px;
+    }
+    .terminal-status{
+        font-size: 20px;
     }
     .terminal-footer {
         height: 90px;
