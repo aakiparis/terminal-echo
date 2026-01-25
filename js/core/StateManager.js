@@ -8,7 +8,7 @@ class StateManager {
     getInitialState() {
         return {
             player: {
-                name: 'Gotten',
+                name: '',
                 level: 1,
                 hp: 20,
                 maxHp: 20,
