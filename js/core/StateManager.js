@@ -14,9 +14,9 @@ class StateManager {
                 maxHp: 20,
                 xp: 0,
                 caps: 10,
-                str: 1,
-                int: 1,
-                lck: 1,
+                str: 5,
+                int: 5,
+                lck: 5,
                 reputation: 0, // e.g., -100 (Shady) to +100 (Honorable)
                 inventory: [],
                 // inventory: ['stim_pack', 'nano_gloves'], // Will hold item IDs

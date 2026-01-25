@@ -3,7 +3,7 @@ class NewGameModeScreen extends BaseScreen {
     initComponents() {
         this.components.title = new ScreenTitle({ text: 'Select Game Mode' });
         this.components.description = new ScreenDescription(
-            { text: 'Terminal Echo runs in two modes:<br> > <b>Scripted</b> - a hand-curated story<br> > <b>Indefinite</b> - In-flight AI-Generated game mode as you play', centered: false }
+            { text: 'Terminal Echo Scripted mode - a hand-curated story<br>Indefinite Terminal Echo - In-flight AI-Generated game', centered: false }
         );
         const menuItems = [
             { id: 'scripted', label: 'Scripted', type: 'navigation', action: () => this.selectMode('scripted') },

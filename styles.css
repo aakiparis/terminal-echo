@@ -44,9 +44,10 @@ body {
 .terminal-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    al
+    align-items: top;
     /*min-height: 100vh;*/
-    height: 100vh;
+    height: 100dvh;
     padding: var(--spacing-lg);
 }
 
@@ -437,7 +438,8 @@ body {
     }
 
     .terminal-frame {
-        max-height: calc(100vh - 40px); /*space for safari non-hiding address menu*/
+        max-height: calc(100dvh); /*space for safari non-hiding address menu*/
+        /*max-height: calc(100vh - 50px); /*space for safari non-hiding address menu*/*/
     }
     .terminal-frame::before {
         background-size: 100% 3px, 5px 100%;
