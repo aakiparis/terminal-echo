@@ -6,8 +6,12 @@ class InputManager {
 
     init() {
         document.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        
         // Basic touch support
-        document.addEventListener('touchstart', (e) => this.handleTouch(e), { passive: false });
+        // document.addEventListener('touchstart', (e) => this.handleTouch(e), { passive: false });
+
+        // A much smarter handler that replaces the problematic 'handleTouch'
+        document.addEventListener('click', (e) => this.handleClick(e));
     }
 
     handleKeyDown(e) {
@@ -64,4 +68,44 @@ class InputManager {
 
         this.eventBus.emit('input', { type: 'COMMAND', command: 'SELECT' });
     }
+
+    handleClick(e) {
+        const target = e.target;
+
+        // --- FIX for Problem #3 and general browser behavior ---
+        // If the click is on a standard interactive element, let the browser do its job and do nothing further.
+        if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.tagName === 'A') {
+            return; 
+        }
+
+        // --- FIX for Problem #2 ---
+        // Specifically check for attribute buttons
+        const attributeButton = target.closest('.attribute-button');
+        if (attributeButton && attributeButton.dataset.action) {
+            e.preventDefault(); // We're handling this, so prevent other actions.
+            this.eventBus.emit('input', {
+                type: 'UI_ACTION',
+                action: attributeButton.dataset.action,
+                stat: attributeButton.dataset.stat
+            });
+            return;
+        }
+
+        // --- Targeted fix for menu items ---
+        // Check if the click was on a menu item
+        const menuItem = target.closest('.menu-item');
+        if (menuItem && menuItem.dataset.id) {
+            e.preventDefault();
+            // Emit a specific event for a direct tap, so the menu knows which item was selected.
+            this.eventBus.emit('input', { type: 'TOUCH_SELECT', id: menuItem.dataset.id });
+            return;
+        }
+
+        // --- FIX for Problem #1 ---
+        // If we've reached this point, the user tapped on an empty space.
+        // We do nothing, allowing scrolling, zooming, etc.
+        // The catch-all "SELECT" command is removed.
+    }
+
+
 }

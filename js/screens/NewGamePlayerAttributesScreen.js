@@ -2,8 +2,8 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
     initComponents() {
         if (!this.attributes) {
             this.totalPoints = 15;
-            this.attributes = { str: 5, int: 5, lck: 5 };
-            this.pointsRemaining = this.totalPoints - 15;
+            this.attributes = { str: 1, int: 1, lck: 1 };
+            this.pointsRemaining = this.totalPoints - 3;
         }
         
         this.updateComponents();
@@ -76,6 +76,15 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
     }
 
     handleInput(input) {
+        if (input.type === 'UI_ACTION') {
+            if (input.action === 'increase') {
+                this.increaseStat(input.stat);
+            } else if (input.action === 'decrease') {
+                this.decreaseStat(input.stat);
+            }
+            return;
+        }
+        
         if (this.components.menu) {
             this.components.menu.handleInput(input);
         }
