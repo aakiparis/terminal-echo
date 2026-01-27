@@ -30,9 +30,9 @@ class Menu extends BaseComponent {
                 itemContent = `
                     <span class="menu-item-label">${item.label}</span>
                     <div class="attribute-controls">
-                        <button class="attribute-button" data-action="decrease" data-id="${item.id}">&lt;</button>
+                        <button class="attribute-button" data-action="decrease" data-id="${item.id}" data-stat="${item.id}">&lt;</button>
                         <span class="attribute-value">${item.value}</span>
-                        <button class="attribute-button" data-action="increase" data-id="${item.id}">&gt;</button>
+                        <button class="attribute-button" data-action="increase" data-id="${item.id}" data-stat="${item.id}">&gt;</button>
                     </div>`;
                 break;
             case 'input':

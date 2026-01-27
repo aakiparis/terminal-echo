@@ -72,23 +72,23 @@ class InputManager {
     handleClick(e) {
         const target = e.target;
 
-        // --- FIX for Problem #3 and general browser behavior ---
-        // If the click is on a standard interactive element, let the browser do its job and do nothing further.
-        if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.tagName === 'A') {
-            return; 
-        }
-
-        // --- FIX for Problem #2 ---
-        // Specifically check for attribute buttons
+        // Specifically check for attribute buttons FIRST (before the early return for buttons)
+        // This must come before the generic button check because attribute buttons ARE buttons
         const attributeButton = target.closest('.attribute-button');
         if (attributeButton && attributeButton.dataset.action) {
             e.preventDefault(); // We're handling this, so prevent other actions.
-            this.eventBus.emit('input', {
+            const uiActionEvent = {
                 type: 'UI_ACTION',
                 action: attributeButton.dataset.action,
                 stat: attributeButton.dataset.stat
-            });
+            };
+            this.eventBus.emit('input', uiActionEvent);
             return;
+        }
+
+        // If the click is on a standard interactive element, let the browser do its job and do nothing further.
+        if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.tagName === 'A') {
+            return; 
         }
 
         // --- Targeted fix for menu items ---
@@ -101,10 +101,6 @@ class InputManager {
             return;
         }
 
-        // --- FIX for Problem #1 ---
-        // If we've reached this point, the user tapped on an empty space.
-        // We do nothing, allowing scrolling, zooming, etc.
-        // The catch-all "SELECT" command is removed.
     }
 
 
