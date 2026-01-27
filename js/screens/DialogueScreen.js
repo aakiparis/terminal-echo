@@ -5,6 +5,8 @@ class DialogueScreen extends BaseScreen {
      * @param {object} params - { locationId, npcId, nodeKey }
      */
     initComponents(params) {
+        const HIDE_UNMET_CONDITIONS = true;
+
         this.locationId = params.locationId;
         this.npcId = params.npcId;
 
@@ -60,7 +62,17 @@ class DialogueScreen extends BaseScreen {
         this.components.description = new ScreenDescription({ text: node.response });
 
         // Map destination_nodes to menu items
-        const menuItems = (node.destination_nodes || []).map((dest, index) => {
+        const menuItems = (node.destination_nodes || [])
+        .filter(dest => {
+                // If the flag is false, always show the item (current behavior).
+                if (!HIDE_UNMET_CONDITIONS) {
+                    return true;
+                }
+                // Otherwise, only include it if its conditions are met.
+                const targetNode = this.npcData.dialogue_graph[dest.node_id];
+                return this.checkConditions(targetNode?.condition);
+        })
+        .map((dest, index) => {
             const targetNode = this.npcData.dialogue_graph[dest.node_id];
             
             // Determine the label for the choice
