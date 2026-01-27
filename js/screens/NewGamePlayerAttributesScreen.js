@@ -2,9 +2,8 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
     initComponents() {
         if (!this.attributes) {
             this.totalPoints = 15;
-            this.attributes = { str: 5, int: 5, lck: 5 };
-            // this.pointsRemaining = this.totalPoints - 15;
-            this.pointsRemaining = 0;
+            this.attributes = { str: 1, int: 1, lck: 1 };
+            this.pointsRemaining = this.totalPoints - 3;
         }
         
         this.updateComponents();

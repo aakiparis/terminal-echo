@@ -8,15 +8,15 @@ class StateManager {
     getInitialState() {
         return {
             player: {
-                name: '',
+                name: 'Gotten',
                 level: 1,
                 hp: 20,
                 maxHp: 20,
                 xp: 0,
                 caps: 10,
-                str: 5,
-                int: 5,
-                lck: 5,
+                str: 1,
+                int: 1,
+                lck: 1,
                 reputation: 0, // e.g., -100 (Shady) to +100 (Honorable)
                 inventory: [],
                 // inventory: ['stim_pack', 'nano_gloves'], // Will hold item IDs
@@ -24,7 +24,7 @@ class StateManager {
             },
             gameMode: 'scripted',
             currentLocation: 'neon_nexus',
-            unlocked_locations: ['neon_nexus'],
+            unlocked_locations: ['neon_nexus','rust_pit'],
             currentScreen: 'MainMenu',
             quests: {},
             eventHistory: []
@@ -73,5 +73,15 @@ class StateManager {
         this.state = updatedState;
         console.log("State updated:", this.state);
         this.eventBus.emit('stateUpdated', this.state);
+
+        // Check for game over condition after every state update.
+        if (this.state.player && this.state.player.hp <= 0) {
+            // Check if we are not already in a game over state to prevent loops.
+            console.log("GAME OVER");
+            if (this.state.gameMode !== 'gameOver') {
+                this.state.gameMode = 'gameOver'; // Set the state
+                this.eventBus.emit('gameOver');   // Emit the event
+            }
+        }
     }
 }

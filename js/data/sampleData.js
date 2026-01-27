@@ -236,7 +236,7 @@ const NPC_DATA = {
                     ]
                 },
                 "partner_item_story": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 0 },
+                    "condition": { "type": "HAVE_ITEM", "item_id": "bone_charm" },
                     "prompt": "I found something in the tunnels...",
                     "response": "What?",
                     "destination_nodes": [
@@ -489,6 +489,7 @@ const NPC_DATA = {
                     ]
                 },
                 "investigate_aftermath": {
+                    // "condition": { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 1},
                     "prompt": "[ Look around the area ]",
                     "response": "[ With the generator reset and the rats gone, the area is quiet. The steady hum is almost peaceful. In the dim light, you spot something lying in the dust next to the generator, entangled in what looks like old, brittle bones. ]",
                     "destination_nodes": [

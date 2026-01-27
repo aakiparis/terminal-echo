@@ -17,7 +17,7 @@ class StatusBar extends BaseComponent {
                 <div class="status-right">
                     <!--<span>LVL: ${level || 1}</span>
                     <span>CAPS: ${caps || 0}</span>-->
-                    <span>REP: ${reputation || 0}</span>
+                    <span>REP: ${reputation || 'Neutral'}</span>
                 </div>
             </div>
         `;

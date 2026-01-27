@@ -38,7 +38,7 @@ class Menu extends BaseComponent {
             case 'input':
                 itemContent = `
                     <span class="menu-item-label">${item.label}</span>
-                    <input type="text" class="input-field" id="${item.id}" value="${item.value || ''}" placeholder="Enter 6-chars nick name..." maxlength="6">`;
+                    <input type="text" class="input-field" id="${item.id}" value="${item.value || ''}" placeholder="Enter text...">`;
                 break;
             default: // action, navigation
                 itemContent = `
