@@ -20,7 +20,8 @@ class LocationScreen extends BaseScreen {
             const npc = npcDataForLocation[npcId];
             return {
                 id: `npc-${npcId}`,
-                label: `Talk to ${npc.name}`,
+                label: `${npc.name}`,
+                // label: `Talk to ${npc.name}`,
                 type: 'action',
                 action: () => this.talkTo(locationId, npcId),
             };
