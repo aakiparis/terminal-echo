@@ -44,7 +44,6 @@ body {
 .terminal-container {
     display: flex;
     justify-content: center;
-    al
     align-items: top;
     /*min-height: 100vh;*/
     height: 100vh;
@@ -366,7 +365,7 @@ body {
     padding-left: 1. 5em;
 }
 
-.event-log: :-webkit-scrollbar {
+.event-log::-webkit-scrollbar {
     width: 6px;
 }
 
