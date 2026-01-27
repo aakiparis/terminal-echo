@@ -346,7 +346,7 @@ const NPC_DATA = {
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 100 },
                         { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 },
-                        { "type": "ITEM_GAIN", "item_id": "glowing_pendant" },
+                        // { "type": "ITEM_GAIN", "item_id": "glowing_pendant" },
                         // { "type": "STAT_CHANGE", "stat": "xp", "value": 200 },
                         { "type": "STAT_CHANGE", "stat": "caps", "value": 150 },
                         { "type": "REPUTATION_CHANGE", "value": 10 }

@@ -5,8 +5,9 @@ class InventoryScreen extends BaseScreen {
         
         const inventoryCount = effectiveStats.inventory ? effectiveStats.inventory.length : 0;
 
-        let descriptionText = `STR: ${effectiveStats.str} | INT: ${effectiveStats.int} | LCK: ${effectiveStats.lck} | CAPS: ${effectiveStats.caps}`;
-        // descriptionText += `\nITEMS: ${inventoryCount}/${effectiveStats.carry_capacity}`;
+        let descriptionText = `STR: ${effectiveStats.str} | INT: ${effectiveStats.int} | LCK: ${effectiveStats.lck} `;
+        descriptionText += '<br>';
+        descriptionText += `LEVEL: ${effectiveStats.level} (XP: ${effectiveStats.xp}) | CAPS: ${effectiveStats.caps}`;
 
         if (inventoryCount === 0) {
             descriptionText += '<br><br>Your inventory is empty.';

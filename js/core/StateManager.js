@@ -24,7 +24,7 @@ class StateManager {
             },
             gameMode: 'scripted',
             currentLocation: 'neon_nexus',
-            unlocked_locations: ['neon_nexus','rust_pit'],
+            unlocked_locations: ['neon_nexus'],
             currentScreen: 'MainMenu',
             quests: {},
             eventHistory: []
@@ -57,6 +57,8 @@ class StateManager {
     }
 
     updateState(newState) {
+        const oldPlayerState = { ...(this.state.player || {}) };
+
         // Create a deep copy to avoid direct mutation
         let updatedState = JSON.parse(JSON.stringify(this.state));
 
@@ -74,6 +76,11 @@ class StateManager {
         console.log("State updated:", this.state);
         this.eventBus.emit('stateUpdated', this.state);
 
+        // Level up Check
+        if (newState.player && newState.player.xp !== undefined) {
+            this.checkLevelUp(oldPlayerState, this.state.player);
+        }
+
         // Check for game over condition after every state update.
         if (this.state.player && this.state.player.hp <= 0) {
             // Check if we are not already in a game over state to prevent loops.
@@ -82,6 +89,40 @@ class StateManager {
                 this.state.gameMode = 'gameOver'; // Set the state
                 this.eventBus.emit('gameOver');   // Emit the event
             }
+        }
+    }
+
+    checkLevelUp(oldPlayerState, newPlayerState) {
+        const player = this.state.player;
+        const xpThresholds = [
+            null,      // Level 0 doesn't exist
+            1000,      // From level 1 to 2
+            2000,      // From level 2 to 3
+            5000,      // From level 3 to 4
+            10000,     // From level 4 to 5
+            20000      // From level 5 to 6
+            // Add more thresholds for higher levels
+        ];
+
+        let currentLevel = newPlayerState.level;
+        let requiredXp = xpThresholds[currentLevel];
+
+        // Loop in case the player gains enough XP for multiple levels at once.
+        // Continue as long as there is a defined next level and the player has enough XP.
+        while (requiredXp !== null && requiredXp !== undefined && newPlayerState.xp >= requiredXp) {
+            // Player leveled up!
+            currentLevel++;
+            
+            // Update the player's level directly in the state.
+            newPlayerState.level = currentLevel;
+
+            this.eventBus.emit('log', {
+                text: `LEVEL UP! You are now Level ${currentLevel}`,
+                type: 'system-highlight' // Use a special type for styling if desired
+            });
+            
+            // Get the requirement for the next level.
+            requiredXp = xpThresholds[currentLevel];
         }
     }
 }
