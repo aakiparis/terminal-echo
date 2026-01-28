@@ -159,6 +159,7 @@ class DialogueScreen extends BaseScreen {
         const state = this.stateManager.getState();
         let playerUpdates = {};
         let rootUpdates = {};
+        const questsUpdates = { ...(state.quests || {}) };
 
         outcomes.forEach(outcome => {
             switch (outcome.type) {
@@ -193,9 +194,8 @@ class DialogueScreen extends BaseScreen {
                     }
                     break;
                 case 'QUEST_SET_STAGE':
-                    // Update quests object without overwriting other quests
-                    const currentQuests = state.quests || {};
-                    rootUpdates.quests = { ...currentQuests, [outcome.quest_id]: { stage: outcome.stage } };
+                    // Collect quest stage updates without losing other quest state
+                    questsUpdates[outcome.quest_id] = { stage: outcome.stage };
                     this.eventBus.emit('log', { text: `[Quest '${QUEST_DATA[outcome.quest_id].title}' updated]`, type: 'system' });
                     break;
             }
@@ -204,9 +204,10 @@ class DialogueScreen extends BaseScreen {
         if (Object.keys(playerUpdates).length > 0) {
             this.stateManager.updateState({ player: { ...state.player, ...playerUpdates } });
         }
-        if (Object.keys(rootUpdates).length > 0) {
-            this.stateManager.updateState(rootUpdates);
+        if (Object.keys(questsUpdates).length > 0) {
+            rootUpdates.quests = questsUpdates;
         }
+        if (Object.keys(rootUpdates).length > 0) this.stateManager.updateState(rootUpdates);
     }
 
     /**
