@@ -121,6 +121,13 @@ class StateManager {
                 type: 'system-highlight' // Use a special type for styling if desired
             });
             
+            // Emit PostHog event for level up
+            if (typeof window !== 'undefined' && window.posthog) {
+                window.posthog.capture('player_level_up', {
+                    level: currentLevel,
+                });
+            }
+            
             // Get the requirement for the next level.
             requiredXp = xpThresholds[currentLevel];
         }
