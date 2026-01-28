@@ -75,8 +75,37 @@ class InventoryScreen extends BaseScreen {
             this.consumeItem(itemId, itemData);
         } else {
             // Default action for gear, junk, etc. is to drop.
-            this.dropItem(itemId, itemData);
+            this.confirmDropItem(itemId, itemData);
         }
+    }
+
+    confirmDropItem(itemId, itemData) {
+        if (itemData.type === 'quest') {
+            this.eventBus.emit('log', { text: `${itemData.name} is a quest item and cannot be dropped.`, type: 'error' });
+            return;
+        }
+
+        this.navigationManager.showPopup({
+            title: 'CONFIRM DROP',
+            message: `Dropping "${itemData.name}" is permanent and cannot be undone. Continue?`,
+            menuItems: [
+                {
+                    id: 'confirm_drop',
+                    label: '[ DROP ]',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                        this.dropItem(itemId, itemData);
+                    }
+                },
+                {
+                    id: 'cancel_drop',
+                    label: '[ CANCEL ]',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                    }
+                }
+            ]
+        });
     }
 
     consumeItem(itemId, itemData) {
@@ -108,7 +137,7 @@ class InventoryScreen extends BaseScreen {
             return;
         }
 
-        const state = this.stateManager.getEffectivePlayerStats();
+        const state = this.stateManager.getPlayerStats();
         const newInventory = state.inventory.filter(id => id !== itemId);
         
         this.stateManager.updateState({ player: { inventory: newInventory } });

@@ -72,6 +72,20 @@ class NavigationManager {
         }
     }
 
+    showPopup(popupConfig) {
+        this.activePopup = new PopupComponent({
+            eventBus: this.eventBus,
+            ...popupConfig
+        });
+        this.renderCurrentScreen();
+    }
+
+    closePopup() {
+        if (!this.activePopup) return;
+        this.activePopup = null;
+        this.renderCurrentScreen();
+    }
+
     showGameOverPopup() {
         this.activePopup = new PopupComponent({
             eventBus: this.eventBus,
