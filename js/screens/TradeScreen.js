@@ -20,6 +20,19 @@ class TradeScreen extends BaseScreen {
         super.enter(params); // This will call initComponents()
     }
 
+    refresh() {
+        // Rebuild components based on the latest player state and session NPC data
+        if (!this.element) return;
+        this.initComponents();
+        this.element.innerHTML = '';
+        Object.values(this.components).forEach(component => {
+            const componentElement = component.render();
+            if (componentElement) {
+                this.element.appendChild(componentElement);
+            }
+        });
+    }
+
     initComponents() {
         const playerState = this.stateManager.getEffectivePlayerStats();
         // We need the base inventory to iterate over, not the one with calculated stats
@@ -144,9 +157,7 @@ class TradeScreen extends BaseScreen {
         this.sessionNpcData.inventory = this.sessionNpcData.inventory.filter(id => id !== item.id);
 
         this.eventBus.emit('log', { text: `Bought ${item.item.name}.`, type: 'system' });
-        
-        // **FIX for UI Refresh**: Trigger a full re-render of this screen.
-        this.eventBus.emit('render');
+        this.refresh();
     }
 
     sellItem(item) {
@@ -161,9 +172,7 @@ class TradeScreen extends BaseScreen {
         this.sessionNpcData.inventory.push(item.id);
         
         this.eventBus.emit('log', { text: `Sold ${item.item.name}.`, type: 'system' });
-        
-        // **FIX for UI Refresh**: Trigger a full re-render of this screen.
-        this.eventBus.emit('render');
+        this.refresh();
     }
 
     // Input is now simply passed to the one and only menu
