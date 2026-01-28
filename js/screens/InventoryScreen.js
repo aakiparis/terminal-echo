@@ -1,4 +1,12 @@
 class InventoryScreen extends BaseScreen {
+    getConsumableEffectText(itemData) {
+        const statChanges = itemData.stat_change || [];
+        if (!statChanges.length) return '';
+        return statChanges
+            .map(c => `${String(c.stat || '').toUpperCase()} +${c.value}`)
+            .join(', ');
+    }
+
     initComponents() {
         const state = this.stateManager.getPlayerStats();
         const effectiveStats = this.stateManager.getEffectivePlayerStats();
@@ -34,7 +42,7 @@ class InventoryScreen extends BaseScreen {
 
             return {
                 id: itemId,
-                label: `${actionText} ${itemData.name} (CAP: ${itemData.price})`,
+                label: `${actionText} ${itemData.name}${itemData.type === 'consumable' ? ` (${this.getConsumableEffectText(itemData) || 'CONSUMABLE'})` : ''} (CAP: ${itemData.price})`,
                 type: 'action',
                 item: itemData,
                 disabled: itemData.type === 'quest'
@@ -72,11 +80,38 @@ class InventoryScreen extends BaseScreen {
         // For now, we'll use a simple alert/prompt system for actions.
         // A more complex implementation would use a sub-menu.
         if (itemData.type === 'consumable') {
-            this.consumeItem(itemId, itemData);
+            this.confirmConsumeItem(itemId, itemData);
         } else {
             // Default action for gear, junk, etc. is to drop.
             this.confirmDropItem(itemId, itemData);
         }
+    }
+
+    confirmConsumeItem(itemId, itemData) {
+        const effectText = this.getConsumableEffectText(itemData);
+        const effectLine = effectText ? `\nEffect: ${effectText}` : '';
+
+        this.navigationManager.showPopup({
+            title: 'CONFIRM USE',
+            message: `Use "${itemData.name}"?${effectLine}`,
+            menuItems: [
+                {
+                    id: 'confirm_use',
+                    label: '[ USE ]',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                        this.consumeItem(itemId, itemData);
+                    }
+                },
+                {
+                    id: 'cancel_use',
+                    label: '[ CANCEL ]',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                    }
+                }
+            ]
+        });
     }
 
     confirmDropItem(itemId, itemData) {
