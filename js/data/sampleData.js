@@ -1400,7 +1400,13 @@ const QUEST_DATA = {
         "description": "Rex, the head of security, needs someone to clear out an infestation of Glow-Rats from the lower tunnels before they damage critical systems.",
         "location": "neon_nexus",
         "giver": "rex",
-        "stages": { "0": "Not started", "1": "Clear out the Glow-Rat nest in the lower tunnels.", "100": "Completed" },
+        "stages": {
+            "0": "Not started",
+            "1": "Clear out the Glow-Rat nest in the lower tunnels.",
+            "2": "part of the tunnels are cleared.",
+            "3": "the queen of the Glow-Rats is defeated.",
+            "100": "Completed"
+        },
         "rewards": { "items": [], "stat_change": [ { "stat": "xp", "value": 200 }, { "stat": "caps", "value": 150 } ] }
     },
     "echoes_of_the_past": {
