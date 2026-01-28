@@ -5,9 +5,15 @@ class NewGameModeScreen extends BaseScreen {
         this.components.description = new ScreenDescription(
             { text: 'Terminal Echo Scripted mode - a hand-curated story<br>Indefinite Terminal Echo - In-flight AI-Generated game', centered: false }
         );
+        
         const menuItems = [
             { id: 'scripted', label: 'Scripted', type: 'navigation', action: () => this.selectMode('scripted') },
-            { id: 'ai-generated', label: 'Indefinite ( coming soon ) ', type: 'action', disabled: true },
+            { 
+                id: 'ai-generated', 
+                label: 'Indefinite ( waiting list )', 
+                type: 'action', 
+                action: () => this.showWaitingListPopup()
+            },
             {
                 id: 'delimiter',
                 label: `--- --- ---`,
@@ -22,6 +28,106 @@ class NewGameModeScreen extends BaseScreen {
                 if (item.action) item.action();
             }
         });
+    }
+    
+    showWaitingListPopup() {
+        // Create a custom popup with email input
+        const emailPopup = new PopupComponent({
+            eventBus: this.eventBus,
+            title: 'JOIN WAITING LIST',
+            message: 'Indefinite mode is coming soon! Enter your email to be notified when AI-generated adventures are available.',
+            menuItems: [
+                {
+                    id: 'email_input',
+                    label: 'Email:',
+                    type: 'input',
+                    value: ''
+                },
+                {
+                    id: 'submit_email',
+                    label: '[ SUBMIT ]',
+                    type: 'action',
+                    action: () => {
+                        const emailInput = emailPopup.menu.element?.querySelector('#email_input');
+                        const email = emailInput?.value?.trim();
+                        
+                        if (!email || !email.includes('@')) {
+                            this.eventBus.emit('log', { text: 'Please enter a valid email address.', type: 'error' });
+                            return;
+                        }
+                        
+                        // Submit to PostHog survey API
+                        const surveyId = '019c068e-3e42-0000-188b-9dec52c98e15';
+                        this.submitEmailToPostHogSurvey(email, surveyId);
+                        
+                        this.navigationManager.closePopup();
+                        this.eventBus.emit('log', { text: 'Thank you! You\'ve been added to the waiting list.', type: 'system' });
+                    }
+                },
+                {
+                    id: 'cancel',
+                    label: '[ CANCEL ]',
+                    type: 'action',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                    }
+                }
+            ]
+        });
+        
+        this.navigationManager.activePopup = emailPopup;
+        this.navigationManager.renderCurrentScreen();
+        
+        // Focus the email input after a short delay
+        setTimeout(() => {
+            const emailInput = emailPopup.menu.element?.querySelector('#email_input');
+            if (emailInput) {
+                emailInput.focus();
+            }
+        }, 100);
+    }
+    
+    submitEmailToPostHogSurvey(email, surveyId) {
+        if (typeof window === 'undefined' || !window.posthog) {
+            console.warn('[NewGameModeScreen] PostHog not available for email submission');
+            return;
+        }
+        
+        try {
+            // According to PostHog survey docs, each answer should be sent as:
+            //   $survey_response_<question_id>: <answer>
+            // and included in a "survey sent" event with $survey_id.
+
+            const questionId = '9955f792-0ba6-43d3-8fa4-05caaa39fc6c'; // Your email question ID
+            const responseKey = `$survey_response_${questionId}`;
+
+            const props = {
+                $survey_id: surveyId,
+                [responseKey]: email,
+                email: email,
+                survey_name: 'Waiting list of Indefinite game mode'
+            };
+
+            // Capture the standardized survey event
+            window.posthog.capture('survey sent', props);
+            
+            // Also capture as a custom event for easier querying if desired
+            window.posthog.capture('indefinite_mode_waiting_list_signup', {
+                email: email,
+                survey_id: surveyId,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Store email in PostHog person properties for easy access
+            window.posthog.identify(window.posthog.get_distinct_id(), {
+                waiting_list_email: email,
+                indefinite_mode_waiting_list: true
+            });
+            
+            console.log('[NewGameModeScreen] Email captured and sent to PostHog:', email);
+        } catch (error) {
+            console.error('[NewGameModeScreen] Error submitting email to PostHog:', error);
+        }
     }
 
     selectMode(mode) {
