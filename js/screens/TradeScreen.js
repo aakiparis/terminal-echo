@@ -1,4 +1,12 @@
 class TradeScreen extends BaseScreen {
+    getItemEffectText(itemData) {
+        const statChanges = itemData.stat_change || [];
+        if (!statChanges.length) return '';
+        return statChanges
+            .map(c => `${String(c.stat || '').toUpperCase()} +${c.value}`)
+            .join(', ');
+    }
+
     enter(params) {
         // Store the context passed from the DialogueScreen
         this.locationId = params.locationId;
@@ -32,10 +40,11 @@ class TradeScreen extends BaseScreen {
         (this.sessionNpcData.inventory || []).forEach(itemId => {
             const itemData = ITEMS_DATA[itemId];
             const canAfford = playerState.caps >= itemData.price;
+            const effectSuffix = this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : '';
             menuItems.push({
                 id: itemId,
                 source: 'npc', // Mark item source for action logic
-                label: `${itemData.name} (Price: ${itemData.price})`,
+                label: `${itemData.name}${effectSuffix} (Price: ${itemData.price})`,
                 actionText: canAfford ? '[ BUY ]' : '[ TOO EXPENSIVE ]',
                 disabled: !canAfford,
                 item: itemData
@@ -52,10 +61,11 @@ class TradeScreen extends BaseScreen {
         // 4. Add all items from the Player's inventory
         (basePlayerState.inventory || []).forEach(itemId => {
             const itemData = ITEMS_DATA[itemId];
+            const effectSuffix = this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : '';
             menuItems.push({
                 id: itemId,
                 source: 'player', // Mark item source
-                label: `${itemData.name} (Value: ${itemData.price})`,
+                label: `${itemData.name}${effectSuffix} (Value: ${itemData.price})`,
                 actionText: '[ SELL ]',
                 disabled: itemData.tradeable === false,
                 item: itemData

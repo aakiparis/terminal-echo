@@ -1,5 +1,5 @@
 class InventoryScreen extends BaseScreen {
-    getConsumableEffectText(itemData) {
+    getItemEffectText(itemData) {
         const statChanges = itemData.stat_change || [];
         if (!statChanges.length) return '';
         return statChanges
@@ -42,7 +42,7 @@ class InventoryScreen extends BaseScreen {
 
             return {
                 id: itemId,
-                label: `${actionText} ${itemData.name}${itemData.type === 'consumable' ? ` (${this.getConsumableEffectText(itemData) || 'CONSUMABLE'})` : ''} (CAP: ${itemData.price})`,
+                label: `${actionText} ${itemData.name}${this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : ''} (CAP: ${itemData.price})`,
                 type: 'action',
                 item: itemData,
                 disabled: itemData.type === 'quest'
@@ -88,7 +88,7 @@ class InventoryScreen extends BaseScreen {
     }
 
     confirmConsumeItem(itemId, itemData) {
-        const effectText = this.getConsumableEffectText(itemData);
+        const effectText = this.getItemEffectText(itemData);
         const effectLine = effectText ? `\nEffect: ${effectText}` : '';
 
         this.navigationManager.showPopup({
