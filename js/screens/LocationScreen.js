@@ -16,16 +16,29 @@ class LocationScreen extends BaseScreen {
         this.components.title = new ScreenTitle({ text: locationData.name });
         this.components.description = new ScreenDescription({ text: locationData.description, centered: true });
 
-        const menuItems = (locationData.npcs || []).map(npcId => {
-            const npc = npcDataForLocation[npcId];
-            return {
-                id: `npc-${npcId}`,
-                label: `${npc.name}`,
-                // label: `Talk to ${npc.name}`,
-                type: 'action',
-                action: () => this.talkTo(locationId, npcId),
-            };
-        });
+        const menuItems = (locationData.npcs || [])
+            .filter(npcId => {
+                const npc = npcDataForLocation[npcId];
+                return npc && (npc.is_available !== false); // Show if available is true or undefined (default true)
+            })
+            .map(npcId => {
+                const npc = npcDataForLocation[npcId];
+                let label = npc.name;
+                
+                // Add prefix based on type
+                if (npc.type === 'npc') {
+                    label = `Talk to ${npc.name}`;
+                } else if (npc.type === 'device' || npc.type === 'advanture') {
+                    label = `[ ${npc.name} ]`;
+                }
+                
+                return {
+                    id: `npc-${npcId}`,
+                    label: label,
+                    type: 'action',
+                    action: () => this.talkTo(locationId, npcId),
+                };
+            });
 
         // Add static options as per the spec
         menuItems.push({

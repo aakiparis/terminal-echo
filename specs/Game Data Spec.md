@@ -63,6 +63,8 @@ const NPC_DATA = {
     location_id: {
         npc_id: {
             name: "NPC Display Name",
+            type: "npc" | "device" | "advanture",
+            is_available: true/false, // true by default
             description: "Brief character description",
             is_merchant: true/false,
             inventory: ["item_id_1", "item_id_2"],  // Optional, only if is_merchant: true
@@ -71,6 +73,11 @@ const NPC_DATA = {
     }
 };
 ```
+
+`type = "npc"` adds "Talk to" prefix in location screen. Other types doesn't add any prefixies and ideally should be taken into square braces, e.g. `[ Enter the tunnel ]` or `[ Vault Terminal ]`.
+
+`is_available = true` allows player to interact with the npc. `false` could be used for situations when npc isn't available for the dialogue yet (e.g. an unlocking task isn't completed) or when the npcs goes off the game (e.g. npc is eleminated),
+
 
 ### NPC recommendations
 Truly charesmatic characters and engaging stories are pivotal for the game, as it is the key to player conversion and time spend.
@@ -84,6 +91,8 @@ Introduce the following NPC architypes:
 - **Leader**: The person in charge of a settlement or faction. is_merchant: false
 - **Civilian**: A regular inhabitant of a settlement, trying to get by. is_merchant: false
 - **Hermit**: A recluse living in isolation. May be hostile or possess rare knowledge. is_merchant: false
+- **Device**: An interactive device like mainframe console. Typically is_merchant: false
+- **Advanture**: is used for discovery porposes like scanning the tunnels, fighting with someone or solving an occasion. is_merchant: false
 
 Placement logic:
 - NPC archetypes must be consistent with the rules of the Location archetype.

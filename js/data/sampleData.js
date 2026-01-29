@@ -35,6 +35,8 @@ const NPC_DATA = {
     "neon_nexus": {
         "zane": {
             "name": "Zane",
+            "type": "npc",
+            "is_available": true,
             "description": "A jittery technician with a constant stream of data flowing through his cybernetic eye. He seems to be tinkering with a datapad.",
             "is_merchant": true,
             "inventory": ["stimpack", "military_goggles", "harmonic_resonator"],
@@ -154,6 +156,8 @@ const NPC_DATA = {
         },
         "mara": {
             "name": "Mara",
+            "type": "npc",
+            "is_available": true,
             "description": "A stoic scavenger with a haunted look in her eyes. She carries a well-maintained rifle and watches the market crowds with suspicion.",
             "inventory": [],
             "dialogue_graph": {
@@ -214,6 +218,7 @@ const NPC_DATA = {
                     ]
                 },
                 "mara_zane_story_3": {
+                    // TODO: add condition to check if either player has started Zane's quest or make sure this node is reachable at the time of returning to Mara
                     // "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
                     "prompt": "He sent me into those tunnels.",
                     "response": "Did he now? Then be careful. His 'simple' runs have a way of getting complicated. My partner was looking for an 'adaptive circuit' for one of Zane's projects. Never even knew what it was for. Just a prize for Zane to play with.",
@@ -236,6 +241,7 @@ const NPC_DATA = {
                     ]
                 },
                 "partner_item_story": {
+                    // TODO: compound condition AND: HAVE_ITEM("bone_charm") and QUEST_STAGE isn't finished
                     "condition": { "type": "HAVE_ITEM", "item_id": "bone_charm" },
                     "prompt": "I found something in the tunnels...",
                     "response": "What?",
@@ -278,6 +284,8 @@ const NPC_DATA = {
         },
         "rex": {
             "name": "Rex",
+            "type": "npc",
+            "is_available": true,
             "description": "A broad-shouldered man in patchwork armor, leaning against a support pillar. His gaze sweeps over the market, missing nothing.",
             "inventory": [],
             "dialogue_graph": {
@@ -375,6 +383,8 @@ const NPC_DATA = {
         },
         "selene": {
             "name": "Selene",
+            "type": "npc",
+            "is_available": true,
             "description": "A woman with unnervingly bright eyes sits cross-legged on a worn rug, surrounded by strange trinkets and humming softly to the neon glow.",
             "is_merchant": false,
             "dialogue_graph": {
@@ -449,6 +459,8 @@ const NPC_DATA = {
     "nexus_old_tunnel": {
         "power_generator": {
             "name": "Power Generator",
+            "type": "device",
+            "is_available": true,
             "description": "A massive, humming piece of old-world machinery. A control panel flickers erratically, covered in warning glyphs. This is the junction box Zane mentioned.",
             "is_merchant": false,
             "inventory": [],
@@ -528,6 +540,8 @@ const NPC_DATA = {
         },
         "tunnel_passage": {
             "name": "Tunnel Passage",
+            "type": "advanture",
+            "is_available": true,
             "description": "A dark, narrow passage branching off from the main tunnel. Strange scratching noises echo from within.",
             "is_merchant": false,
             "inventory": [],
@@ -597,6 +611,8 @@ const NPC_DATA = {
     "the_forgotten_outpost": {
         "elder_kian": {
             "name": "Elder Kian",
+            "type": "npc",
+            "is_available": true,
             "description": "An old man with a calm demeanor, his face a roadmap of wrinkles. He is the leader of this small community.",
             "is_merchant": false,
             "inventory": [],
@@ -669,6 +685,8 @@ const NPC_DATA = {
         },
         "silas": {
             "name": "Silas",
+            "type": "npc",
+            "is_available": true,
             "description": "A grim-faced guard in scavenged armor, watching the horizon with a powerful rifle. He is a man of few words and much suspicion.",
             "is_merchant": false,
             "inventory": [],
@@ -756,6 +774,8 @@ const NPC_DATA = {
         },
         "lena": {
             "name": "Lena",
+            "type": "npc",
+            "is_available": true,
             "description": "A young woman with grease-stained hands and a hopeful smile. She tends a small hydroponics garden.",
             "is_merchant": true,
             "inventory": ["purified_water", "mutfruit"],
@@ -839,6 +859,8 @@ const NPC_DATA = {
         },
         "fixer_finn": {
             "name": "Fixer Finn",
+            "type": "npc",
+            "is_available": true,
             "description": "A man who seems held together by wires and optimism. He is constantly tinkering with the outpost's ancient technology.",
             "is_merchant": true,
             "inventory": ["signal_jammer"],
@@ -884,6 +906,8 @@ const NPC_DATA = {
     "global_seed_vault": {
         "vault_terminal": {
             "name": "Vault Mainframe",
+            "type": "device",
+            "is_available": true,
             "description": "The terminal hums, displaying a welcome message: 'AgriCorp Global Seed Vault - Preserving Life for a Greener Tomorrow.'",
             "is_merchant": false,
             "inventory": [],
@@ -980,6 +1004,8 @@ const NPC_DATA = {
     "hound_den": {
         "dog_guard_alpha": {
             "name": "Alpha Guard",
+            "type": "npc",
+            "is_available": true,
             "description": "A large, four-legged creature made of metal and scarred flesh. A red optical sensor glows from its head as it blocks the path, emitting a low growl.",
             "is_merchant": false,
             "inventory": [],
@@ -1050,6 +1076,8 @@ const NPC_DATA = {
         },
         "dog_leader_rex": {
             "name": "Rex, Pack-Leader",
+            "type": "npc",
+            "is_available": true,
             "description": "An even larger cybernetic canine sits on a makeshift throne of server racks. Its optical sensors glow a calm blue, and its voice is a synthesized baritone.",
             "is_merchant": false,
             "inventory": [],
@@ -1159,6 +1187,8 @@ const NPC_DATA = {
     "rust_pit": {
         "boss_valeria": {
             "name": "Boss Valeria",
+            "type": "npc",
+            "is_available": true,
             "description": "A woman with a steely gaze and grease-stained hands, overseeing the work from a raised platform. She is clearly in charge here.",
             "is_merchant": false,
             "inventory": [],
@@ -1231,6 +1261,8 @@ const NPC_DATA = {
         },
         "ratchet": {
             "name": "Ratchet",
+            "type": "npc",
+            "is_available": true,
             "description": "A young, energetic technician, constantly wiping grime from a pair of antique glasses. He's surrounded by piles of disassembled machinery.",
             "is_merchant": true,
             "inventory": ["energy_cell", "scrap_metal"],
@@ -1264,6 +1296,8 @@ const NPC_DATA = {
         },
         "doc_eris": {
             "name": "Doc Eris",
+            "type": "npc",
+            "is_available": true,
             "description": "A grim-faced woman with a cybernetic arm, tending to an injured scrapper in a makeshift infirmary. The scent of antiseptic hangs heavy in the air.",
             "is_merchant": true,
             "inventory": ["stimpack", "rad_away"],
@@ -1310,6 +1344,8 @@ const NPC_DATA = {
         },
         "whisper": {
             "name": "Whisper",
+            "type": "npc",
+            "is_available": true,
             "description": "A shadowy figure lurking near a stack of rusted containers, communicating in hushed tones and quick gestures. They seem to be a source of information.",
             "is_merchant": false,
             "inventory": [],
