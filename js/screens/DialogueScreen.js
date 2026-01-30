@@ -193,6 +193,20 @@ class DialogueScreen extends BaseScreen {
                         this.eventBus.emit('log', { text: `[New location unlocked: ${LOCATION_DATA[outcome.location_id].name}]`, type: 'system' });
                     }
                     break;
+                case 'NPC_UNLOCK':
+                    const currentUnlockedNpcs = state.unlocked_npcs || {};
+                    const locationNpcs = currentUnlockedNpcs[outcome.location_id] || [];
+                    if (!locationNpcs.includes(outcome.npc_id)) {
+                        const updatedUnlockedNpcs = {
+                            ...currentUnlockedNpcs,
+                            [outcome.location_id]: [...locationNpcs, outcome.npc_id]
+                        };
+                        rootUpdates.unlocked_npcs = updatedUnlockedNpcs;
+                        const npcData = NPC_DATA[outcome.location_id]?.[outcome.npc_id];
+                        const npcName = npcData?.name || outcome.npc_id;
+                        this.eventBus.emit('log', { text: `[NPC unlocked: ${npcName}]`, type: 'system' });
+                    }
+                    break;
                 case 'QUEST_SET_STAGE':
                     // Collect quest stage updates without losing other quest state
                     questsUpdates[outcome.quest_id] = { stage: outcome.stage };

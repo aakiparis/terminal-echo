@@ -112,7 +112,8 @@ const NPC_DATA = {
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 1 },
                         { "type": "ITEM_GAIN", "item_id": "data_scrambler" },
-                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_old_tunnel"}
+                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_old_tunnel" },
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel" , "npc_id": "power_generator" },
                     ],
                     "destination_nodes": [
                         { "node_id": "end" }
@@ -330,7 +331,8 @@ const NPC_DATA = {
                     "response": "Good. Don't get cocky. They're fast and there's more than a few. Take care of them and I'll make it worth your while.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 1 },
-                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_old_tunnel" }
+                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_old_tunnel" },
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel" , "npc_id": "tunnel_passage" },
                     ],
                     "destination_nodes": [ 
                         { "node_id": "end" }
@@ -460,7 +462,7 @@ const NPC_DATA = {
         "power_generator": {
             "name": "Power Generator",
             "type": "device",
-            "is_available": true,
+            "is_available": false,
             "description": "A massive, humming piece of old-world machinery. A control panel flickers erratically, covered in warning glyphs. This is the junction box Zane mentioned.",
             "is_merchant": false,
             "inventory": [],
@@ -541,7 +543,7 @@ const NPC_DATA = {
         "tunnel_passage": {
             "name": "Tunnel Passage",
             "type": "advanture",
-            "is_available": true,
+            "is_available": false,
             "description": "A dark, narrow passage branching off from the main tunnel. Strange scratching noises echo from within.",
             "is_merchant": false,
             "inventory": [],

@@ -25,6 +25,7 @@ class StateManager {
             gameMode: 'scripted',
             currentLocation: 'neon_nexus',
             unlocked_locations: ['neon_nexus'],
+            unlocked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] }
             currentScreen: 'MainMenu',
             quests: {},
             eventHistory: []

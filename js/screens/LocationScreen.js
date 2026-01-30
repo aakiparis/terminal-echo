@@ -16,10 +16,16 @@ class LocationScreen extends BaseScreen {
         this.components.title = new ScreenTitle({ text: locationData.name });
         this.components.description = new ScreenDescription({ text: locationData.description, centered: true });
 
+        const state = this.stateManager.getState();
+        const unlockedNpcs = state.unlocked_npcs || {};
+        const locationUnlockedNpcs = unlockedNpcs[locationId] || [];
+        
         const menuItems = (locationData.npcs || [])
             .filter(npcId => {
                 const npc = npcDataForLocation[npcId];
-                return npc && (npc.is_available !== false); // Show if available is true or undefined (default true)
+                if (!npc) return false;
+                // Show if available is true/undefined OR if NPC is unlocked via NPC_UNLOCK outcome
+                return (npc.is_available !== false) || locationUnlockedNpcs.includes(npcId);
             })
             .map(npcId => {
                 const npc = npcDataForLocation[npcId];

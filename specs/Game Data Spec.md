@@ -226,6 +226,7 @@ Array of outcome objects that trigger when a node is shown:
 
 ```javascript
 outcomes: [
+    { type: "NPC_UNLOCK", location_id: "location_id" , npc_id: "npc_id"},
     { type: "LOCATION_UNLOCK", location_id: "location_id" },
     { type: "QUEST_SET_STAGE", quest_id:  "quest_id", stage: 1 },
     { type: "ITEM_GAIN", item_id: "item_id_1" },
