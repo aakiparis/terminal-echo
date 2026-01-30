@@ -189,7 +189,7 @@ const NPC_DATA = {
                     "destination_nodes": [
                         { "node_id": "mara_story_1", "prompt_replacement": "Can you remind me what you do here?" },
                         { "node_id": "mara_zane_story_1" },
-                        { "node_id": "zane_quest_reaction" },
+                        // { "node_id": "zane_quest_reaction" },
                         { "node_id": "partner_item_story" },
                         { "node_id": "end" }
                     ]
@@ -218,6 +218,11 @@ const NPC_DATA = {
                 },
                 "mara_zane_story_1": {
                     "prompt": "What do you know about Zane?",
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
+                        ]
+                    },
                     "response": "The tech-head? He keeps the lights on, so people tolerate his... eccentricities. He's obsessed with the old tech. Thinks it holds all the answers.",
                     "destination_nodes": [
                         { "node_id": "mara_zane_story_2" }
@@ -1279,27 +1284,23 @@ const NPC_DATA = {
                         // { "type": "QUEST_SET_STAGE", "quest_id": "clearing_the_path", "stage": 2 }
                     ],
                     "destination_nodes": [
-                        { "node_id": "accept_jammer_quest" },
+                        { "node_id": "bring_jammer" },
+                        { "node_id": "offer_jammer" },
                         { "node_id": "choice_kill" }
                     ]
                 },
-                "accept_jammer_quest": {
+                "bring_jammer": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "NO_ITEM", "item_id": "signal_jammer" }
+                        ]
+                    },
                     "prompt": "Okay, let me see what can I do",
                     "response": "Ack. Get back with the jammer and not with a reinforcement",
                     "outcomes": [],
                     "destination_nodes": [
                         { "node_id": "end" }
                     ]
-                },
-                "choice_kill": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 52 }
-                        ]
-                    },
-                    "prompt": "You're too dangerous to live. I'm finishing the job.",
-                    "response": "A predictable outcome. You have chosen the path of ignorance and death. So be it. Pack! Defend your home!",
-                    "destination_nodes": [{ "node_id": "fight_leader" }]
                 },
                 "offer_jammer": {
                     "conditions": {
@@ -1326,7 +1327,16 @@ const NPC_DATA = {
                     ],
                     "destination_nodes": [{ "node_id": "end" }]
                 },
-                
+                "choice_kill": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 52 }
+                        ]
+                    },
+                    "prompt": "You're too dangerous to live. I'm finishing the job.",
+                    "response": "A predictable outcome. You have chosen the path of ignorance and death. So be it. Pack! Defend your home!",
+                    "destination_nodes": [{ "node_id": "fight_leader" }]
+                },                
                 "fight_leader": {
                     "prompt": "[ATTACK]",
                     "response": "Rex lets out a deafening howl, and the den becomes a whirlwind of metal and fury. You have made your choice.",
@@ -1339,7 +1349,7 @@ const NPC_DATA = {
                     "destination_nodes": [{ "node_id": "end" }]
                 },
                 "end": {
-                    "prompt": "[Leave the den.]",
+                    "prompt": "[Leave Rex]",
                     "response": "You turn your back on the cyborg dogs and head back into the wasteland."
                 }
             }
@@ -1477,7 +1487,7 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A grim-faced woman with a cybernetic arm, tending to an injured scrapper in a makeshift infirmary. The scent of antiseptic hangs heavy in the air.",
             "is_merchant": true,
-            "inventory": ["stimpack", "rad_away"],
+            "inventory": ["stimpack"],
             "dialogue_graph": {
                 "start": { "response": "Unless you're bleeding, wait your turn. I'm Doc Eris. What's the damage?", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "trade" }, { "node_id": "quest_tainted_metal_intro" }, { "node_id": "end" }] },
                 "return": { "response": "You again. Don't tell me you're hurt already.", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "trade" }, { "node_id": "quest_tainted_metal_intro" }, { "node_id": "quest_tainted_metal_reminder" }, { "node_id": "end" }] },
@@ -1539,9 +1549,31 @@ const NPC_DATA = {
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
-                "start": { "response": "Psst. Over here. You've got the look of someone who seeks... opportunities. I'm Whisper. I hear things. For a price.", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "quest_whispers_in_the_dark_intro" }, { "node_id": "end" }] },
-                "return": { "response": "You're back. Looking for another secret?", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "quest_whispers_in_the_dark_intro" }, { "node_id": "quest_whispers_in_the_dark_reminder" }, { "node_id": "end" }] },
-                "story_1": { "prompt": "What kind of things do you hear?", "response": "Secrets. Who's cheating who. Where the good scrap is hidden. Who's about to have an... accident. Information is the real currency out here.", "destination_nodes": [{ "node_id": "end" }] },
+                "start": {
+                    "response": "Psst. Over here. You've got the look of someone who seeks... opportunities. I'm Whisper. I hear things. For a price.", 
+                    "destination_nodes": [
+                        { "node_id": "story_1" }, 
+                        { "node_id": "quest_whispers_in_the_dark_intro" }, 
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "You're back. Looking for another secret?",
+                    "destination_nodes": [
+                        { "node_id": "story_1" }, 
+                        { "node_id": "quest_whispers_in_the_dark_intro" }, 
+                        { "node_id": "quest_whispers_in_the_dark_reminder" }, 
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "What kind of things do you hear?",
+                    "response": "Secrets. Who's cheating who. Where the good scrap is hidden. Who's about to have an... accident. Information is the real currency out here.",
+                    "destination_nodes": [
+                        { "node_id": "quest_whispers_in_the_dark_intro" }, 
+                        { "node_id": "end" }
+                    ]
+                },
                 "quest_whispers_in_the_dark_intro": {
                     "conditions": {
                         "condition": [
@@ -1550,15 +1582,29 @@ const NPC_DATA = {
                     },
                     "prompt": "I'm looking for a lucrative opportunity.",
                     "response": "I might have one. A rival crew boss, Silas, has a ledger. Details all his smuggling routes. That ledger would be very valuable to Valeria. It's in a locked safe in his office at the old comms tower. I can get you the keycard, but you have to retrieve the ledger.",
-                    "destination_nodes": [{ "node_id": "quest_whispers_in_the_dark_accept" }, { "node_id": "quest_whispers_in_the_dark_reject" }]
+                    "destination_nodes": [
+                        { "node_id": "quest_whispers_in_the_dark_accept" }, 
+                        { "node_id": "quest_whispers_in_the_dark_reject" }
+                    ]
                 },
                 "quest_whispers_in_the_dark_accept": {
-                    "prompt": "[INT 6] Sounds risky. What's my cut?",
+                    "prompt": "Sounds risky. What's my cut?",
                     "response": "Smart. I'll give you the keycard and a stealth unit. You get me the ledger, I'll pay you well. Valeria never needs to know I was involved. Our secret.",
-                    "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 }, { "type": "ITEM_GAIN", "item_id": "silas_keycard" }],
-                    "destination_nodes": [{ "node_id": "end" }]
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 },
+                        { "type": "ITEM_GAIN", "item_id": "silas_keycard" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
                 },
-                "quest_whispers_in_the_dark_reject": { "prompt": "I'm not a thief.", "response": "Suit yourself. More for the next enterprising soul.", "destination_nodes": [{ "node_id": "end" }] },
+                "quest_whispers_in_the_dark_reject": {
+                    "prompt": "I'm not a thief.",
+                    "response": "Suit yourself. More for the next enterprising soul.",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
                 "quest_whispers_in_the_dark_reminder": {
                     "conditions": {
                         "condition": [
@@ -1567,7 +1613,10 @@ const NPC_DATA = {
                     },
                     "prompt": "About that ledger...",
                     "response": "The clock is ticking. Silas won't keep it in one place forever. Get moving.",
-                    "destination_nodes": [{ "node_id": "quest_whispers_in_the_dark_completion" }, { "node_id": "end" }]
+                    "destination_nodes": [
+                        { "node_id": "quest_whispers_in_the_dark_completion" }, 
+                        { "node_id": "end" }
+                    ]
                 },
                 "quest_whispers_in_the_dark_completion": {
                     "conditions": {
@@ -1771,7 +1820,6 @@ const ITEMS_DATA = {
     "silas_keycard": { "name": "Silas's Keycard", "tradeable": false, "type": "quest", "price": 0 },
     "silas_ledger": { "name": "Silas's Ledger", "tradeable": false, "type": "quest", "price": 0 },
     "scrap_metal": { "name": "Scrap Metal", "tradeable": true, "type": "junk", "price": 10 },
-    "rad_away": { "name": "Rad-Away", "tradeable": true, "type": "consumable", "price": 75 },
 };
 
 console.log('game.js: LOCATION_DATA', LOCATION_DATA);

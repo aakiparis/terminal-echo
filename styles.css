@@ -147,7 +147,7 @@ body {
     padding: var(--spacing-md);
     overflow-y:  scroll;
     scrollbar-width: thin;
-    scrollbar-color: var(--color-disabled) var(--color-bg-darker);
+    scrollbar-color: var(--color-primary) var(--color-bg-darker);
 }
 
 /* === STATUS BAR === */
@@ -206,7 +206,7 @@ body {
     padding: var(--spacing-sm);
     margin: 5px 0;
     transition: all var(--transition-fast);
-    cursor: pointer;
+    /* cursor: pointer; */
     font-size: var(--font-size-base);
     position: relative;
     display: flex;
@@ -239,7 +239,7 @@ body {
 
 .menu-item.disabled {
     opacity: 0.4;
-    cursor: not-allowed;
+    /* cursor: not-allowed; */
 }
 
 .menu-item.disabled:hover {
@@ -369,12 +369,13 @@ body {
     width: 6px;
 }
 
+/* 
 .event-log::-webkit-scrollbar-track {
     background: var(--color-disabled);
 }
 
 .event-log::-webkit-scrollbar-thumb {
-    background: var(--color-disabled);
+    background: var(--color-disabled); 
 }
 
 .event-log-entry {
@@ -471,7 +472,7 @@ body {
         --spacing-md: 10px;
         --spacing-lg: 10px;
 
-        cursor: pointer;
+        /* cursor: pointer; */
         user-select: all;
     }
 
