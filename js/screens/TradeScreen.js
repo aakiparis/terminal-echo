@@ -57,7 +57,7 @@ class TradeScreen extends BaseScreen {
             menuItems.push({
                 id: itemId,
                 source: 'npc', // Mark item source for action logic
-                label: `${itemData.name}${effectSuffix} (Price: ${itemData.price})`,
+                label: `[ BUY ] ${itemData.name}${effectSuffix} - Price: ${itemData.price}`,
                 actionText: canAfford ? '[ BUY ]' : '[ TOO EXPENSIVE ]',
                 disabled: !canAfford,
                 item: itemData
@@ -78,7 +78,7 @@ class TradeScreen extends BaseScreen {
             menuItems.push({
                 id: itemId,
                 source: 'player', // Mark item source
-                label: `${itemData.name}${effectSuffix} (Value: ${itemData.price})`,
+                label: `[ SELL ] ${itemData.name}${effectSuffix} - Value: ${itemData.price}`,
                 actionText: '[ SELL ]',
                 disabled: itemData.tradeable === false,
                 item: itemData
