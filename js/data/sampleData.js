@@ -227,6 +227,7 @@ const NPC_DATA = {
                         { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
                     ],
                     "destination_nodes": [
+                        { "node_id": "partner_item_story" },
                         { "node_id": "end" }
                     ]
                 },
@@ -535,7 +536,7 @@ const NPC_DATA = {
                     ]
                 },
                 "end": {
-                    "prompt": "[ Leave the tunnels ]",
+                    "prompt": "[ Leave the generator ]",
                     "response": "[ You head back towards the light of the Neon Nexus. ]"
                 }
             }
@@ -601,10 +602,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end", "prompt_replacement": "[Leave the now-silent nest.]" } ]
                 },
                 "leave": {
-                    "prompt": "[Back away from the passage.]",
+                    "prompt": "[ Back away from the passage ]",
                     "response": "You decide not to venture into the darkness today."
                 },
                 "end": {
+                    "prompt": "[ Back away from the passage ]",
                     "response": "Back away from the passage."
                 }
             }
@@ -1057,7 +1059,8 @@ const NPC_DATA = {
                     "prompt": "I want to know the truth. 'Mutants' don't usually talk.",
                     "response": "...Processing... Your statement is logical. We are not 'mutants'. Your curiosity is an anomaly. The Pack-Leader will see you. Do not try anything. I will be watching.",
                     "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "clearing_the_path", "stage": 52 }
+                        { "type": "QUEST_SET_STAGE", "quest_id": "clearing_the_path", "stage": 52 },
+                        { "type": "NPC_UNLOCK", "location_id": "hound_den" , "npc_id": "dog_leader_rex"}
                     ],
                     "destination_nodes": [{ "node_id": "end" }]
                 },
@@ -1066,7 +1069,8 @@ const NPC_DATA = {
                     "response": "You raise your weapon, and the entire den erupts with metallic howls. This will be a fight to the death.",
                     "outcomes": [
                         { "type": "STAT_CHANGE", "stat": "hp", "value": -30 },
-                        { "type": "QUEST_SET_STAGE", "quest_id": "clearing_the_path", "stage": 3 }
+                        { "type": "QUEST_SET_STAGE", "quest_id": "clearing_the_path", "stage": 3 },
+                        { "type": "NPC_LOCK", "location_id": "hound_den" , "npc_id": "dog_guard_alpha"}
                     ],
                     "destination_nodes": [{ "node_id": "end" }] // should lead to different content
                 },
@@ -1079,7 +1083,7 @@ const NPC_DATA = {
         "dog_leader_rex": {
             "name": "Rex, Pack-Leader",
             "type": "npc",
-            "is_available": true,
+            "is_available": false,
             "description": "An even larger cybernetic canine sits on a makeshift throne of server racks. Its optical sensors glow a calm blue, and its voice is a synthesized baritone.",
             "is_merchant": false,
             "inventory": [],
@@ -1176,6 +1180,8 @@ const NPC_DATA = {
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "clearing_the_path", "stage": 2 },
                         { "type": "STAT_CHANGE", "stat": "hp", "value": -30 },
+                        { "type": "NPC_LOCK", "location_id": "hound_den" , "npc_id": "dog_guard_alpha" },
+                        { "type": "NPC_LOCK", "location_id": "hound_den" , "npc_id": "dog_leader_rex" }
                     ],
                     "destination_nodes": [{ "node_id": "end" }]
                 },

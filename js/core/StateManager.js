@@ -24,8 +24,9 @@ class StateManager {
             },
             gameMode: 'scripted',
             currentLocation: 'neon_nexus',
-            unlocked_locations: ['neon_nexus'],
+            unlocked_locations: ['neon_nexus', 'the_forgotten_outpost'],
             unlocked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] }
+            locked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] } - NPCs that were locked via NPC_LOCK
             currentScreen: 'MainMenu',
             quests: {},
             eventHistory: []

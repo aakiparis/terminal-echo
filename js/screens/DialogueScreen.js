@@ -207,6 +207,34 @@ class DialogueScreen extends BaseScreen {
                         this.eventBus.emit('log', { text: `[NPC unlocked: ${npcName}]`, type: 'system' });
                     }
                     break;
+                case 'NPC_LOCK':
+                    const currentUnlockedNpcsForLock = state.unlocked_npcs || {};
+                    const locationNpcsForLock = currentUnlockedNpcsForLock[outcome.location_id] || [];
+                    const currentLockedNpcs = state.locked_npcs || {};
+                    const locationLockedNpcs = currentLockedNpcs[outcome.location_id] || [];
+                    
+                    // Remove from unlocked list if present
+                    let updatedUnlockedNpcsForLock = { ...currentUnlockedNpcsForLock };
+                    if (locationNpcsForLock.includes(outcome.npc_id)) {
+                        updatedUnlockedNpcsForLock = {
+                            ...currentUnlockedNpcsForLock,
+                            [outcome.location_id]: locationNpcsForLock.filter(id => id !== outcome.npc_id)
+                        };
+                        rootUpdates.unlocked_npcs = updatedUnlockedNpcsForLock;
+                    }
+                    
+                    // Add to locked list if not already there
+                    if (!locationLockedNpcs.includes(outcome.npc_id)) {
+                        const updatedLockedNpcs = {
+                            ...currentLockedNpcs,
+                            [outcome.location_id]: [...locationLockedNpcs, outcome.npc_id]
+                        };
+                        rootUpdates.locked_npcs = updatedLockedNpcs;
+                        const npcDataForLock = NPC_DATA[outcome.location_id]?.[outcome.npc_id];
+                        const npcNameForLock = npcDataForLock?.name || outcome.npc_id;
+                        this.eventBus.emit('log', { text: `[NPC locked: ${npcNameForLock}]`, type: 'system' });
+                    }
+                    break;
                 case 'QUEST_SET_STAGE':
                     // Collect quest stage updates without losing other quest state
                     questsUpdates[outcome.quest_id] = { stage: outcome.stage };

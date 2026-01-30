@@ -19,13 +19,28 @@ class LocationScreen extends BaseScreen {
         const state = this.stateManager.getState();
         const unlockedNpcs = state.unlocked_npcs || {};
         const locationUnlockedNpcs = unlockedNpcs[locationId] || [];
+        const lockedNpcs = state.locked_npcs || {};
+        const locationLockedNpcs = lockedNpcs[locationId] || [];
         
         const menuItems = (locationData.npcs || [])
             .filter(npcId => {
                 const npc = npcDataForLocation[npcId];
                 if (!npc) return false;
-                // Show if available is true/undefined OR if NPC is unlocked via NPC_UNLOCK outcome
-                return (npc.is_available !== false) || locationUnlockedNpcs.includes(npcId);
+                
+                // If NPC is locked, hide them regardless of is_available status
+                if (locationLockedNpcs.includes(npcId)) {
+                    return false;
+                }
+                
+                // If NPC is in unlocked list, show them (they were unlocked via NPC_UNLOCK)
+                if (locationUnlockedNpcs.includes(npcId)) {
+                    return true;
+                }
+                
+                // If NPC is not in unlocked list and not locked:
+                // - Show if is_available is true/undefined (default available)
+                // - Hide if is_available is false (default unavailable, needs to be unlocked)
+                return npc.is_available !== false;
             })
             .map(npcId => {
                 const npc = npcDataForLocation[npcId];
