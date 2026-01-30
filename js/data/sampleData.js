@@ -201,7 +201,7 @@ const NPC_DATA = {
                     "response": "Lying low. Trading what I can find. The Nexus is safer than the wastes, but nowhere is truly safe. You learn that fast.",
                     "destination_nodes": [
                         { "node_id": "mara_zane_story_1" }, // allows to transit from mara_story sub-graph to mara_zane_story
-                        { "node_id": "end" }
+                        { "node_id": "return" , "prompt_replacement": "Let's talk about something else." }
                     ]
                 },
                 "mara_zane_story_1": {
@@ -214,18 +214,19 @@ const NPC_DATA = {
                 "mara_zane_story_2": {
                     "prompt": "You don't trust him?",
                     "response": "I don't trust anyone who thinks machines are more reliable than people. He sent my last partner on a 'simple' salvage run into the tunnels. He never came back.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
+                    ],
                     "destination_nodes": [
                         { "node_id": "mara_zane_story_3" },
+                        { "node_id": "return" , "prompt_replacement": "Let's talk about something else."},
                     ]
                 },
                 "mara_zane_story_3": {
                     // TODO: add condition to check if either player has started Zane's quest or make sure this node is reachable at the time of returning to Mara
-                    // "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
-                    "prompt": "He sent me into those tunnels.",
+                    "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
+                    "prompt": "Zane sent me into those tunnels.",
                     "response": "Did he now? Then be careful. His 'simple' runs have a way of getting complicated. My partner was looking for an 'adaptive circuit' for one of Zane's projects. Never even knew what it was for. Just a prize for Zane to play with.",
-                    "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
-                    ],
                     "destination_nodes": [
                         { "node_id": "partner_item_story" },
                         { "node_id": "end" }

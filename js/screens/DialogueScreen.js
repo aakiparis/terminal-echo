@@ -267,7 +267,19 @@ class DialogueScreen extends BaseScreen {
             case 'STAT_CHECK':
                 return (state.player[condition.stat] || 0) >= condition.min;
             case 'QUEST_STAGE':
-                return (state.quests?.[condition.quest_id]?.stage || 0) === condition.stage;
+                const questStage = state.quests?.[condition.quest_id]?.stage || 0;
+                const op = condition.op || 'eq'; // Default to 'eq' if not specified
+                switch (op) {
+                    case 'eq':
+                        return questStage === condition.stage;
+                    case 'neq':
+                        return questStage !== condition.stage;
+                    case 'gte':
+                        return questStage >= condition.stage;
+                    default:
+                        // Unknown operator, default to equality check
+                        return questStage === condition.stage;
+                }
             case 'HAVE_ITEM':
                 return state.player.inventory.includes(condition.item_id);
             default:

@@ -210,9 +210,13 @@ condition: {
 Examples:
 ```javascript
 condition: {
-    type: "QUEST_STAGE", quest_id: "quest_id", stage: 1
+    type: "QUEST_STAGE",
+    quest_id: "quest_id",
+    stage: 1,
+    op: 'eq' | 'neq' | 'gte' // operand is optional. if not specified, default value is eq
 }
 ```
+
 - `HAVE_ITEM`: Check inventory
 Examples:
 ```javascript
