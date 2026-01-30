@@ -196,9 +196,8 @@ When building a NPCs dialogue graph, it is important to ensure that sub-graphs a
 Sub-graph interconnectivity is fundamental to ensure that all stories are reachable. `prompt_replacement` attribute can make transition from one sub-graph to another more coherent and seamless if that would sound more natural.
 
 #### Conditions
-Some nodes, typically nodes that open quest sub-graph, can have conditions.
 
-**Types:**
+**Condition types:**
 - `STAT_CHECK`: Check player stat (str, int, lck, hp, reputation, xp, caps)
 Examples:
 ```javascript
@@ -222,6 +221,14 @@ Examples:
 ```javascript
 condition: {
     type: "HAVE_ITEM":  item_id: "item_id_1" 
+}
+```
+
+- `NO_ITEM`: Check inventory
+Examples:
+```javascript
+condition: {
+    type: "NO_ITEM":  item_id: "item_id_1" 
 }
 ```
 

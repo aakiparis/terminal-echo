@@ -282,6 +282,8 @@ class DialogueScreen extends BaseScreen {
                 }
             case 'HAVE_ITEM':
                 return state.player.inventory.includes(condition.item_id);
+            case 'NO_ITEM':
+                return !state.player.inventory.includes(condition.item_id);
             default:
                 return true;
         }

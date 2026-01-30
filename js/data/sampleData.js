@@ -481,6 +481,7 @@ const NPC_DATA = {
                     "destination_nodes": [
                         { "node_id": "install_scrambler" },
                         { "node_id": "investigate_aftermath" },
+                        { "node_id": "check_history" },
                         { "node_id": "end" }
                     ]
                 },
@@ -501,11 +502,13 @@ const NPC_DATA = {
                         { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 }
                     ],
                     "destination_nodes": [
-                        { "node_id": "investigate_aftermath" }
+                        { "node_id": "investigate_aftermath" },
+                        { "node_id": "check_history" },
+                        { "node_id": "end" }
                     ]
                 },
                 "investigate_aftermath": {
-                    // "condition": { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 1},
+                    "condition": { "type": "NO_ITEM", "item_id": "bone_charm" },
                     "prompt": "[ Look around the area ]",
                     "response": "[ With the generator reset and the rats gone, the area is quiet. The steady hum is almost peaceful. In the dim light, you spot something lying in the dust next to the generator, entangled in what looks like old, brittle bones. ]",
                     "destination_nodes": [
@@ -526,6 +529,7 @@ const NPC_DATA = {
                     ]
                 },
                 "check_history": {
+                    // TODO: now can be triggered multiple times, but should be triggered only once
                     "condition": { "type": "STAT_CHECK", "stat": "lck", "min": 6 },
                     "prompt": "[ Try to access the generator's logs ]",
                     "response": "[ You feel a strange intuition and press a sequence of faded buttons on the console. A hidden log file opens, detailing the station's final hours before the fall. It speaks of a 'shelter protocol' and a last-ditch effort to save a handful of personnel. A fragment of history preserved. ]",
