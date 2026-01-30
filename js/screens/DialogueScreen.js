@@ -70,7 +70,7 @@ class DialogueScreen extends BaseScreen {
                 }
                 // Otherwise, only include it if its conditions are met.
                 const targetNode = this.npcData.dialogue_graph[dest.node_id];
-                return this.checkConditions(targetNode?.condition);
+                return this.checkConditions(targetNode?.conditions || targetNode?.condition);
         })
         .map((dest, index) => {
             const targetNode = this.npcData.dialogue_graph[dest.node_id];
@@ -78,12 +78,15 @@ class DialogueScreen extends BaseScreen {
             // Determine the label for the choice
             let label = dest.prompt_replacement || targetNode?.prompt || dest.node_id;
 
-            // Check conditions on the *target* node
-            const isDisabled = !this.checkConditions(targetNode?.condition);
+            // Check conditions on the *target* node (support both old and new format)
+            const conditions = targetNode?.conditions || targetNode?.condition;
+            const isDisabled = !this.checkConditions(conditions);
             
             // Add stat check prefix like "[INT 5]" if it exists
-            if (targetNode?.condition?.type === 'STAT_CHECK') {
-                label = `[${targetNode.condition.stat.toUpperCase()} ${targetNode.condition.min}] ${label}`;
+            // Support both old format (condition.type) and new format (conditions.condition[0].type)
+            const firstCondition = conditions?.condition?.[0] || conditions;
+            if (firstCondition?.type === 'STAT_CHECK') {
+                label = `[${firstCondition.stat.toUpperCase()} ${firstCondition.min}] ${label}`;
             }
 
             return {
@@ -254,11 +257,46 @@ class DialogueScreen extends BaseScreen {
 
     /**
      * Checks if the player meets the conditions for a given node or option.
-     * @param {object} condition - A single condition object.
+     * Supports both old format (single condition object) and new format (conditions object with condition array).
+     * @param {object} conditions - Either a single condition object (old format) or conditions object with condition array (new format).
      * @returns {boolean} - True if conditions are met or if there are none.
      */
-    checkConditions(condition) {
-        if (!condition) {
+    checkConditions(conditions) {
+        if (!conditions) {
+            return true;
+        }
+        
+        // Handle new format: conditions object with condition array
+        if (conditions.condition && Array.isArray(conditions.condition)) {
+            const conditionArray = conditions.condition;
+            const op = conditions.op || 'AND'; // Default to 'AND' if not specified
+            
+            if (conditionArray.length === 0) {
+                return true;
+            }
+            
+            // Evaluate each condition
+            const results = conditionArray.map(cond => this.checkSingleCondition(cond));
+            
+            // Apply operator
+            if (op === 'OR') {
+                return results.some(result => result === true);
+            } else { // 'AND' (default)
+                return results.every(result => result === true);
+            }
+        }
+        
+        // Handle old format: single condition object (backward compatibility)
+        return this.checkSingleCondition(conditions);
+    }
+    
+    /**
+     * Checks a single condition object.
+     * @param {object} condition - A single condition object.
+     * @returns {boolean} - True if condition is met.
+     */
+    checkSingleCondition(condition) {
+        if (!condition || !condition.type) {
             return true;
         }
         const state = this.stateManager.getState();

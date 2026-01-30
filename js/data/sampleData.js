@@ -88,7 +88,11 @@ const NPC_DATA = {
                     ]
                 },
                 "quest_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 0 }
+                        ]
+                    },
                     "prompt": "You seem like you have a problem.",
                     "response": "Astute observation. One of my critical regulators is failing. The diagnostic signature is... corrupted. I need someone to plant a data scrambler on the main junction box to force a reset. The problem is, it's deep in the old service tunnels.",
                     "outcomes": [],
@@ -127,7 +131,11 @@ const NPC_DATA = {
                     ]
                 },
                 "quest_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1 }
+                        ]
+                    },
                     "prompt": "About that regulator...",
                     "response": "The clock is ticking. Get that scrambler on the junction box before the whole grid goes dark. The tunnels aren't safe.",
                     "destination_nodes": [
@@ -136,7 +144,11 @@ const NPC_DATA = {
                     ]
                 },
                 "quest_completion": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 }
+                        ]
+                    },
                     "prompt": "I planted the scrambler. The system should be reset.",
                     "response": "You did it? Fantastic! The diagnostic is clearing up already. You've saved the Nexus from going dark. I'm in your debt. Here, take this for your trouble. You've earned it.",
                     "outcomes": [
@@ -215,6 +227,7 @@ const NPC_DATA = {
                     "prompt": "You don't trust him?",
                     "response": "I don't trust anyone who thinks machines are more reliable than people. He sent my last partner on a 'simple' salvage run into the tunnels. He never came back.",
                     "outcomes": [
+                        // TO FIX: now can be reset to 0 after quest completion
                         { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
                     ],
                     "destination_nodes": [
@@ -224,7 +237,11 @@ const NPC_DATA = {
                 },
                 "mara_zane_story_3": {
                     // TODO: add condition to check if either player has started Zane's quest or make sure this node is reachable at the time of returning to Mara
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" }
+                        ]
+                    },
                     "prompt": "Zane sent me into those tunnels.",
                     "response": "Did he now? Then be careful. His 'simple' runs have a way of getting complicated. My partner was looking for an 'adaptive circuit' for one of Zane's projects. Never even knew what it was for. Just a prize for Zane to play with.",
                     "destination_nodes": [
@@ -233,7 +250,13 @@ const NPC_DATA = {
                     ]
                 },
                 "zane_quest_reaction": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
+                    "conditions": {
+                        "op": "AND",
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 100, "op": "neq" }
+                        ]
+                    },
                     "prompt": "About Zane's quest...",
                     "response": "You're heading into the tunnels for him, aren't you? Be smart. Don't end up like my last partner. Keep your eyes open for more than just a junction box.",
                     "outcomes": [],
@@ -244,8 +267,13 @@ const NPC_DATA = {
                     ]
                 },
                 "partner_item_story": {
-                    // TODO: compound condition AND: HAVE_ITEM("bone_charm") and QUEST_STAGE isn't finished
-                    "condition": { "type": "HAVE_ITEM", "item_id": "bone_charm" },
+                    "conditions": {
+                        "op": "AND",
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "bone_charm" },
+                            { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 100, "op": "neq" }
+                        ]
+                    },
                     "prompt": "I found something in the tunnels...",
                     "response": "What?",
                     "destination_nodes": [
@@ -255,7 +283,11 @@ const NPC_DATA = {
                     ]
                 },
                 "partner_item_show": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "bone_charm" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "bone_charm" }
+                        ]
+                    },
                     "prompt": "Here, look at it this tiny thing... It was... across someone's bones..",
                     "response": "Bones? Let me see what you found... this charm... it was his. He carved it himself from a rat-king's femur. So that's where he ended up. At least... at least now I know. He always said it brought him luck. Looks like it ran out. Keep it. A reminder that luck is something you make, not find. You brought me closure. That's worth more than caps. You've earned my respect.",
                     "outcomes": [
@@ -268,7 +300,11 @@ const NPC_DATA = {
                     ]
                 },
                 "partner_item_keep": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "bone_charm" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "bone_charm" }
+                        ]
+                    },
                     "prompt": "I wanted to let you know that I was in the tunnels, and... I've saw someone's bones next to the power generator.",
                     "response": "I see. Just knowing where he fell... it's enough. Thank you for telling me. It's more than anyone else has done.",
                     "outcomes": [
@@ -323,7 +359,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "quest_pest_control_intro" }, { "node_id": "end" } ]
                 },
                 "quest_pest_control_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 0 }
+                        ]
+                    },
                     "prompt": "Need any help with security?",
                     "response": "Maybe. We've got Glow-Rats nesting in the lower tunnels. Getting bolder. Chewing on things they shouldn't. I need them cleared out before they cause a real problem.",
                     "destination_nodes": [ { "node_id": "quest_pest_control_accept" }, { "node_id": "quest_pest_control_reject" }]
@@ -352,7 +392,11 @@ const NPC_DATA = {
                 //     "destination_nodes": [ { "node_id": "quest_pest_control_completion" }, { "node_id": "end" } ]
                 // },
                 "quest_pest_control_completion": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 3 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 3 }
+                        ]
+                    },
                     "prompt": "The Glow-Rats are gone. I cleared the nest.",
                     "response": "Good work. That's one less problem to worry about. I found this near the nesting site, looks like the alpha was hoarding it. Here's your payment. You earned it.",
                     "outcomes": [
@@ -376,7 +420,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "return", "prompt_replacement": "One more question..." } ]
                 },
                 "quest_selene_intro_reaction": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 }
+                        ]
+                    },
                     "prompt": "Selene sent me. We need to open a maintenance hatch.",
                     "response": "She did, huh? That hatch hasn't been opened in years. Fine. But if you break anything, you answer to me. Stand back.",
                     "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }],
@@ -421,7 +469,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_echoes_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 }
+                        ]
+                    },
                     "prompt": "Rex said to show you this pendant.",
                     "response": "Ah, the light returns to its source. This was... a key. An amplifier for the station's voice. A great beast held it, but the true echo is locked away, in a place only the founders knew. Will you help me find it?",
                     "destination_nodes": [ { "node_id": "quest_echoes_accept" }, { "node_id": "quest_echoes_reject" } ]
@@ -438,13 +490,21 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_echoes_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 }
+                        ]
+                    },
                     "prompt": "About that rusted lock...",
                     "response": "The guardian, Rex, must be convinced. His strength is the key to the next path. The light will not be denied.",
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_echoes_completion": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
+                        ]
+                    },
                     "prompt": "The hatch is open.",
                     "response": "You have done it! The echo is clear now... a memory. Not of the fall, but of the beginning. This was a shelter. A promise. The founders built an outpost, a beacon of hope. Its location is inside this memory. You have unlocked The Forgotten Outpost.",
                     "outcomes": [
@@ -486,7 +546,11 @@ const NPC_DATA = {
                     ]
                 },
                 "install_scrambler": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "data_scrambler" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "data_scrambler" }
+                        ]
+                    },
                     "prompt": "[ Access the service port to install the scrambler ]",
                     "response": "[ You slide the data scrambler into the port. Lights on the panel flash wildly as the device begins its work. Suddenly, you hear a frantic skittering from the darkness. ]",
                     "destination_nodes": [
@@ -508,7 +572,11 @@ const NPC_DATA = {
                     ]
                 },
                 "investigate_aftermath": {
-                    "condition": { "type": "NO_ITEM", "item_id": "bone_charm" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "NO_ITEM", "item_id": "bone_charm" }
+                        ]
+                    },
                     "prompt": "[ Look around the area ]",
                     "response": "[ With the generator reset and the rats gone, the area is quiet. The steady hum is almost peaceful. In the dim light, you spot something lying in the dust next to the generator, entangled in what looks like old, brittle bones. ]",
                     "destination_nodes": [
@@ -530,7 +598,11 @@ const NPC_DATA = {
                 },
                 "check_history": {
                     // TODO: now can be triggered multiple times, but should be triggered only once
-                    "condition": { "type": "STAT_CHECK", "stat": "lck", "min": 6 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "STAT_CHECK", "stat": "lck", "min": 6 }
+                        ]
+                    },
                     "prompt": "[ Try to access the generator's logs ]",
                     "response": "[ You feel a strange intuition and press a sequence of faded buttons on the console. A hidden log file opens, detailing the station's final hours before the fall. It speaks of a 'shelter protocol' and a last-ditch effort to save a handful of personnel. A fragment of history preserved. ]",
                      "outcomes": [
@@ -566,7 +638,11 @@ const NPC_DATA = {
                         { "node_id": "end" } ]
                 },
                 "enter_nest": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1 }
+                        ]
+                    },
                     "prompt": "[Enter the rat's nest.]",
                     "response": "You push deeper, the walls slick with grime. Old graffiti from the before-times tells a story. 'The trains will save us,' says one scrawl. A newer one underneath says, 'The trains are tombs.'",
                     "destination_nodes": [ { "node_id": "story_2" } ]
@@ -590,7 +666,11 @@ const NPC_DATA = {
                     ]
                 },
                 "story_3": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 2 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 2 }
+                        ]
+                    },
                     "prompt": "[Push towards the source.]",
                     "response": "The passage opens into a large cavern. In the center is a massive, pulsating nest made of scrap metal, wire, and bone. Atop it sits a monstrously large Glow-Rat, its eyes burning with intelligence. The Queen.",
                     "destination_nodes": [ { "node_id": "fight_queen" } ]
@@ -654,7 +734,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "quest_signal_boost_intro" }, { "node_id": "end" } ]
                 },
                 "quest_signal_boost_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "the_whispering_signal", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "the_whispering_signal", "stage": 0 }
+                        ]
+                    },
                     "prompt": "Maybe I can help with the signal.",
                     "response": "Perhaps. The main signal booster is shot. Our technician, Finn, says he needs 'harmonic resonator' to build a new one. This is old-world tech, hard to find. We've scavenged the area clean. If you could find it, you'd be saving more than just a signal.",
                     "destination_nodes": [ { "node_id": "quest_signal_boost_accept" }, { "node_id": "quest_signal_boost_reject" } ]
@@ -671,13 +755,21 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                  "quest_signal_boost_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "the_whispering_signal", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "the_whispering_signal", "stage": 1 }
+                        ]
+                    },
                     "prompt": "About the resonators...",
                     "response": "The signal fades. Time is not on our side. Have you spoken to Finn?",
                     "destination_nodes": [ { "node_id": "quest_signal_boost_completion" }, { "node_id": "end" } ]
                 },
                 "quest_signal_boost_completion": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "harmonic_resonator", "quantity": 3 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "harmonic_resonator", "quantity": 3 }
+                        ]
+                    },
                     "prompt": "I have the resonator!",
                     "response": "You have done it! You have given us a voice again! This is a great day. Please, take this. It is a small reward for a monumental deed.",
                     "outcomes": [
@@ -725,7 +817,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "quest_scout_intro" }, { "node_id": "end" } ]
                 },
                 "quest_scout_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 0 }
+                        ]
+                    },
                     "prompt": "Looks like you could use an extra gun.",
                     "response": "Maybe. There's a pack of mutated hounds that have gotten too close to the spire. They're getting bold. I need someone to clear their den to the east. Make them think twice about coming back.",
                     "destination_nodes": [ { "node_id": "quest_scout_accept" }, { "node_id": "quest_scout_reject" } ]
@@ -745,7 +841,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_scout_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 1 }
+                        ]
+                    },
                     "prompt": "About those hounds...",
                     "response": "Are they gone or not? Stop wasting my time.",
                     "destination_nodes": [
@@ -755,7 +855,11 @@ const NPC_DATA = {
                     ]
                 },
                 "quest_scout_completion": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 3 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 3 }
+                        ]
+                    },
                     "prompt": "The hound den is cleared.",
                     "response": "Hmph. You're more useful than you look. Here. For the ammo you spent.",
                     "outcomes": [
@@ -767,7 +871,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_scout_dogs_side": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 99 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 99 }
+                        ]
+                    },
                     "prompt": "The hounds won't be a problem anymore.",
                     "response": "They're gone? Good. I don't see them on the scopes. Don't know what you did, don't care. A problem solved is a problem solved. Here's your pay.",
                     "outcomes": [
@@ -819,7 +927,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "quest_seed_intro" }, { "node_id": "end" } ]
                 },
                 "quest_seed_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "seeds_of_hope", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "seeds_of_hope", "stage": 0 }
+                        ]
+                    },
                     "prompt": "Is there anything I can help with?",
                     "response": "Actually, yes! Our seed bank is almost depleted. I've heard stories of a pre-war 'Global Seed Vault' not far from here. If you could find a 'Heirloom Seed Packet' from there, it could secure our future for generations!",
                     "destination_nodes": [ { "node_id": "quest_seed_accept" }, { "node_id": "quest_seed_reject" } ]
@@ -845,14 +957,22 @@ const NPC_DATA = {
                 //     "destination_nodes": [ { "node_id": "quest_seed_completion" }, { "node_id": "end" } ]
                 // },
                 "quest_seed_failed": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "seeds_of_hope", "stage": 99 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "seeds_of_hope", "stage": 99 }
+                        ]
+                    },
                     "prompt": "I got to the vault, but haven't managed to get in. The doors locked right in front of my nose.",
                     "response": "Ah, what a shame. I knew it is not a easy task. Anywait, thanks for trying.",
                     "outcomes": [],
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_seed_completion": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "heirloom_seed_packet" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "heirloom_seed_packet" }
+                        ]
+                    },
                     "prompt": "I found a Heirloom Seed Packet.",
                     "response": "You found it! You really found it! Oh, this changes everything! We can grow new things, better things! Thank you, thank you! Please, take this for your efforts.",
                     "outcomes": [
@@ -898,7 +1018,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "quest_signal_boost_details" }, { "node_id": "end" } ]
                 },
                 "quest_signal_boost_details": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "the_whispering_signal", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "the_whispering_signal", "stage": 1 }
+                        ]
+                    },
                     "prompt": "Kian sent me about the signal booster.",
                     "response": "Ah, the new blood! Good. Okay, so, harmonic resonator. Tricky little thing. Look for old comms stations or radio shacks. They often used them. They look like a small, metallic tuning fork inside a glass tube. Bring it to me, and I can work some real magic.",
                     "destination_nodes": [ { "node_id": "end" } ]
@@ -956,7 +1080,11 @@ const NPC_DATA = {
                     ]
                 },
                 "access_seed_bay": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "seeds_of_hope", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "seeds_of_hope", "stage": 1 }
+                        ]
+                    },
                     "prompt": "[ Access Directory: 'Central Seed Bay' ]",
                     "response": "> ACCESS DENIED. Security Protocol 7 activated. Please enter verbal passphrase to unlock main bay doors.",
                     "destination_nodes": [ { "node_id": "hack_terminal" } ]
@@ -1036,7 +1164,11 @@ const NPC_DATA = {
                     ]
                 },
                 "intent_kill": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 1 }
+                        ]
+                    },
                     "prompt": "I'm here to do what Silas couldn't.",
                     "response": "Affirmative. Hostile intent confirmed. Engaging termination protocols.",
                     "destination_nodes": [
@@ -1044,7 +1176,11 @@ const NPC_DATA = {
                     ]
                 },
                 "intent_talk": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 1 }
+                        ]
+                    },
                     "prompt": "Silas sent me, but I'm not here to fight.",
                     "response": "Unlikely variable. Your kind only follows orders. Why should we believe you?",
                     "destination_nodes": [
@@ -1119,7 +1255,11 @@ const NPC_DATA = {
                     ]
                 },
                 "story_1": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 52 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 52 }
+                        ]
+                    },
                     "prompt": "I want to understand what you are.",
                     "response": "So, the Hunter sends a new weapon. My guard says you are... different. That you chose words over violence. I am Rex, leader of this Pack.<br>'What'. An astute question. We are the leftovers of a military experiment. Project 'Canis Cyberneticus'. We were bred for war, enhanced for slaughter. When the world fell, we were abandoned. We escaped. We only wish to survive.",
                     "destination_nodes": [{ "node_id": "story_2" }]
@@ -1152,13 +1292,21 @@ const NPC_DATA = {
                     ]
                 },
                 "choice_kill": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 52 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "clearing_the_path", "stage": 52 }
+                        ]
+                    },
                     "prompt": "You're too dangerous to live. I'm finishing the job.",
                     "response": "A predictable outcome. You have chosen the path of ignorance and death. So be it. Pack! Defend your home!",
                     "destination_nodes": [{ "node_id": "fight_leader" }]
                 },
                 "offer_jammer": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "signal_jammer" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "signal_jammer" }
+                        ]
+                    },
                     "prompt": "I have the signal jammer.",
                     "response": "You have... succeeded. You chose peace over destruction. You are a true anomaly. We will install this and be ghosts to the Spire-dweller. Thank you, human. You have given us a future.",
                     "outcomes": [
@@ -1234,7 +1382,11 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "quest_scrappers_union_intro" }, { "node_id": "end" } ]
                 },
                 "quest_scrappers_union_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 0 }
+                        ]
+                    },
                     "prompt": "You seem to have everything under control.",
                     "response": "Not everything. Our main hydraulic press is seizing up. Needs a specific part - a 'cryo-coupler'. My best tech, Ratchet, says there might be one in the old pumping station nearby. The place is crawling with bots. I need someone tough and disposable to check it out.",
                     "destination_nodes": [ { "node_id": "quest_scrappers_union_accept" }, { "node_id": "quest_scrappers_union_reject" } ]
@@ -1251,13 +1403,21 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
                 "quest_scrappers_union_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 }
+                        ]
+                    },
                     "prompt": "About that cryo-coupler...",
                     "response": "Are you holding it? No? Then stop wasting air and go get it. That press isn't fixing itself.",
                     "destination_nodes": [ { "node_id": "quest_scrappers_union_completion" }, { "node_id": "end" } ]
                 },
                 "quest_scrappers_union_completion": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "cryo_coupler" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "cryo_coupler" }
+                        ]
+                    },
                     "prompt": "I have the cryo-coupler.",
                     "response": "You actually did it. I'm impressed. You've got grit. Here's your pay. Stick around, I might have more work for you.",
                     "outcomes": [
@@ -1299,7 +1459,11 @@ const NPC_DATA = {
                     "destination_nodes": [{ "node_id": "valeria_quest_reaction" }, { "node_id": "end" }]
                 },
                 "valeria_quest_reaction": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 }
+                        ]
+                    },
                     "prompt": "[INT 5] Valeria sent me for a cryo-coupler.",
                     "response": "She did? Whoa. Be careful, the old pumping station's security is no joke. But if you find it, that press will run smoother than ever. It's the key to our whole operation.",
                     "destination_nodes": [{ "node_id": "end" }]
@@ -1320,7 +1484,11 @@ const NPC_DATA = {
                 "trade": { "prompt": "I need medical supplies.", "response": "I've got the basics. It'll cost you. Good health isn't free.", "destination_nodes": [{ "node_id": "return", "prompt_replacement": "Something else." }] },
                 "story_1": { "prompt": "You're the doctor here?", "response": "I'm the only thing between these fools and a tetanus infection. I patch them up so Valeria can send them back out to get new holes. It's a living.", "destination_nodes": [{ "node_id": "quest_tainted_metal_intro" }, { "node_id": "end" }] },
                 "quest_tainted_metal_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 0 }
+                        ]
+                    },
                     "prompt": "You seem busy.",
                     "response": "Always. Lately, more than usual. Scrappers are coming back with a weird sickness. A 'metal rot'. They handle some junk, and days later, their skin starts... flaking. I need a sample of the source metal to synthesize an antidote. Someone mentioned a strange, shimmering ore in the quarry nearby.",
                     "destination_nodes": [{ "node_id": "quest_tainted_metal_accept" }, { "node_id": "quest_tainted_metal_reject" }]
@@ -1333,13 +1501,21 @@ const NPC_DATA = {
                 },
                 "quest_tainted_metal_reject": { "prompt": "Sounds contagious. I'll pass.", "response": "Your funeral. Just don't come crawling to me when your fingers fall off.", "destination_nodes": [{ "node_id": "end" }] },
                 "quest_tainted_metal_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 1 }
+                        ]
+                    },
                     "prompt": "About that metal sample...",
                     "response": "Do you have it? People are getting worse. I can't hold this infection back forever.",
                     "destination_nodes": [{ "node_id": "quest_tainted_metal_completion" }, { "node_id": "end" }]
                 },
                 "quest_tainted_metal_completion": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "shimmering_ore" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "shimmering_ore" }
+                        ]
+                    },
                     "prompt": "I have the shimmering ore.",
                     "response": "Finally! Let me see... yes, the radiation signature is off the charts. I can work with this. You've saved lives today. Take this. You've more than earned it.",
                     "outcomes": [
@@ -1367,7 +1543,11 @@ const NPC_DATA = {
                 "return": { "response": "You're back. Looking for another secret?", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "quest_whispers_in_the_dark_intro" }, { "node_id": "quest_whispers_in_the_dark_reminder" }, { "node_id": "end" }] },
                 "story_1": { "prompt": "What kind of things do you hear?", "response": "Secrets. Who's cheating who. Where the good scrap is hidden. Who's about to have an... accident. Information is the real currency out here.", "destination_nodes": [{ "node_id": "end" }] },
                 "quest_whispers_in_the_dark_intro": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 0 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 0 }
+                        ]
+                    },
                     "prompt": "I'm looking for a lucrative opportunity.",
                     "response": "I might have one. A rival crew boss, Silas, has a ledger. Details all his smuggling routes. That ledger would be very valuable to Valeria. It's in a locked safe in his office at the old comms tower. I can get you the keycard, but you have to retrieve the ledger.",
                     "destination_nodes": [{ "node_id": "quest_whispers_in_the_dark_accept" }, { "node_id": "quest_whispers_in_the_dark_reject" }]
@@ -1380,13 +1560,21 @@ const NPC_DATA = {
                 },
                 "quest_whispers_in_the_dark_reject": { "prompt": "I'm not a thief.", "response": "Suit yourself. More for the next enterprising soul.", "destination_nodes": [{ "node_id": "end" }] },
                 "quest_whispers_in_the_dark_reminder": {
-                    "condition": { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 },
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 }
+                        ]
+                    },
                     "prompt": "About that ledger...",
                     "response": "The clock is ticking. Silas won't keep it in one place forever. Get moving.",
                     "destination_nodes": [{ "node_id": "quest_whispers_in_the_dark_completion" }, { "node_id": "end" }]
                 },
                 "quest_whispers_in_the_dark_completion": {
-                    "condition": { "type": "HAVE_ITEM", "item_id": "silas_ledger" },
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "silas_ledger" }
+                        ]
+                    },
                     "prompt": "I have the ledger.",
                     "response": "Excellent. Let's see... yes, this is perfect. Valeria will be very pleased with 'your' discovery. Here is your payment. A pleasure doing business with you.",
                     "outcomes": [

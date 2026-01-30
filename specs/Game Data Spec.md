@@ -196,6 +196,50 @@ When building a NPCs dialogue graph, it is important to ensure that sub-graphs a
 Sub-graph interconnectivity is fundamental to ensure that all stories are reachable. `prompt_replacement` attribute can make transition from one sub-graph to another more coherent and seamless if that would sound more natural.
 
 #### Conditions
+Some nodes, typically nodes that build a quest's sub-graph, have conditions.
+
+```javascript
+node_id: {
+    // ...
+    conditions: { // Optional.
+        op: 'AND' | 'OR', // Optional. Doesn't bring in any logic if there is only one sub-condition within the below array. If there are two and more conditions in the below array, specifies the operand between them. Default value is AND.
+        condition: [
+            { /*...*/ }, // at least one is required
+            { /*...*/ }
+        ]
+    },
+    // ...
+}
+```
+Conditions might me a simple one-clause statement, or a compound condition with multiple sub-clauses.
+
+Example of a simple condition:
+```javascript
+node_id: {
+    // ...
+    conditions: {
+        condition: [
+            { type: "STAT_CHECK", stat: "int", min: 7 }
+        ]
+    },
+    // ...
+}
+```
+
+Example of a compound condition:
+```javascript
+node_id: {
+    // ...
+    conditions: {
+        op: "OR",
+        condition: [
+            { type: "NO_ITEM", "item_id": "item_id_1" },
+            { type: "QUEST_STAGE", "quest_id": "quest_id_1", stage: 1 },
+        ]
+    },
+    // ...
+}
+```
 
 **Condition types:**
 - `STAT_CHECK`: Check player stat (str, int, lck, hp, reputation, xp, caps)
