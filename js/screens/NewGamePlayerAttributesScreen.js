@@ -37,7 +37,7 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
 
     adjustAttribute(attr, direction) {
         let valueChanged = false;
-        if (direction > 0 && this.pointsRemaining > 0) {
+        if (direction > 0 && this.pointsRemaining > 0 && this.attributes[attr] < 10) {
             this.attributes[attr]++;
             this.pointsRemaining--;
             valueChanged = true;
