@@ -27,7 +27,7 @@ const LOCATION_DATA = {
     "rust_pit": {
         "name": "The Rust Pit",
         "description": "A grimy, open-air workshop built in the hollowed-out chassis of a colossal mining machine. The air smells of ozone and hot metal, and the clang of hammers is constant.",
-        "npcs": ["boss_valeria", "ratchet", "doc_eris", "whisper"]
+        "npcs": ["boss_valeria", "ratchet", "doc_eris", "whisper", "corvus"]
     }
 };
 
@@ -1366,80 +1366,160 @@ const NPC_DATA = {
             "dialogue_graph": {
                 "start": {
                     "response": "New face. Don't break anything you can't pay for. I'm Valeria. I run this pit. What do you want?",
-                    "destination_nodes": [
-                        { "node_id": "story_1" },
-                        { "node_id": "quest_scrappers_union_intro" },
-                        { "node_id": "end" }
+                    "destination_nodes": [ 
+                        { "node_id": "story_1" }, 
+                        { "node_id": "report_whisper" }, 
+                        { "node_id": "punishment_node" }, 
+                        { "node_id": "end" } 
                     ]
                 },
                 "return": {
                     "response": "You're back. Don't waste my time.",
-                    "destination_nodes": [
-                        { "node_id": "story_1", "prompt_replacement": "Remind me about this place." },
-                        { "node_id": "quest_scrappers_union_intro" },
-                        { "node_id": "quest_scrappers_union_reminder" },
-                        { "node_id": "end" }
+                    "destination_nodes": [ 
+                        { "node_id": "story_1" }, 
+                        { "node_id": "report_whisper" }, 
+                        { "node_id": "punishment_node" }, 
+                        { "node_id": "house_cleaning_stage_2" }, 
+                        { "node_id": "house_cleaning_stage_3" }, 
+                        { "node_id": "house_cleaning_stage_final" }, 
+                        { "node_id": "house_cleaning_respect" }, 
+                        { "node_id": "end" } 
                     ]
                 },
                 "story_1": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100, "op": "neq"}
+                        ]
+                    },
                     "prompt": "What is this place?",
                     "response": "The Rust Pit. We reclaim, we rebuild. Best scrap operation this side of the Ash Fields. We keep the gears of the world turning.",
-                    "destination_nodes": [ { "node_id": "story_2" } ]
+                    "destination_nodes": [ 
+                        { "node_id": "return" , "prompt_replacement": "Tell me about the something else."} 
+                    ]
                 },
-                "story_2": {
-                    "prompt": "You're the boss?",
-                    "response": "That's right. Earned it. Built this place from the ground up with my crew. Everyone here pulls their weight.",
-                    "destination_nodes": [ { "node_id": "quest_scrappers_union_intro" }, { "node_id": "end" } ]
-                },
-                "quest_scrappers_union_intro": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 0 }
+                "report_whisper": {
+                    "conditions": { 
+                        "op": "AND",
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 0 },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 2, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 3, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100, "op": "neq" },
                         ]
                     },
-                    "prompt": "You seem to have everything under control.",
-                    "response": "Not everything. Our main hydraulic press is seizing up. Needs a specific part - a 'cryo-coupler'. My best tech, Ratchet, says there might be one in the old pumping station nearby. The place is crawling with bots. I need someone tough and disposable to check it out.",
-                    "destination_nodes": [ { "node_id": "quest_scrappers_union_accept" }, { "node_id": "quest_scrappers_union_reject" } ]
+                    "prompt": "Whisper sent me to steal a ledger from Corvus.",
+                    "response": "Did he now? That rat is always stirring up trouble. Corvus is also a snake. I'm tired of both of them. I want you to clean house. Get the ledger from Corvus, bring it to me. I did a copy of the Corvus's desk key. Take it and use it to open the safe. Then, we'll deal with Whisper.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 1 }, 
+                        { "type": "ITEM_GAIN", "item_id": "corvus_key" }
+                    ],
+                    "destination_nodes": [ 
+                        // decline house cleaning
+                        { "node_id": "end" } 
+                    ]
                 },
-                "quest_scrappers_union_accept": {
-                    "prompt": "I can be tough and disposable. For a price.",
-                    "response": "I like your style. Get me that cryo-coupler, and you'll get a handsome cut. Don't dawdle.",
-                    "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "scrappers_union", "stage": 1 }],
-                    "destination_nodes": [ { "node_id": "end" } ]
-                },
-                "quest_scrappers_union_reject": {
-                    "prompt": "Fighting bots isn't in my job description.",
-                    "response": "Then you're useless to me. Get out of my sight.",
-                    "destination_nodes": [ { "node_id": "end" } ]
-                },
-                "quest_scrappers_union_reminder": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 }
+                "house_cleaning_stage_2": {
+                    "conditions": { 
+                        "op": "AND",
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 2 }, 
+                            { "type": "HAVE_ITEM", "item_id": "corvus_ledger" } ,
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 3, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100, "op": "neq" },
                         ]
                     },
-                    "prompt": "About that cryo-coupler...",
-                    "response": "Are you holding it? No? Then stop wasting air and go get it. That press isn't fixing itself.",
-                    "destination_nodes": [ { "node_id": "quest_scrappers_union_completion" }, { "node_id": "end" } ]
+                    "prompt": "I have the ledger.",
+                    "response": "Good. Let me see... just as I thought. Corvus has been skimming profits. He's a liability. Take care of him. Then come back, and we'll finish this with Whisper.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 3 }, 
+                        { "type": "ITEM_LOSE", "item_id": "corvus_ledger" },
+                    ],
+                    "destination_nodes": [ 
+                        // there are other nodes to go to
+                        { "node_id": "end" } 
+                    ]
                 },
-                "quest_scrappers_union_completion": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "HAVE_ITEM", "item_id": "cryo_coupler" }
-                        ]
+                "house_cleaning_stage_3": {
+                    "conditions": { 
+                        "op": "AND",
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 4 },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 3, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100, "op": "neq" },
+                        ] 
                     },
-                    "prompt": "I have the cryo-coupler.",
-                    "response": "You actually did it. I'm impressed. You've got grit. Here's your pay. Stick around, I might have more work for you.",
-                    "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "scrappers_union", "stage": 100 },
-                        { "type": "ITEM_LOSE", "item_id": "cryo_coupler" },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 500 },
-                        { "type": "STAT_CHANGE", "stat": "caps", "value": 400 },
-                        { "type": "REPUTATION_CHANGE", "value": 15 }
+                    "prompt": "Corvus is dealt with. What about Whisper?",
+                    "response": "One loose end remains. Go tell Whisper the job is done, but Corvus fought back. Lure him out. Then, silence him for good. I want a clean pit.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 5 },
                     ],
                     "destination_nodes": [ { "node_id": "end" } ]
                 },
-                "end": { "prompt": "I'll get out of your hair.", "response": "Good." }
+                "house_cleaning_stage_final": {
+                    "conditions": { 
+                        "op": "AND",
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 6 },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 3, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51, "op": "neq" },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 10, "op": "neq" },
+                        ]
+                    },
+                    "prompt": "Whisper is out of the game too.",
+                    "response": "Whisper is dead. The pit is clean. People of the pit and I will never forget what you did.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 100 },
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 101 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 2000 },
+                        { "type": "STAT_CHANGE", "stat": "caps", "value": 1000 },
+                        { "type": "REPUTATION_CHANGE", "value": 50 }
+                    ],
+                    "destination_nodes": [ { "node_id": "end" } ]
+                },
+                "punishment_node": {
+                    "conditions": { 
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100 }
+                        ]
+                    },
+                    "prompt": "About what happened...",
+                    "response": "You thought you could play games in my pit? You killed Corvus, a valuable asset, because a rat told you to. You're a fool and a liability. This is your only warning. Valeria gets out the gun and shoots you in the head.",
+                    "destination_nodes": [ { "node_id": "punishment_node_2"}]
+                },
+                "punishment_node_2": {
+                    "prompt": "[ Defend yourself ]",
+                    "outcomes": [
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -60 },
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "boss_valeria" },
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 101 },
+                        { "type": "REPUTATION_CHANGE", "value": -50 }
+                    ],
+                    "response": "...",
+                    "destination_nodes": [ { "node_id": "end" , "prompt_replacement": "..."}]
+                },
+                "house_cleaning_respect": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 100 }
+                        ]
+                    },
+                    "prompt": "How things are going?",
+                    "response": "The pit is clean. People of the pit and I will never forget what you did.",
+                    "destination_nodes": [ { "node_id": "end" } ]
+                },
+                "end": { 
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100 , "op": "neq"}
+                        ]
+                    },
+                    "prompt": "I'll get to it.", 
+                    "response": "Don't disappoint me." 
+                }
             }
         },
         "ratchet": {
@@ -1545,98 +1625,365 @@ const NPC_DATA = {
             "name": "Whisper",
             "type": "npc",
             "is_available": true,
-            "description": "A shadowy figure lurking near a stack of rusted containers, communicating in hushed tones and quick gestures. They seem to be a source of information.",
+            "description": "A shadowy figure lurking near a stack of rusted containers. They seem to be a source of information.",
             "is_merchant": false,
-            "inventory": [],
             "dialogue_graph": {
-                "start": {
-                    "response": "Psst. Over here. You've got the look of someone who seeks... opportunities. I'm Whisper. I hear things. For a price.", 
+                "start": { 
+                    "response": "Psst. Over here. You look like someone who seeks... opportunities. I'm Whisper. I hear things. For a price.", 
                     "destination_nodes": [
                         { "node_id": "story_1" }, 
-                        { "node_id": "quest_whispers_in_the_dark_intro" }, 
+                        { "node_id": "quest_intro" }, 
                         { "node_id": "end" }
-                    ]
+                    ] 
                 },
-                "return": {
-                    "response": "You're back. Looking for another secret?",
-                    "destination_nodes": [
+                "return": { 
+                    "response": "You're back.", 
+                    "destination_nodes": [ 
                         { "node_id": "story_1" }, 
-                        { "node_id": "quest_whispers_in_the_dark_intro" }, 
-                        { "node_id": "quest_whispers_in_the_dark_reminder" }, 
-                        { "node_id": "end" }
-                    ]
+                        { "node_id": "quest_intro" }, 
+                        { "node_id": "quest_completion_stolen" }, 
+                        { "node_id": "quest_completion_killed_corvus" }, 
+                        { "node_id": "quest_betrayal" }, 
+                        { "node_id": "house_cleaning_lure" }, 
+                        { "node_id": "end" } 
+                    ] 
                 },
                 "story_1": {
-                    "prompt": "What kind of things do you hear?",
-                    "response": "Secrets. Who's cheating who. Where the good scrap is hidden. Who's about to have an... accident. Information is the real currency out here.",
+                    // "conditions":
+                    "prompt": "What kind of things do you hear?", 
+                    "response": "Secrets. Who's cheating who. Where the good scrap is hidden. Information is the real currency.", 
                     "destination_nodes": [
-                        { "node_id": "quest_whispers_in_the_dark_intro" }, 
+                        { "node_id": "quest_intro" },
                         { "node_id": "end" }
-                    ]
+                    ] 
                 },
-                "quest_whispers_in_the_dark_intro": {
-                    "conditions": {
+                "quest_intro": {
+                    "conditions": { 
                         "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 0 }
-                        ]
-                    },
+                             { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 0 } 
+                            ]
+                        },
                     "prompt": "I'm looking for a lucrative opportunity.",
-                    "response": "I might have one. A rival crew boss, Silas, has a ledger. Details all his smuggling routes. That ledger would be very valuable to Valeria. It's in a locked safe in his office at the old comms tower. I can get you the keycard, but you have to retrieve the ledger.",
+                    "response": "I might have one. A man named Corvus has a ledger. Details all her smuggling routes, and his own side deals. That ledger would be very valuable. It's in a locked safe in his corner of the pit. I need it.",
                     "destination_nodes": [
-                        { "node_id": "quest_whispers_in_the_dark_accept" }, 
-                        { "node_id": "quest_whispers_in_the_dark_reject" }
+                        { "node_id": "quest_accept" }, 
+                        { "node_id": "quest_reject" }
                     ]
                 },
-                "quest_whispers_in_the_dark_accept": {
+                "quest_accept": {
                     "prompt": "Sounds risky. What's my cut?",
-                    "response": "Smart. I'll give you the keycard and a stealth unit. You get me the ledger, I'll pay you well. Valeria never needs to know I was involved. Our secret.",
+                    "response": "Smart. You get me the ledger, I'll pay you well. Our secret.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 },
-                        { "type": "ITEM_GAIN", "item_id": "silas_keycard" }
+                        { "type": "NPC_UNLOCK", "location_id": "rust_pit", "npc_id": "corvus" }
                     ],
                     "destination_nodes": [
                         { "node_id": "end" }
                     ]
                 },
-                "quest_whispers_in_the_dark_reject": {
-                    "prompt": "I'm not a thief.",
-                    "response": "Suit yourself. More for the next enterprising soul.",
+                "quest_reject": { 
+                    "prompt": "I'm not a thief.", 
+                    "response": "Suit yourself. More for the next enterprising soul.", 
                     "destination_nodes": [
                         { "node_id": "end" }
                     ]
                 },
-                "quest_whispers_in_the_dark_reminder": {
-                    "conditions": {
+                "quest_completion_stolen": {
+                    "conditions": { 
+                        "op": "AND",
                         "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 }
-                        ]
+                            { "type": "HAVE_ITEM", "item_id": "corvus_ledger" }, 
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 2 } 
+                        ] 
                     },
-                    "prompt": "About that ledger...",
-                    "response": "The clock is ticking. Silas won't keep it in one place forever. Get moving.",
-                    "destination_nodes": [
-                        { "node_id": "quest_whispers_in_the_dark_completion" }, 
-                        { "node_id": "end" }
-                    ]
-                },
-                "quest_whispers_in_the_dark_completion": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "HAVE_ITEM", "item_id": "silas_ledger" }
-                        ]
-                    },
-                    "prompt": "I have the ledger.",
-                    "response": "Excellent. Let's see... yes, this is perfect. Valeria will be very pleased with 'your' discovery. Here is your payment. A pleasure doing business with you.",
+                    "prompt": "I have the ledger. Stole it clean.",
+                    "response": "Excellent! You're a true professional. This is perfect. Here's your payment. A pleasure doing business with you.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100 },
-                        { "type": "ITEM_LOSE", "item_id": "silas_ledger" },
-                        { "type": "ITEM_LOSE", "item_id": "silas_keycard" },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 600 },
-                        { "type": "STAT_CHANGE", "stat": "caps", "value": 500 },
-                        { "type": "REPUTATION_CHANGE", "value": -5 }
+                        { "type": "ITEM_LOSE", "item_id": "corvus_ledger" },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 1000 },
+                        { "type": "STAT_CHANGE", "stat": "caps", "value": 1000 },
+                        { "type": "REPUTATION_CHANGE", "value": -20 }
                     ],
-                    "destination_nodes": [{ "node_id": "end" }]
+                    "destination_nodes": [
+                        { "node_id": "final_reward" }
+                    ]
+                },
+                "quest_completion_killed_corvus": {
+                    "conditions": { 
+                        "op": "AND",
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "corvus_ledger" }, 
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 3 } 
+                        ]
+                    },
+                    "prompt": "Corvus is dead. I have the ledger.",
+                    "response": "Dead? Messy... but effective. He was a snake anyway. This will do. Here is your payment. Pity about Corvus, he was useful sometimes.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100 },
+                        { "type": "ITEM_LOSE", "item_id": "corvus_ledger" },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 1000 },
+                        { "type": "STAT_CHANGE", "stat": "caps", "value": 1000 },
+                        { "type": "REPUTATION_CHANGE", "value": -20 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "final_reward" }
+                    ]
+                },
+                "final_reward": {
+                    "prompt": "Working with you was a pleasure. ",
+                    "response": "Hold on. Not as quick. I have one more thing for you. As you now know too much about my business, I can't let you go. You will stay silent. Forever.",
+                    "destination_nodes": [ { "node_id": "final_reward_2", } ]
+                },
+                "final_reward_2": {
+                    "prompt": "[ Defend yourself ]",
+                    "response": "Whisper suddenly pulls out a penknife and stabs you in the ribs.",
+                    "outcomes": [ 
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -50 } ,
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "whisper" }
+                    ],
+                    "destination_nodes": [ { "node_id": "end", "prompt_replacement": "..." } ]
+                },
+                "quest_betrayal": {
+                    "conditions": { 
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 50 } 
+                        ]
+                    },
+                    "prompt": "Corvus sends his regards.",
+                    "response": "What? That snake! He thinks he can cross me? You made a mistake, outsider. Whisper suddenly pulls out a penknife and stabs you in the ribs.",
+                    "destination_nodes": [
+                        { "node_id": "betrayal_2"}
+                    ]
+                },
+                "betrayal_2": {
+                    "prompt": "[ defend yourself ]",
+                    "response": "...",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51},
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -30 },
+                        { "type": "ITEM_GAIN", "item_id": "whisper_ring" }, 
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "whisper" },
+                        { "type": "REPUTATION_CHANGE", "value": -30 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end" , "prompt_replacement": "..."}
+                    ]
+                },
+                "house_cleaning_lure": {
+                    "conditions": { 
+                        "condition": [ 
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 5 }
+                        ]
+                    },
+                    "prompt": "The job is done. Corvus fought back.",
+                    "response": "He did, eh? Good. Let's go collect my prize. Meet me by the old smelter.",
+                    "destination_nodes": [
+                        { "node_id": "house_cleaning_5" }
+                    ]
+                },
+                "house_cleaning_5": {
+                    "prompt": "[ Off to the old smelter.]",
+                    "response": "You and Whisper head to the old smelter, where you meet Valeria. Valeria says she is enough of slippery snakes around here and that she's not happy with Whisper.",
+                    "destination_nodes": [
+                        { "node_id": "house_cleaning_6" }
+                    ]
+                },
+                "house_cleaning_6": {
+                    "prompt": "[ Valeria shoots Whisper down]",
+                    "response": "Valeria tells you to meet her at the her office for the reward.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 6 },
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "whisper" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end" , "prompt_replacement": "..."}
+                    ]
                 },
                 "end": { "prompt": "I'm gone.", "response": "Stay in the shadows." }
+            }
+        },
+        "corvus": {
+            "name": "Corvus",
+            "type": "npc",
+            "is_available": false,
+            "description": "A man with sharp eyes and even sharper clothes, standing by a reinforced container. He looks dangerously out of place.",
+            "is_merchant": false,
+            "dialogue_graph": {
+                "start": {
+                    "response": "You're not one of the usual grease monkeys. Whisper sent you, didn't he? That little rat wants my ledger.",
+                    "destination_nodes": [ 
+                        { "node_id": "steal" }, 
+                        { "node_id": "house_cleaning_1" }, 
+                        { "node_id": "counter_offer" }, 
+                        { "node_id": "attack" } 
+                    ]
+                },
+                "return": { 
+                    "response": "Still here?", 
+                    "destination_nodes": [ 
+                        { "node_id": "steal" }, 
+                        { "node_id": "house_cleaning_1" }, 
+                        { "node_id": "house_cleaning_2" }, 
+                        { "node_id": "counter_offer" },  // FIX: on return prompt of counter_offer doesn't sound coherent
+                        { "node_id": "attack" },
+                        { "node_id": "reward" },
+                        { "node_id": "fallback" }
+                    ] 
+                },
+                "steal": {
+                    "conditions": { 
+                        "op": "AND",
+                        "condition": [ 
+                            { "type": "STAT_CHECK", "stat": "lck", "min": 8 } ,
+                            { "type": "NO_ITEM", "item_id": "corvus_ledger"},
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100 , "op": "neq"} 
+                        ] 
+                    },
+                    "prompt": "Whisper? Never heard of him. Just looking around.",
+                    "response": "He plays dumb... Accidenlty, he's distracted by someone outside shouting his name aloud. You immediately spot the ledger and quickly snatch it. Corvus turns around and doesn't see the miss",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 2 },
+                        { "type": "ITEM_GAIN", "item_id": "corvus_ledger" }
+                    ],
+                    "destination_nodes": [ { "node_id": "end" , "prompt_replacement": "Nevermind, see you later."} ]
+                },
+                "house_cleaning_1": {
+                    "conditions": {
+                        "op": "AND",
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 1 },
+                            { "type": "NO_ITEM", "item_id": "corvus_ledger" }
+                        ]
+                    },
+                    "prompt": "Valeria sent me to get you to the Eris to check how her accounts are doing.",
+                    "response": "Looks at you suspiciously. Why would she send you? But I'm curious too. Corvus leaves his office and heads off to the Eris's clinic.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 2 },
+                        { "type": "ITEM_GAIN", "item_id": "corvus_ledger" },
+                        // { "type": "ITEM_LOSE", "item_id": "corvus_key" }
+                    ],
+                    "destination_nodes": [ { "node_id": "end" , "prompt_replacement": "You open the Corvus's safe and find the ledger."} ]
+                },
+                "house_cleaning_2": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 3 }
+                        ]
+                    },
+                    "prompt": "Valeria and you passes the Corvus's office in. Valeria says she has seen the ledger and that she's not happy. Valeria pulls out a gun and points it at Corvus.",
+                    "response": "Ah, I knew the dirty trick with Eris was to steal my ledger.", // complete the sentence
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "house_cleaning", "stage": 4 },
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "corvus" }
+                    ],
+                    "destination_nodes": [ { "node_id": "end", "prompt_replacement": "Valeria shoots Corvus in the chest." } ]
+                },
+                "counter_offer": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 },
+                        ]
+                    },
+                    "prompt": "Maybe he did. What's it to you?",
+                    "response": "It's a nuisance. That ledger is my business insurance. But Whisper... he's a pest. I'll make you a better offer. Forget the ledger. Eliminate Whisper for me, and I'll make you rich.",
+                    "destination_nodes": [ 
+                        { "node_id": "counter_offer_accepte_1" },
+                        { "node_id": "attack" } 
+                    ]
+                },
+                "counter_offer_accepte_1": {
+                    "prompt": "Hmm.. sounds attractive. What's the catch?",
+                    "response": "No catch. Whisper has been trying to take my business for years. You eliminate him, I'll give you 5,000 caps.",
+                    "destination_nodes": [ 
+                        { "node_id": "counter_offer_accepte_2" },
+                        { "node_id": "attack" } 
+                    ]
+                },
+                "counter_offer_accepte_2": {
+                    "prompt": "5,000 caps? I'm in.",
+                    "response": "Brave. Bring the ring from Whisper's index finger to me. With the finger, I'll give you the caps.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 50 } 
+                    ],
+                    "destination_nodes": [ 
+                        { "node_id": "end", "prompt_replacement": "That's a good deal." }
+                    ]
+                },
+                "attack": {
+                    "conditions": {
+                        "op": "AND",
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 1 },
+                            // { "type": "NO_ITEM", "item_id": "corvus_ledger" },
+                        ]
+                    },
+                    "prompt": "[ATTACK] Give me the ledger now!",
+                    "response": "You fool. You think you're the first to try?",
+                    "destination_nodes": [ { "node_id": "attack_2" } ]
+                },
+                "attack_2": {
+                    // "conditions": {
+                    //     "condition": [
+                    //         { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51 },
+                    //     ]
+                    // },
+                    "prompt": "[DEFEND YOURSELF]",
+                    "response": "Corvus gets out his shoutgun and shoots you in the chest.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 3 },
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -30 },
+                        { "type": "ITEM_GAIN", "item_id": "corvus_ledger" },
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "corvus" },
+                        { "type": "REPUTATION_CHANGE", "value": -30 }
+                    ],
+                    "destination_nodes": [ { "node_id": "end", "prompt_replacement": "..." } ]
+                },
+                "reward": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 51 },
+                        ]
+                    },
+                    "prompt": "There is no such a man as Whisper anymore. Just a memory.",
+                    "response": "Ah, sound to my ears. I was dreaming about this day for years. Here, take your reward.",
+                    "outcomes": [ 
+                        { "type": "QUEST_SET_STAGE", "quest_id": "whispers_in_the_dark", "stage": 100 },
+                        { "type": "STAT_CHANGE", "stat": "caps", "value": 5000 } ,
+                        { "type": "ITEM_LOSE", "item_id": "whisper_ring" }, 
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 1000 },
+                        { "type": "REPUTATION_CHANGE", "value": -20 }
+                    ],
+                    "destination_nodes": [ { "node_id": "final_reward" } ]
+                },
+                "final_reward": {
+                    "prompt": "Working with you was a pleasure. ",
+                    "response": "Hold on. Not as quick. I have one more thing for you. As you now know too much about my business, I can't let you go. You will stay silent. Forever. Corvus gets out his shoutgun and shoots you in the chest.",
+                    "destination_nodes": [ { "node_id": "final_reward_2" } ]
+                },
+                "final_reward_2": {
+                    "prompt": "[ Defend yourself ]",
+                    "response": "...",
+                    "outcomes": [
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -50 },
+                        { "type": "NPC_LOCK", "location_id": "rust_pit", "npc_id": "corvus" }
+                    ],
+                    "destination_nodes": [ { "node_id": "end" , "prompt_replacement": "..."}]
+                },
+                "fallback": {
+                    "conditions": {
+                        "op": "OR",
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "house_cleaning", "stage": 2 },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 2 },
+                            { "type": "QUEST_STAGE", "quest_id": "whispers_in_the_dark", "stage": 50 },
+                        ]
+                    },
+                    "prompt": "Oh, a wrong door",
+                    "response": "...",
+                    "destination_nodes": [ { "node_id": "end", "prompt_replacement": "..." } ]
+                },
+                "end": { "prompt": "See you later.", "response": "Don't beat around the bush too long." }
             }
         }
     }
@@ -1777,21 +2124,31 @@ const QUEST_DATA = {
     },
     "whispers_in_the_dark": {
         "title": "Whispers in the Dark",
-        "description": "Whisper, an information broker, wants you to steal a rival's ledger from a safe in the old comms tower.",
+        "description": "Whisper wants you to steal a ledger from Corvus.",
         "location": "rust_pit",
         "giver": "whisper",
-        "stages": {
-            "0": "Not started",
-            "1": "Retrieve Silas's ledger from the comms tower.",
-            "100": "Completed"
-        },
-        "rewards": {
-            "items": [],
-            "stat_change": [
-                { "stat": "xp", "value": 600 },
-                { "stat": "caps", "value": 500 },
-                { "stat": "reputation", "value": -5 }
-            ]
+        "stages": { 
+            "0": "Not started", 
+            "1": "Confront Corvus to get his ledger.", 
+            "11": "You stole the ledger.", 
+            "12": "You killed Corvus for the ledger.", 
+            "13": "You sided with Corvus.", 
+            "100": "Completed by giving Whisper the stolen ledger.", 
+            "101": "Completed by giving Whisper the ledger from the dead Corvus.", 
+            "102": "Betrayed Whisper and were attacked." 
+        }
+    },
+    "house_cleaning": {
+        "title": "House Cleaning",
+        "description": "Valeria wants you to end the infighting between Whisper and Corvus, her way.",
+        "location": "rust_pit",
+        "giver": "boss_valeria",
+        "stages": { 
+            "0": "Not started", 
+            "1": "Get the ledger from Corvus using the key Valeria provided.", 
+            "2": "Eliminate Corvus.", 
+            "3": "Lure and eliminate Whisper.", 
+            "100": "Completed" 
         }
     }
 };
@@ -1799,13 +2156,7 @@ const QUEST_DATA = {
 const ITEMS_DATA = {
     "data_scrambler": { "name": "Data Scrambler", "tradeable": false, "type": "quest", "price": 0 },
     "glowing_pendant": { "name": "Glowing Pendant", "tradeable": false, "type": "quest", "price": 0 },
-    "bone_charm": {
-        "name": "Bone Charm",
-        "tradeable": false,
-        "type": "gear",
-        "stat_change": [{ "stat": "lck", "value": 1 }],
-        "price": 0
-    },
+    "bone_charm": { "name": "Bone Charm", "tradeable": false, "type": "gear", "stat_change": [{ "stat": "lck", "value": 1 }], "price": 0 },
     "stimpack": { "name": "Stimpack", "tradeable": true, "type": "consumable", "stat_change": [{ "stat": "hp", "value": 25 }], "price": 50 },
     "military_goggles": { "name": "Military Goggles", "tradeable": true, "type": "gear", "stat_change": [{ "stat": "int", "value": 1 }], "price": 120 },
     "energy_cell": { "name": "Energy Cell", "tradeable": true, "type": "junk", "price": 25 },
@@ -1817,8 +2168,9 @@ const ITEMS_DATA = {
     "cryo_coupler": { "name": "Cryo-Coupler", "tradeable": false, "type": "quest", "price": 0 },
     "geo_tongs": { "name": "Geo-Tongs", "tradeable": false, "type": "quest", "price": 0 },
     "shimmering_ore": { "name": "Shimmering Ore", "tradeable": false, "type": "quest", "price": 0 },
-    "silas_keycard": { "name": "Silas's Keycard", "tradeable": false, "type": "quest", "price": 0 },
-    "silas_ledger": { "name": "Silas's Ledger", "tradeable": false, "type": "quest", "price": 0 },
+    "corvus_key": { "name": "Corvus's desk key", "tradeable": false, "type": "quest", "price": 0 },
+    "corvus_ledger": { "name": "Corvus's Ledger", "tradeable": false, "type": "quest", "price": 0 },
+    "whisper_ring": { "name": "Whisper's Ring", "tradeable": false, "type": "quest", "price": 0 },
     "scrap_metal": { "name": "Scrap Metal", "tradeable": true, "type": "junk", "price": 10 },
 };
 

@@ -35,7 +35,7 @@ body {
     font-size: var(--font-size-base);
     color: var(--color-text);
     /*overflow:  scroll;*/
-    cursor: none; /* Hide cursor */
+    /* cursor: none; */
     /*user-select: none;*/
     letter-spacing: 1px;
 }
