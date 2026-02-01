@@ -399,7 +399,7 @@ const NPC_DATA = {
                 "quest_pest_control_completion": {
                     "conditions": {
                         "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 3 }
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 2 }
                         ]
                     },
                     "prompt": "The Glow-Rats are gone. I cleared the nest.",
@@ -2193,7 +2193,7 @@ const ITEMS_DATA = {
     "signal_jammer": { "name": "Signal Jammer", "type": "quest", "tradeable": true, "price": 100 },
     "data_scrambler": { "name": "Data Scrambler", "tradeable": false, "type": "quest", "price": 0 },
     "glowing_pendant": { "name": "Glowing Pendant", "tradeable": false, "type": "quest", "price": 0 },
-    "harmonic_resonator": { "name": "Harmonic Resonator", "tradeable": false, "type": "quest", "price": 0 },
+    "harmonic_resonator": { "name": "Harmonic Resonator", "tradeable": true, "type": "quest", "price": 100 },
     "heirloom_seed_packet": { "name": "Heirloom Seed Packet", "tradeable": false, "type": "quest", "price": 0 },
     // "cryo_coupler": { "name": "Cryo-Coupler", "tradeable": false, "type": "quest", "price": 0 },
     "geo_tongs": { "name": "Geo-Tongs", "tradeable": false, "type": "quest", "price": 0 },

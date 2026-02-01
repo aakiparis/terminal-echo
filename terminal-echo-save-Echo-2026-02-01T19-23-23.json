@@ -1,0 +1,59 @@
+{
+  "player": {
+    "name": "Echo",
+    "level": 2,
+    "hp": 20,
+    "maxHp": 20,
+    "xp": 1100,
+    "caps": 40,
+    "str": 1,
+    "int": 7,
+    "lck": 7,
+    "reputation": 40,
+    "inventory": [
+      "bone_charm",
+      "military_goggles",
+      "stimpack",
+      "harmonic_resonator"
+    ],
+    "convo_history": {}
+  },
+  "gameMode": "scripted",
+  "currentLocation": "neon_nexus",
+  "unlocked_locations": [
+    "neon_nexus",
+    "nexus_old_tunnel",
+    "the_forgotten_outpost"
+  ],
+  "unlocked_npcs": {
+    "nexus_old_tunnel": [
+      "power_generator",
+      "tunnel_passage"
+    ]
+  },
+  "locked_npcs": {},
+  "currentScreen": "WorldMap",
+  "quests": {
+    "glitch_in_the_system": {
+      "stage": 100
+    },
+    "maras_partner_fate": {
+      "stage": 100
+    },
+    "pest_control": {
+      "stage": 100
+    },
+    "echoes_of_the_past": {
+      "stage": 100
+    }
+  },
+  "eventHistory": [],
+  "convo_history": {
+    "zane": true,
+    "mara": true,
+    "rex": true,
+    "power_generator": true,
+    "tunnel_passage": true,
+    "selene": true
+  }
+}
