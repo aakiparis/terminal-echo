@@ -22,19 +22,48 @@ class WorldMapScreen extends BaseScreen {
             label: `--- --- ---`,
             disabled: true // delimiters are not selectable
         });
+        // menuItems.push({
+        //     id: 'inventory',
+        //     label: '[ INVENTORY ]',
+        //     type: 'action',
+        //     action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
+        // }); 
         menuItems.push({
-            id: 'inventory',
-            label: '[ INVENTORY ]',
+            id: 'main-menu',
+            label: '[ MAIN MENU ]',
             type: 'action',
-            action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
-        }); 
-        menuItems.push({ id: 'game-menu', label: ' [ GAME MENU ] ( cooming soon )', type: 'action', disabled: true }); // Not implemented yet
+            action: () => this.confirmMainMenu()
+        });
 
         this.components.menu = new Menu({
             items: menuItems,
             onSelect: (item) => {
                 if (item.action) item.action();
             }
+        });
+    }
+    
+    confirmMainMenu() {
+        this.navigationManager.showPopup({
+            title: 'RETURN TO MAIN MENU',
+            message: 'Returning to the main menu will lose all current progress. Are you sure?',
+            menuItems: [
+                {
+                    id: 'confirm_main_menu',
+                    label: '[ YES, RETURN ]',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                        this.navigationManager.navigateTo({ screen: 'MainMenu' });
+                    }
+                },
+                {
+                    id: 'cancel_main_menu',
+                    label: '[ CANCEL ]',
+                    action: () => {
+                        this.navigationManager.closePopup();
+                    }
+                }
+            ]
         });
     }
     
