@@ -1528,15 +1528,23 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A young, energetic technician, constantly wiping grime from a pair of antique glasses. He's surrounded by piles of disassembled machinery.",
             "is_merchant": true,
-            "inventory": ["energy_cell", "scrap_metal"],
+            "inventory": ["leather_armor"],
             "dialogue_graph": {
                 "start": {
                     "response": "Hey! Watch your step! This stuff is delicate. Mostly. I'm Ratchet. You need something fixed, or just browsing the mechanical graveyard?",
-                    "destination_nodes": [{ "node_id": "trade" }, { "node_id": "story_1" }, { "node_id": "end" }]
+                    "destination_nodes": [
+                        { "node_id": "trade" }, 
+                        { "node_id": "story_1" }, 
+                        { "node_id": "end" }
+                    ]
                 },
                 "return": {
                     "response": "Oh, hey! Back again. Did you break something already?",
-                    "destination_nodes": [{ "node_id": "trade" }, { "node_id": "story_1" }, { "node_id": "valeria_quest_reaction" }, { "node_id": "end" }]
+                    "destination_nodes": [
+                        { "node_id": "trade" }, 
+                        { "node_id": "story_1" }, 
+                        // { "node_id": "valeria_quest_reaction" }, 
+                        { "node_id": "end" }]
                 },
                 "trade": {
                     "prompt": "Let's trade.",
@@ -1548,17 +1556,17 @@ const NPC_DATA = {
                     "response": "The best! Valeria handles the muscle, I handle the brains. I can make these old machines sing again. It's like... solving a puzzle from a thousand years ago.",
                     "destination_nodes": [{ "node_id": "valeria_quest_reaction" }, { "node_id": "end" }]
                 },
-                "valeria_quest_reaction": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 }
-                        ]
-                    },
-                    "prompt": "[INT 5] Valeria sent me for a cryo-coupler.",
-                    "response": "She did? Whoa. Be careful, the old pumping station's security is no joke. But if you find it, that press will run smoother than ever. It's the key to our whole operation.",
-                    "destination_nodes": [{ "node_id": "end" }]
-                },
-                "end": { "prompt": "See you.", "response": "Keep your circuits clean!" }
+                // "valeria_quest_reaction": {
+                //     "conditions": {
+                //         "condition": [
+                //             { "type": "QUEST_STAGE", "quest_id": "scrappers_union", "stage": 1 }
+                //         ]
+                //     },
+                //     "prompt": "[INT 5] Valeria sent me for a cryo-coupler.",
+                //     "response": "She did? Whoa. Be careful, the old pumping station's security is no joke. But if you find it, that press will run smoother than ever. It's the key to our whole operation.",
+                //     "destination_nodes": [{ "node_id": "end" }]
+                // },
+                // "end": { "prompt": "See you.", "response": "Keep your circuits clean!" }
             }
         },
         "doc_eris": {
@@ -1569,55 +1577,72 @@ const NPC_DATA = {
             "is_merchant": true,
             "inventory": ["stimpack"],
             "dialogue_graph": {
-                "start": { "response": "Unless you're bleeding, wait your turn. I'm Doc Eris. What's the damage?", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "trade" }, { "node_id": "quest_tainted_metal_intro" }, { "node_id": "end" }] },
-                "return": { "response": "You again. Don't tell me you're hurt already.", "destination_nodes": [{ "node_id": "story_1" }, { "node_id": "trade" }, { "node_id": "quest_tainted_metal_intro" }, { "node_id": "quest_tainted_metal_reminder" }, { "node_id": "end" }] },
+                "start": { 
+                    "response": "Unless you're bleeding, wait your turn. I'm Doc Eris. What's the damage?", 
+                    "destination_nodes": [
+                        { "node_id": "story_1" }, 
+                        { "node_id": "trade" }, 
+                        // { "node_id": "quest_tainted_metal_intro" }, 
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": { 
+                    "response": "You again. Don't tell me you're hurt already.", 
+                    "destination_nodes": [
+                        { "node_id": "story_1" }, 
+                        { "node_id": "trade" }, 
+                        // { "node_id": "quest_tainted_metal_intro" }, 
+                        // { "node_id": "quest_tainted_metal_reminder" }, 
+                        { "node_id": "end" }
+                    ] 
+                },
                 "trade": { "prompt": "I need medical supplies.", "response": "I've got the basics. It'll cost you. Good health isn't free.", "destination_nodes": [{ "node_id": "return", "prompt_replacement": "Something else." }] },
                 "story_1": { "prompt": "You're the doctor here?", "response": "I'm the only thing between these fools and a tetanus infection. I patch them up so Valeria can send them back out to get new holes. It's a living.", "destination_nodes": [{ "node_id": "quest_tainted_metal_intro" }, { "node_id": "end" }] },
-                "quest_tainted_metal_intro": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 0 }
-                        ]
-                    },
-                    "prompt": "You seem busy.",
-                    "response": "Always. Lately, more than usual. Scrappers are coming back with a weird sickness. A 'metal rot'. They handle some junk, and days later, their skin starts... flaking. I need a sample of the source metal to synthesize an antidote. Someone mentioned a strange, shimmering ore in the quarry nearby.",
-                    "destination_nodes": [{ "node_id": "quest_tainted_metal_accept" }, { "node_id": "quest_tainted_metal_reject" }]
-                },
-                "quest_tainted_metal_accept": {
-                    "prompt": "I'll get your sample.",
-                    "response": "You will? Don't touch it with your bare hands. Use these geo-tongs. Bring it straight back to me. The lives of my patients depend on it.",
-                    "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "tainted_metal", "stage": 1 }, { "type": "ITEM_GAIN", "item_id": "geo_tongs" }],
-                    "destination_nodes": [{ "node_id": "end" }]
-                },
-                "quest_tainted_metal_reject": { "prompt": "Sounds contagious. I'll pass.", "response": "Your funeral. Just don't come crawling to me when your fingers fall off.", "destination_nodes": [{ "node_id": "end" }] },
-                "quest_tainted_metal_reminder": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 1 }
-                        ]
-                    },
-                    "prompt": "About that metal sample...",
-                    "response": "Do you have it? People are getting worse. I can't hold this infection back forever.",
-                    "destination_nodes": [{ "node_id": "quest_tainted_metal_completion" }, { "node_id": "end" }]
-                },
-                "quest_tainted_metal_completion": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "HAVE_ITEM", "item_id": "shimmering_ore" }
-                        ]
-                    },
-                    "prompt": "I have the shimmering ore.",
-                    "response": "Finally! Let me see... yes, the radiation signature is off the charts. I can work with this. You've saved lives today. Take this. You've more than earned it.",
-                    "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "tainted_metal", "stage": 100 },
-                        { "type": "ITEM_LOSE", "item_id": "shimmering_ore" },
-                        { "type": "ITEM_LOSE", "item_id": "geo_tongs" },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 450 },
-                        { "type": "STAT_CHANGE", "stat": "caps", "value": 300 },
-                        { "type": "REPUTATION_CHANGE", "value": 10 }
-                    ],
-                    "destination_nodes": [{ "node_id": "end" }]
-                },
+                // "quest_tainted_metal_intro": {
+                //     "conditions": {
+                //         "condition": [
+                //             { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 0 }
+                //         ]
+                //     },
+                //     "prompt": "You seem busy.",
+                //     "response": "Always. Lately, more than usual. Scrappers are coming back with a weird sickness. A 'metal rot'. They handle some junk, and days later, their skin starts... flaking. I need a sample of the source metal to synthesize an antidote. Someone mentioned a strange, shimmering ore in the quarry nearby.",
+                //     "destination_nodes": [{ "node_id": "quest_tainted_metal_accept" }, { "node_id": "quest_tainted_metal_reject" }]
+                // },
+                // "quest_tainted_metal_accept": {
+                //     "prompt": "I'll get your sample.",
+                //     "response": "You will? Don't touch it with your bare hands. Use these geo-tongs. Bring it straight back to me. The lives of my patients depend on it.",
+                //     "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "tainted_metal", "stage": 1 }, { "type": "ITEM_GAIN", "item_id": "geo_tongs" }],
+                //     "destination_nodes": [{ "node_id": "end" }]
+                // },
+                // "quest_tainted_metal_reject": { "prompt": "Sounds contagious. I'll pass.", "response": "Your funeral. Just don't come crawling to me when your fingers fall off.", "destination_nodes": [{ "node_id": "end" }] },
+                // "quest_tainted_metal_reminder": {
+                //     "conditions": {
+                //         "condition": [
+                //             { "type": "QUEST_STAGE", "quest_id": "tainted_metal", "stage": 1 }
+                //         ]
+                //     },
+                //     "prompt": "About that metal sample...",
+                //     "response": "Do you have it? People are getting worse. I can't hold this infection back forever.",
+                //     "destination_nodes": [{ "node_id": "quest_tainted_metal_completion" }, { "node_id": "end" }]
+                // },
+                // "quest_tainted_metal_completion": {
+                //     "conditions": {
+                //         "condition": [
+                //             { "type": "HAVE_ITEM", "item_id": "shimmering_ore" }
+                //         ]
+                //     },
+                //     "prompt": "I have the shimmering ore.",
+                //     "response": "Finally! Let me see... yes, the radiation signature is off the charts. I can work with this. You've saved lives today. Take this. You've more than earned it.",
+                //     "outcomes": [
+                //         { "type": "QUEST_SET_STAGE", "quest_id": "tainted_metal", "stage": 100 },
+                //         { "type": "ITEM_LOSE", "item_id": "shimmering_ore" },
+                //         { "type": "ITEM_LOSE", "item_id": "geo_tongs" },
+                //         { "type": "STAT_CHANGE", "stat": "xp", "value": 450 },
+                //         { "type": "STAT_CHANGE", "stat": "caps", "value": 300 },
+                //         { "type": "REPUTATION_CHANGE", "value": 10 }
+                //     ],
+                //     "destination_nodes": [{ "node_id": "end" }]
+                // },
                 "end": { "prompt": "Stay healthy.", "response": "I'll try." }
             }
         },
@@ -2154,24 +2179,33 @@ const QUEST_DATA = {
 };
 
 const ITEMS_DATA = {
-    "data_scrambler": { "name": "Data Scrambler", "tradeable": false, "type": "quest", "price": 0 },
-    "glowing_pendant": { "name": "Glowing Pendant", "tradeable": false, "type": "quest", "price": 0 },
-    "bone_charm": { "name": "Bone Charm", "tradeable": false, "type": "gear", "stat_change": [{ "stat": "lck", "value": 1 }], "price": 0 },
-    "stimpack": { "name": "Stimpack", "tradeable": true, "type": "consumable", "stat_change": [{ "stat": "hp", "value": 25 }], "price": 50 },
+    // gears
+    "leather_armor": { "name": "Leather Armor", "tradeable": true, "type": "gear", "stat_change": [{ "stat": "str", "value": 1 }], "price": 150 },
     "military_goggles": { "name": "Military Goggles", "tradeable": true, "type": "gear", "stat_change": [{ "stat": "int", "value": 1 }], "price": 120 },
-    "energy_cell": { "name": "Energy Cell", "tradeable": true, "type": "junk", "price": 25 },
-    "harmonic_resonator": { "name": "Harmonic Resonator", "tradeable": true, "type": "quest", "price": 20 },
-    "heirloom_seed_packet": { "name": "Heirloom Seed Packet", "tradeable": false, "type": "quest", "price": 0 },
+    "bone_charm": { "name": "Bone Charm", "tradeable": false, "type": "gear", "stat_change": [{ "stat": "lck", "value": 1 }], "price": 0 },
+
+    // consumables
+    "stimpack": { "name": "Stimpack", "tradeable": true, "type": "consumable", "stat_change": [{ "stat": "hp", "value": 25 }], "price": 50 },
     "purified_water": { "name": "Purified Water", "tradeable": true, "type": "consumable", "stat_change": [{ "stat": "hp", "value": 10 }], "price": 20 },
     "mutfruit": { "name": "Mutfruit", "tradeable": true, "type": "consumable", "stat_change": [{ "stat": "hp", "value": 5 }], "price": 10 },
+    
+    // quest items
     "signal_jammer": { "name": "Signal Jammer", "type": "quest", "tradeable": true, "price": 100 },
-    "cryo_coupler": { "name": "Cryo-Coupler", "tradeable": false, "type": "quest", "price": 0 },
+    "data_scrambler": { "name": "Data Scrambler", "tradeable": false, "type": "quest", "price": 0 },
+    "glowing_pendant": { "name": "Glowing Pendant", "tradeable": false, "type": "quest", "price": 0 },
+    "harmonic_resonator": { "name": "Harmonic Resonator", "tradeable": false, "type": "quest", "price": 0 },
+    "heirloom_seed_packet": { "name": "Heirloom Seed Packet", "tradeable": false, "type": "quest", "price": 0 },
+    // "cryo_coupler": { "name": "Cryo-Coupler", "tradeable": false, "type": "quest", "price": 0 },
     "geo_tongs": { "name": "Geo-Tongs", "tradeable": false, "type": "quest", "price": 0 },
     "shimmering_ore": { "name": "Shimmering Ore", "tradeable": false, "type": "quest", "price": 0 },
     "corvus_key": { "name": "Corvus's desk key", "tradeable": false, "type": "quest", "price": 0 },
     "corvus_ledger": { "name": "Corvus's Ledger", "tradeable": false, "type": "quest", "price": 0 },
     "whisper_ring": { "name": "Whisper's Ring", "tradeable": false, "type": "quest", "price": 0 },
-    "scrap_metal": { "name": "Scrap Metal", "tradeable": true, "type": "junk", "price": 10 },
+
+    // junk
+    // "scrap_metal": { "name": "Scrap Metal", "tradeable": true, "type": "junk", "price": 10 },
+    // "energy_cell": { "name": "Energy Cell", "tradeable": true, "type": "junk", "price": 25 },
+
 };
 
 console.log('game.js: LOCATION_DATA', LOCATION_DATA);
