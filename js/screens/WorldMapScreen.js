@@ -53,6 +53,7 @@ class WorldMapScreen extends BaseScreen {
                     label: '[ YES, RETURN ]',
                     action: () => {
                         this.navigationManager.closePopup();
+                        this.stateManager.resetState();
                         this.navigationManager.navigateTo({ screen: 'MainMenu' });
                     }
                 },

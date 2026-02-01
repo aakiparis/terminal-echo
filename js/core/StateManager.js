@@ -37,6 +37,12 @@ class StateManager {
         return this.state;
     }
 
+    resetState() {
+        this.state = this.getInitialState();
+        console.log("State reset to initial state");
+        this.eventBus.emit('stateUpdated', this.state);
+    }
+
     getPlayerStats() {
         return this.state.player;
     }
