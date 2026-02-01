@@ -8,7 +8,7 @@ class MainMenuScreen extends BaseScreen {
 
         const menuItems = [
             { id: 'new-game', label: '[ NEW GAME ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGameMode' }) },
-            { id: 'load-game', label: '[ LOAD GAME ] ( coming soon ) ', type: 'action', disabled: true },
+            { id: 'load-game', label: '[ LOAD GAME ]', type: 'action', action: () => this.loadGame() },
             { id: 'credits', label: '[ CREDITS ]', type: 'action', action: () => this.showCredits() },
         ];
 
@@ -22,6 +22,63 @@ class MainMenuScreen extends BaseScreen {
 
     showCredits() {
         this.eventBus.emit('log', { text: 'Created by Andrei Kiparis with Terminal Echo GPT' });
+    }
+
+    loadGame() {
+        // Create a hidden file input element
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json';
+        fileInput.style.display = 'none';
+        
+        fileInput.onchange = (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const saveData = JSON.parse(e.target.result);
+                    
+                    // Load the state
+                    this.stateManager.loadState(saveData);
+                    
+                    // Navigate to the appropriate screen based on saved state
+                    const savedScreen = saveData.currentScreen || 'WorldMap';
+                    const savedLocation = saveData.currentLocation;
+                    
+                    this.eventBus.emit('log', { text: `Game loaded! Welcome back, ${saveData.player?.name || 'Echo'}!`, type: 'system' });
+                    
+                    // Navigate based on saved screen
+                    if (savedScreen === 'Location' && savedLocation) {
+                        this.navigationManager.navigateTo({ screen: 'Location', params: { id: savedLocation } });
+                    } else if (savedScreen === 'WorldMap') {
+                        this.navigationManager.navigateTo({ screen: 'WorldMap' });
+                    } else {
+                        // Default to WorldMap if screen is unknown
+                        this.navigationManager.navigateTo({ screen: 'WorldMap' });
+                    }
+                } catch (error) {
+                    console.error('Error loading game:', error);
+                    this.eventBus.emit('log', { text: 'Failed to load game. Invalid save file.', type: 'error' });
+                }
+            };
+            
+            reader.onerror = () => {
+                this.eventBus.emit('log', { text: 'Error reading save file.', type: 'error' });
+            };
+            
+            reader.readAsText(file);
+            
+            // Clean up
+            document.body.removeChild(fileInput);
+        };
+        
+        // Add to DOM and trigger click
+        document.body.appendChild(fileInput);
+        fileInput.click();
     }
 
     handleInput(input) {

@@ -29,6 +29,12 @@ class WorldMapScreen extends BaseScreen {
         //     action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
         // }); 
         menuItems.push({
+            id: 'save-game',
+            label: '[ SAVE GAME ]',
+            type: 'action',
+            action: () => this.saveGame()
+        });
+        menuItems.push({
             id: 'main-menu',
             label: '[ MAIN MENU ]',
             type: 'action',
@@ -43,6 +49,34 @@ class WorldMapScreen extends BaseScreen {
         });
     }
     
+    saveGame() {
+        try {
+            const state = this.stateManager.getState();
+            const saveData = JSON.stringify(state, null, 2);
+            
+            // Create a blob and download it
+            const blob = new Blob([saveData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            // Generate filename with timestamp
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const playerName = state.player?.name || 'Echo';
+            a.download = `terminal-echo-save-${playerName}-${timestamp}.json`;
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            this.eventBus.emit('log', { text: 'Game saved successfully!', type: 'system' });
+        } catch (error) {
+            console.error('Error saving game:', error);
+            this.eventBus.emit('log', { text: 'Failed to save game.', type: 'error' });
+        }
+    }
+
     confirmMainMenu() {
         this.navigationManager.showPopup({
             title: 'RETURN TO MAIN MENU',

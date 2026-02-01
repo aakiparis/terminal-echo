@@ -43,6 +43,20 @@ class StateManager {
         this.eventBus.emit('stateUpdated', this.state);
     }
 
+    loadState(savedState) {
+        // Validate that the saved state has the required structure
+        if (!savedState || typeof savedState !== 'object') {
+            throw new Error('Invalid save file format');
+        }
+        
+        // Merge saved state with current state to ensure all required fields exist
+        const initialState = this.getInitialState();
+        this.state = { ...initialState, ...savedState };
+        
+        console.log("State loaded from save file");
+        this.eventBus.emit('stateUpdated', this.state);
+    }
+
     getPlayerStats() {
         return this.state.player;
     }
