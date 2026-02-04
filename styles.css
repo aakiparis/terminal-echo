@@ -10,17 +10,18 @@
 }
 
 :root {
-    --color-primary: #FCEB50; /*3f3*/
-    --color-bg-dark: #0d0c05; /*0a180a*/
+    --color-primary: #FFB000; /* green: 33FF00*/ /* amber: #FFB000;*/
+    --color-bg-dark: #0f0b00; /*green 0a180a*/ /*amber: #0f0b00*/
     --color-bg-darker: #222;
-    --color-bg-light: #fceb501c; /*rgba(0, 255, 0, 0.1);*/
-    --color-border: var(--color-primary); /*3f3*/
-    --color-text: var(--color-primary); /*3f3*/
+    --color-bg-light: #ffcf661c; /*rgba(0, 255, 0, 0.1);*/
+    --color-border: var(--color-primary);
+    --color-text: var(--color-primary);
     --color-text-inverse: #000;
     --color-disabled: #030;
     
     --font-primary: 'VT323', monospace;
     --font-size-base: 30px;
+    --text-shadow: 0 0 10px #ffb000; /* amber glow: #ffe3a6;*/
     
     --spacing-sm: 10px;
     --spacing-md: 15px;
@@ -33,6 +34,7 @@ body {
     background: var(--color-bg-darker);
     font-family: var(--font-primary);
     font-size: var(--font-size-base);
+    text-shadow: var(--text-shadow);
     color: var(--color-text);
     /*overflow:  scroll;*/
     /* cursor: none; */
@@ -93,9 +95,9 @@ body {
     height: 100px;
     background: linear-gradient(
         to bottom,
-        #fceb5000 0%,
-        #fceb5005 50%,
-        #fceb5012 100%
+        #FFB00000 0%,
+        #FFB00015 50%,
+        #FFB00025 100%
     );
     pointer-events: none;
     z-index: 11;

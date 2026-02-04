@@ -292,7 +292,36 @@ outcomes: [
 ]
 ```
 
+
 ### Dialogue guidance and recommendations
+
+#### 3.1 Special Nodes
+
+Each NPC `dialogue_graph` MUST contain three mandatory, special nodes: `start`, `return`, and `end`. The `trade` node is mandatory for merchants. These nodes form the core of the dialogue flow.
+
+*   **`start`**: The entry point for the player's first-ever interaction with an NPC. This node's primary purpose is to introduce the character and provide initial pathways into their main dialogue sub-graphs (e.g., story, quests, trade).
+
+*   **`return`**: **The central dialogue hub.** This node is the entry point for all subsequent interactions with the NPC after the first meeting.
+    *   **CRITICAL RULE:** No dialogue sub-graph (like a story chain or quest interaction) should ever terminate with an `end` node unless it is narratively required for the NPC to permanently cease communication.
+    *   **CRITICAL RULE:** Instead of `end`, dialogue branches MUST loop back to the `return` node. This is achieved by making the last node of a sub-graph point to `return`. A `prompt_replacement` should be used to provide a context-appropriate transition, such as "What else can you tell me?" or "Let's talk about something else."
+    *   **Example of a correct loop:**
+        ```javascript
+        "story_node_3": {
+            "prompt": "And what happened then?",
+            "response": "That's a story for another day.",
+            "destination_nodes": [
+                // CORRECT: Loops back to the main hub instead of ending the conversation.
+                { "node_id": "return", "prompt_replacement": "Alright, let's talk about something else." }
+            ]
+        }
+        ```
+
+*   **`end`**: This node is ONLY for explicitly ending the conversation from the main `return` hub. It should almost always be a direct destination from the `return` node, giving the player a clear "goodbye" option. It should NOT be the termination point for individual story or quest lines.
+
+*   **`trade`**: A mandatory node for any NPC where `is_merchant` is `true`. After the trade interaction is complete, it MUST loop back to the `return` node.
+
+
+
 
 **Storytelling and Dialogue Flow**:
 - For half of all NPCs make their stories 90 seconds long. Break it down into chain of 2-3-4 nodes.
@@ -332,6 +361,45 @@ outcomes: [
 - Always pair `HAVE_ITEM` conditions with `ITEM_LOSE` outcomes
 - Quest items should have type `quest`
 - Don't use `item_id:  "caps"` for currency; caps are part of player's stat
+
+
+### 3.5 Dialogue Flow Guardrails
+
+To ensure a non-blocking and player-friendly experience, every `dialogue_graph` must adhere to the following structural guardrails, centered around the `return` node.
+
+*   **Guardrail #1: Perpetual Story Availability.** The `return` node MUST always contain a non-conditional destination node that leads back to the beginning of the NPC's main story sub-graph (e.g., `story_1`). This ensures a player can never permanently miss an NPC's backstory, even if they skip it during the first conversation. A `prompt_replacement` should be used to rephrase the entry as a reminder (e.g., "Can you tell me about yourself again?").
+
+*   **Guardrail #2: Perpetual Quest Availability.** For every quest an NPC can give, the `return` node MUST contain a conditional destination node that leads to that quest's introductory node.
+    *   This node's condition MUST be `{ "type": "QUEST_STAGE", "quest_id": "the_quest_id", "stage": 0 }`.
+    *   This ensures that if a player rejects a quest or ignores it, they will always have the option to start it on a subsequent visit.
+
+*   **Guardrail #3: Guaranteed Quest State Handling.** The `return` node MUST include conditional destination nodes for every potential "in-progress" and "ready for completion" state of a quest the NPC is involved in.
+    *   **Reminders:** For intermediate stages (`stage > 0` and `stage < 100`), include a conditional "reminder" node (e.g., "How's that task going?").
+    *   **Completion:** For the final step, include a conditional node that checks for the completion criteria (e.g., `{ "type": "HAVE_ITEM", "item_id": "macguffin" }` or `{ "type": "QUEST_STAGE", "quest_id": "the_quest_id", "stage": 99 }`). This node MUST lead to the quest completion sub-graph.
+
+**Example `return` node implementing these guardrails:**
+```javascript
+"return": {
+    "response": "You're back. What do you need?",
+    "destination_nodes": [
+        // Guardrail #1: Perpetual Story Access
+        { "node_id": "story_1", "prompt_replacement": "Tell me about this place again." },
+
+        // Guardrail #2: Perpetual Quest Offer
+        { "node_id": "quest_filter_intro", "prompt_replacement": "You mentioned having a problem?" },
+
+        // Guardrail #3: Quest State Handling (Reminder)
+        { "node_id": "quest_filter_reminder" }, // This node is conditional for stage 1
+
+        // Guardrail #3: Quest State Handling (Completion)
+        { "node_id": "quest_filter_completion" }, // This node is conditional for having the item
+
+        // Standard options
+        { "node_id": "trade" }, // If merchant
+        { "node_id": "end" }    // The "goodbye" option
+    ]
+}
+```
 
 **Guardrails**
 - Once dialogue graph is generated, ensure there are always exist unconditional nodes in conversation (e.g. at least one garanteed path to finish the dialogue)

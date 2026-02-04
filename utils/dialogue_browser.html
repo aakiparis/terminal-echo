@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal Echo - Dialogue Browser</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Terminal Echo - Dialogue Browser</h1>
+            <div class="controls">
+                <div class="selectors">
+                    <label for="location-picker">Location:</label>
+                    <select id="location-picker"></select>
+                    <label for="npc-picker">NPC:</label>
+                    <select id="npc-picker"></select>
+                </div>
+                <div class="stat-block">
+                    <span>Nodes: <strong id="nodes-count">0</strong></span>
+                    <span>Unconditional Edges: <strong id="unconditional-edges-count">0</strong></span>
+                    <span>Conditional Edges: <strong id="conditional-edges-count">0</strong></span>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div id="graph-container"></div>
+            <div id="node-details">
+                <h2>Node Details</h2>
+                <pre id="node-details-content">Select a node to see its details</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Data -->
+    <script src="../js/data/sampleData.js"></script>
+    <!-- Dialogue Browser Logic -->
+    <script src="dialogue_browser.js"></script>
+
+</body>
+</html>
