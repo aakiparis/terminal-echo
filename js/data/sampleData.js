@@ -28,6 +28,11 @@ const LOCATION_DATA = {
         "name": "The Rust Pit",
         "description": "A grimy, open-air workshop built in the hollowed-out chassis of a colossal mining machine. The air smells of ozone and hot metal, and the clang of hammers is constant.",
         "npcs": ["boss_valeria", "ratchet", "doc_eris", "whisper", "corvus"]
+    },
+    "tech_depot": {
+        "name": "Old-World Tech Depot",
+        "description": "A massive, reinforced structure from the old world. Warning signs cover the exterior, and the air hums with the low thrum of active security systems. The main gates loom ahead, imposing and deadly.",
+        "npcs": ["depot_gates", "tech_scavenger_alpha", "tech_scavenger_beta", "tech_scavenger_gamma"]
     }
 };
 
@@ -203,17 +208,38 @@ const NPC_DATA = {
                 },
                 "mara_story_2": {
                     "prompt": "What happened to your crew?",
-                    "response": "We hit an old-world tech depot. Alarms, automated defenses... a slaughter. I was the only one who made it out. I carry their tags to remember them.",
+                    "response": "We hit an old-world tech depot. Alarms, automated defenses... I was the only one who made it out. I carry their tags to remember them.",
                     "destination_nodes": [
-                        { "node_id": "mara_story_3" }
+                        { "node_id": "mara_story_3" },
+                        { "node_id": "mara_story_4" }
                     ]
                 },
                 "mara_story_3": {
                     "prompt": "That's rough. What are you doing here?",
                     "response": "Lying low. Trading what I can find. The Nexus is safer than the wastes, but nowhere is truly safe. You learn that fast.",
                     "destination_nodes": [
+                        { "node_id": "mara_story_4" },
                         { "node_id": "mara_zane_story_1" }, // allows to transit from mara_story sub-graph to mara_zane_story
                         { "node_id": "return" , "prompt_replacement": "Let's talk about something else." }
+                    ]
+                },
+                "mara_story_4": {
+                    "prompt": "Tell me more about the depot gates.",
+                    "response": "The gates... they're the first line of defense. Old-world security system, still active after all these years. The alarm system is brutal - automated turrets, gas traps, the works. But here's the thing: if you're lucky enough or strong enough, you can bypass the system entirely. The gates have a manual override that only responds to high luck or brute force. Anyone else tries to force it... well, let's just say the alarm doesn't discriminate.",
+                    "destination_nodes": [
+                        { "node_id": "mara_story_3" },
+                        { "node_id": "return", "prompt_replacement": "Thanks for the warning." },
+                        { "node_id": "depot_location_unlock" }
+                    ]
+                },
+                "depot_location_unlock": {
+                    "prompt": "Where is this depot?",
+                    "response": "East of here, past the Rust Canyons. You'll know it when you see it - massive reinforced gates, warning signs everywhere. If you're going there, remember what I told you. Luck or strength. Nothing else will get you through those gates alive.",
+                    "outcomes": [
+                        { "type": "LOCATION_UNLOCK", "location_id": "tech_depot" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I'll keep that in mind." }
                     ]
                 },
                 "mara_zane_story_1": {
@@ -399,7 +425,7 @@ const NPC_DATA = {
                 "quest_pest_control_completion": {
                     "conditions": {
                         "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 2 }
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 3 }
                         ]
                     },
                     "prompt": "The Glow-Rats are gone. I cleared the nest.",
@@ -557,16 +583,25 @@ const NPC_DATA = {
                         ]
                     },
                     "prompt": "[ Access the service port to install the scrambler ]",
-                    "response": "[ You slide the data scrambler into the port. Lights on the panel flash wildly as the device begins its work. Suddenly, you hear a frantic skittering from the darkness. ]",
+                    "response": "[ Suddenly, you hear a frantic skittering from the darkness. ]",
                     "destination_nodes": [
                         { "node_id": "rat_attack" }
                     ]
                 },
                 "rat_attack": {
-                    "prompt": "[ Defend yourself! ]",
-                    "response": "[ A swarm of glow-rats bursts from a nearby conduit, enraged by the energy fluctuations! You fight them off, but not before one sinks its teeth into your leg. The last rat falls, and the generator emits a steady, calm hum. The scrambler has done its job. ]",
+                    "prompt": "[ Defend ]",
+                    "response": "[ A swarm of glow-rats bursts from a nearby conduit, enraged by the energy fluctuations! You fight them off, but not before one sinks its teeth into your leg.]",
                     "outcomes": [
-                        { "type": "STAT_CHANGE", "stat": "hp", "value": -15 },
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -10 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "install_scrambler" }
+                    ]
+                },
+                "install_scrambler": {
+                    "prompt": "[ Install the scrambler ]",
+                    "response": "[ You slide the data scrambler into the port. Lights on the panel flash wildly as the device begins its work. The generator emits a steady, calm hum. The scrambler has done its job. ]",
+                    "outcomes": [
                         { "type": "ITEM_LOSE", "item_id": "data_scrambler" },
                         { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 }
                     ],
@@ -681,7 +716,7 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "fight_queen" } ]
                 },
                 "fight_queen": {
-                    "prompt": "[Fight the Rat Queen!]",
+                    "prompt": "[Fight the Rat Queen]",
                     "response": "The battle is fierce. The Queen is fast and powerful, commanding her brood. With a final, desperate lunge, you bring the beast down. As it collapses, something shiny falls from the nest it was guarding.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 3 },
@@ -2009,6 +2044,223 @@ const NPC_DATA = {
                     "destination_nodes": [ { "node_id": "end", "prompt_replacement": "..." } ]
                 },
                 "end": { "prompt": "See you later.", "response": "Don't beat around the bush too long." }
+            }
+        }
+    },
+    "tech_depot": {
+        "depot_gates": {
+            "name": "Depot Gates",
+            "type": "device",
+            "is_available": true,
+            "description": "Massive reinforced gates covered in warning signs. A control panel glows ominously, and you can hear the faint whir of automated security systems beyond.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ The gates loom before you, massive and imposing. Warning lights pulse rhythmically. A control panel is set into the wall beside the gates. ]",
+                    "destination_nodes": [
+                        { "node_id": "attempt_open_luck" },
+                        { "node_id": "attempt_open_str" },
+                        { "node_id": "attempt_force" },
+                        { "node_id": "leave" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The gates remain closed, the security systems still active. ]",
+                    "destination_nodes": [
+                        { "node_id": "attempt_open_luck" },
+                        { "node_id": "attempt_open_str" },
+                        { "node_id": "attempt_force" },
+                        { "node_id": "leave" }
+                    ]
+                },
+                "attempt_open_luck": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "STAT_CHECK", "stat": "lck", "min": 9 }
+                        ]
+                    },
+                    "prompt": "[LCK 9] Try to use the manual override with precision and luck.",
+                    "response": "[ Your fingers dance across the control panel with uncanny precision. The system recognizes your high luck stat and grants access. The gates slide open with a low rumble, revealing the depot interior. ]",
+                    "outcomes": [
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_alpha" },
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_beta" },
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_gamma" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "attempt_open_str": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "STAT_CHECK", "stat": "str", "min": 9 }
+                        ]
+                    },
+                    "prompt": "[STR 9] Force the gates open with brute strength.",
+                    "response": "[ You plant your feet and heave against the massive gates. Your strength is more than enough - the manual override mechanism yields to your brute force. The gates grind open, revealing the depot interior. ]",
+                    "outcomes": [
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_alpha" },
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_beta" },
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_gamma" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "attempt_force": {
+                    "prompt": "[ Try to force the gates open anyway. ]",
+                    "response": "[ You attempt to force the gates, but without the required luck or strength, the security system activates. Alarms blare, automated turrets deploy, and gas fills the area! You take 30 damage from the security system before managing to retreat. ]",
+                    "outcomes": [
+                        { "type": "STAT_CHANGE", "stat": "hp", "value": -30 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "leave": {
+                    "prompt": "[ Leave the depot gates. ]",
+                    "response": "[ You decide against attempting to breach the gates. Better to come back when you're stronger or luckier. ]",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "end": {
+                    "prompt": "[ Step back. ]",
+                    "response": "[ The gates remain as they were. ]"
+                }
+            }
+        },
+        "tech_scavenger_alpha": {
+            "name": "Alpha",
+            "type": "npc",
+            "is_available": false,
+            "description": "A wiry scavenger hunched over a workbench covered in disassembled electronics. His fingers move with practiced precision as he tinkers with old-world tech.",
+            "is_merchant": true,
+            "inventory": ["military_goggles", "harmonic_resonator"],
+            "dialogue_graph": {
+                "start": {
+                    "response": "Well, well. Someone actually made it past the gates. Impressive. I'm Jax. I deal in old-world electronics and precision tools. What brings you to this death trap?",
+                    "destination_nodes": [
+                        { "node_id": "story_1" },
+                        { "node_id": "trade" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "Back again? Still alive, I see.",
+                    "destination_nodes": [
+                        { "node_id": "story_1", "prompt_replacement": "Tell me about this place." },
+                        { "node_id": "trade" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "How did you get in here?",
+                    "response": "Same way you did - luck or strength. The gates are the only way in, and not many can bypass that security system. Those of us who made it through set up shop inside. It's dangerous, but the tech here is worth the risk.",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "trade": {
+                    "prompt": "Let's trade.",
+                    "response": "Always happy to do business with someone who can get past those gates.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Anything else?" }
+                    ]
+                },
+                "end": {
+                    "prompt": "I'll be going.",
+                    "response": "Stay safe out there. The depot doesn't forgive mistakes."
+                }
+            }
+        },
+        "tech_scavenger_beta": {
+            "name": "Beta",
+            "type": "npc",
+            "is_available": false,
+            "description": "A sharp-eyed woman sorting through a pile of salvaged components. She moves with the confidence of someone who's survived the depot's dangers many times.",
+            "is_merchant": true,
+            "inventory": ["stimpack", "leather_armor"],
+            "dialogue_graph": {
+                "start": {
+                    "response": "Another survivor. Good. I'm Nova. I deal in survival gear and medical supplies. You'll need both if you plan on staying here long.",
+                    "destination_nodes": [
+                        { "node_id": "story_1" },
+                        { "node_id": "trade" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "You're still here. Smart.",
+                    "destination_nodes": [
+                        { "node_id": "story_1", "prompt_replacement": "Tell me about the depot." },
+                        { "node_id": "trade" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "What's it like living here?",
+                    "response": "Dangerous, but profitable. The old-world tech here is pristine - better than anything you'll find in the settlements. We've learned to work around the security systems. Just don't trigger the alarms.",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "trade": {
+                    "prompt": "Show me what you have.",
+                    "response": "Take your pick. Everything here is top quality.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Anything else?" }
+                    ]
+                },
+                "end": {
+                    "prompt": "See you around.",
+                    "response": "Watch your step. The depot has a way of surprising the unwary."
+                }
+            }
+        },
+        "tech_scavenger_gamma": {
+            "name": "Gamma",
+            "type": "npc",
+            "is_available": false,
+            "description": "A burly scavenger with cybernetic enhancements visible on his arms. He's examining a large piece of old-world machinery with intense focus.",
+            "is_merchant": true,
+            "inventory": ["military_goggles", "stimpack", "purified_water"],
+            "dialogue_graph": {
+                "start": {
+                    "response": "Huh. Made it past the gates. Not many do. I'm Rex. I deal in high-end tech and enhancements. If you're looking for the good stuff, you've come to the right place.",
+                    "destination_nodes": [
+                        { "node_id": "story_1" },
+                        { "node_id": "trade" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "Back for more?",
+                    "destination_nodes": [
+                        { "node_id": "story_1", "prompt_replacement": "Tell me about yourself." },
+                        { "node_id": "trade" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "How long have you been here?",
+                    "response": "Long enough to know every corner of this place. The depot's full of old-world wonders - power cores, cybernetic components, advanced electronics. Worth the risk if you know what you're doing.",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "trade": {
+                    "prompt": "What do you have?",
+                    "response": "The best tech the old world had to offer. Take a look.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Anything else?" }
+                    ]
+                },
+                "end": {
+                    "prompt": "I'll be on my way.",
+                    "response": "Don't let the gates catch you off guard on the way out."
+                }
             }
         }
     }
