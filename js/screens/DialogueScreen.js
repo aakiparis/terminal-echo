@@ -163,6 +163,8 @@ class DialogueScreen extends BaseScreen {
         let playerUpdates = {};
         let rootUpdates = {};
         const questsUpdates = { ...(state.quests || {}) };
+        // Track unlocked NPCs separately to accumulate multiple unlocks
+        let accumulatedUnlockedNpcs = { ...(state.unlocked_npcs || {}) };
 
         outcomes.forEach(outcome => {
             switch (outcome.type) {
@@ -197,14 +199,10 @@ class DialogueScreen extends BaseScreen {
                     }
                     break;
                 case 'NPC_UNLOCK':
-                    const currentUnlockedNpcs = state.unlocked_npcs || {};
-                    const locationNpcs = currentUnlockedNpcs[outcome.location_id] || [];
+                    const locationNpcs = accumulatedUnlockedNpcs[outcome.location_id] || [];
                     if (!locationNpcs.includes(outcome.npc_id)) {
-                        const updatedUnlockedNpcs = {
-                            ...currentUnlockedNpcs,
-                            [outcome.location_id]: [...locationNpcs, outcome.npc_id]
-                        };
-                        rootUpdates.unlocked_npcs = updatedUnlockedNpcs;
+                        // Update the accumulated object instead of creating a new one each time
+                        accumulatedUnlockedNpcs[outcome.location_id] = [...locationNpcs, outcome.npc_id];
                         const npcData = NPC_DATA[outcome.location_id]?.[outcome.npc_id];
                         const npcName = npcData?.name || outcome.npc_id;
                         this.eventBus.emit('log', { text: `[NPC unlocked: ${npcName}]`, type: 'system' });
@@ -251,6 +249,10 @@ class DialogueScreen extends BaseScreen {
         }
         if (Object.keys(questsUpdates).length > 0) {
             rootUpdates.quests = questsUpdates;
+        }
+        // Set the accumulated unlocked NPCs if any were unlocked
+        if (Object.keys(accumulatedUnlockedNpcs).length > 0) {
+            rootUpdates.unlocked_npcs = accumulatedUnlockedNpcs;
         }
         if (Object.keys(rootUpdates).length > 0) this.stateManager.updateState(rootUpdates);
     }

@@ -595,10 +595,10 @@ const NPC_DATA = {
                         { "type": "STAT_CHANGE", "stat": "hp", "value": -10 }
                     ],
                     "destination_nodes": [
-                        { "node_id": "install_scrambler" }
+                        { "node_id": "install_scrambler_2" }
                     ]
                 },
-                "install_scrambler": {
+                "install_scrambler_2": {
                     "prompt": "[ Install the scrambler ]",
                     "response": "[ You slide the data scrambler into the port. Lights on the panel flash wildly as the device begins its work. The generator emits a steady, calm hum. The scrambler has done its job. ]",
                     "outcomes": [
@@ -2077,11 +2077,11 @@ const NPC_DATA = {
                 "attempt_open_luck": {
                     "conditions": {
                         "condition": [
-                            { "type": "STAT_CHECK", "stat": "lck", "min": 9 }
+                            { "type": "STAT_CHECK", "stat": "lck", "min": 8 }
                         ]
                     },
-                    "prompt": "[LCK 9] Try to use the manual override with precision and luck.",
-                    "response": "[ Your fingers dance across the control panel with uncanny precision. The system recognizes your high luck stat and grants access. The gates slide open with a low rumble, revealing the depot interior. ]",
+                    "prompt": "Try to use the manual override with precision and luck.",
+                    "response": "[ Your fingers dance across the control panel with uncanny precision. The gates slide open with a low rumble, revealing the depot interior. ]",
                     "outcomes": [
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_alpha" },
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_beta" },
@@ -2094,10 +2094,10 @@ const NPC_DATA = {
                 "attempt_open_str": {
                     "conditions": {
                         "condition": [
-                            { "type": "STAT_CHECK", "stat": "str", "min": 9 }
+                            { "type": "STAT_CHECK", "stat": "str", "min": 8 }
                         ]
                     },
-                    "prompt": "[STR 9] Force the gates open with brute strength.",
+                    "prompt": "Force the gates open with brute strength.",
                     "response": "[ You plant your feet and heave against the massive gates. Your strength is more than enough - the manual override mechanism yields to your brute force. The gates grind open, revealing the depot interior. ]",
                     "outcomes": [
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_alpha" },
