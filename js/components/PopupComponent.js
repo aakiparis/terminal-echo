@@ -40,7 +40,20 @@ class PopupComponent extends BaseComponent {
     }
 
     handleInput(input) {
-        // Pass input directly to the internal menu
+        // Handle UI_ACTION for attribute buttons
+        if (input.type === 'UI_ACTION') {
+            const item = this.menu.items.find(i => i.id === input.stat);
+            if (item && item.type === 'attribute' && item.onAdjust) {
+                if (input.action === 'increase') {
+                    item.onAdjust(1);
+                } else if (input.action === 'decrease') {
+                    item.onAdjust(-1);
+                }
+            }
+            return;
+        }
+        
+        // Pass other input directly to the internal menu
         this.menu.handleInput(input);
     }
 }
