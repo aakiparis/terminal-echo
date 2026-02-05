@@ -2085,7 +2085,8 @@ const NPC_DATA = {
                     "outcomes": [
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_alpha" },
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_beta" },
-                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_gamma" }
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_gamma" },
+                        { "type": "NPC_LOCK", "location_id": "tech_depot", "npc_id": "depot_gates" }
                     ],
                     "destination_nodes": [
                         { "node_id": "end" }
@@ -2102,7 +2103,8 @@ const NPC_DATA = {
                     "outcomes": [
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_alpha" },
                         { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_beta" },
-                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_gamma" }
+                        { "type": "NPC_UNLOCK", "location_id": "tech_depot", "npc_id": "tech_scavenger_gamma" },
+                        { "type": "NPC_LOCK", "location_id": "tech_depot", "npc_id": "depot_gates" }
                     ],
                     "destination_nodes": [
                         { "node_id": "end" }
@@ -2140,7 +2142,7 @@ const NPC_DATA = {
             "inventory": ["military_goggles", "harmonic_resonator"],
             "dialogue_graph": {
                 "start": {
-                    "response": "Well, well. Someone actually made it past the gates. Impressive. I'm Jax. I deal in old-world electronics and precision tools. What brings you to this death trap?",
+                    "response": "Well, well. Someone actually made it past the gates. Impressive. I'm Alpha. I deal in old-world electronics and precision tools. What brings you to this death trap?",
                     "destination_nodes": [
                         { "node_id": "story_1" },
                         { "node_id": "trade" },
@@ -2184,7 +2186,7 @@ const NPC_DATA = {
             "inventory": ["stimpack", "leather_armor"],
             "dialogue_graph": {
                 "start": {
-                    "response": "Another survivor. Good. I'm Nova. I deal in survival gear and medical supplies. You'll need both if you plan on staying here long.",
+                    "response": "Another survivor. Good. I'm Beta. I deal in survival gear and medical supplies. You'll need both if you plan on staying here long.",
                     "destination_nodes": [
                         { "node_id": "story_1" },
                         { "node_id": "trade" },
@@ -2228,7 +2230,7 @@ const NPC_DATA = {
             "inventory": ["military_goggles", "stimpack", "purified_water"],
             "dialogue_graph": {
                 "start": {
-                    "response": "Huh. Made it past the gates. Not many do. I'm Rex. I deal in high-end tech and enhancements. If you're looking for the good stuff, you've come to the right place.",
+                    "response": "Huh. Made it past the gates. Not many do. I'm Gamma. I deal in high-end tech and enhancements. If you're looking for the good stuff, you've come to the right place.",
                     "destination_nodes": [
                         { "node_id": "story_1" },
                         { "node_id": "trade" },

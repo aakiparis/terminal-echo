@@ -79,7 +79,7 @@ class LocationScreen extends BaseScreen {
             type: 'navigation',
             action: () => {
                 this.navigationManager.navigateTo({ screen: 'WorldMap' })
-                this.eventBus.emit('log', { text: `You've leaved ${locationId}` });
+                this.eventBus.emit('log', { text: `You've left ${locationData.name}` });
             }
         });
         
@@ -93,7 +93,9 @@ class LocationScreen extends BaseScreen {
     
     talkTo(locationId, npcId) {
         this.navigationManager.navigateTo({ screen: 'Dialogue', params: { locationId, npcId } });
-        this.eventBus.emit('log', { text: `You're talking to ${npcId}` });
+        const npcData = NPC_DATA[locationId]?.[npcId];
+        const npcName = npcData?.name || npcId;
+        this.eventBus.emit('log', { text: `You're talking to ${npcName}` });
     }
 
     // This method was missing, causing inputs to be ignored.

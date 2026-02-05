@@ -105,7 +105,9 @@ class WorldMapScreen extends BaseScreen {
     travelTo(locationId) {
         this.stateManager.updateState({ currentLocation: locationId });
         this.navigationManager.navigateTo({ screen: 'Location', params: { id: locationId } });
-        this.eventBus.emit('log', { text: `You've arrived to ${locationId}` });
+        const locationData = LOCATION_DATA[locationId];
+        const locationName = locationData?.name || locationId;
+        this.eventBus.emit('log', { text: `You've arrived at ${locationName}` });
     }
 
     // This method handles arrow keys and enter.
