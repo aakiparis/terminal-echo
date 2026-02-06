@@ -46,7 +46,7 @@ class TradeScreen extends BaseScreen {
         menuItems.push({
             id: 'header_npc',
             label: `--- ${this.sessionNpcData.name}'s Wares ---`,
-            disabled: true // Headers are not selectable
+            type: 'separator'
         });
 
         // 2. Add all items from the NPC's inventory
@@ -68,9 +68,8 @@ class TradeScreen extends BaseScreen {
         menuItems.push({
             id: 'header_player',
             label: `--- Your Inventory ---`,
-            disabled: true
+            type: 'separator'
         });
-
         // 4. Add all items from the Player's inventory
         (basePlayerState.inventory || []).forEach(itemId => {
             const itemData = ITEMS_DATA[itemId];
@@ -88,8 +87,8 @@ class TradeScreen extends BaseScreen {
         // 5. Add the "Finish Trading" option
         menuItems.push({
             id: 'delimiter',
-            label: `--- --- ---`,
-            disabled: true // delimiters are not selectable
+            label: `------`,
+            type: 'separator'
         });
         menuItems.push({
             id: 'action_exit',

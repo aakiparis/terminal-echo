@@ -206,7 +206,7 @@ body {
 
 .menu-item {
     padding: var(--spacing-sm);
-    margin: 5px 0;
+    /* margin: 5px 0; */
     transition: all var(--transition-fast);
     /* cursor: pointer; */
     font-size: var(--font-size-base);
@@ -264,6 +264,35 @@ body {
 }
 
 /* === MENU ITEM TYPES === */
+
+/* Separator - compact delimiter */
+.menu-item.type-separator {
+    padding: 0 0 0 calc(var(--spacing-md)*2);
+    margin: 0px;
+    min-height: auto;
+    height: auto;
+    cursor: default;
+    font-size: 10px;
+}
+
+.menu-item.type-separator:hover {
+    background: none;
+}
+
+.menu-item.type-separator.focused {
+    background: none;
+    color: var(--color-text);
+}
+
+.menu-item.type-separator.focused::before {
+    display: none;
+}
+
+.menu-separator-content {
+    opacity: 0.5;
+    font-size: calc(var(--font-size-base) * 0.85);
+    letter-spacing: 2px;
+}
 
 /* Attribute Adjuster */
 .menu-item.type-attribute {

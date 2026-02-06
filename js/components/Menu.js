@@ -7,10 +7,10 @@ class Menu extends BaseComponent {
     }
 
     findInitialFocus(startIndex) {
-        if (!this.items[startIndex] || !this.items[startIndex].disabled) {
+        if (!this.items[startIndex] || (!this.items[startIndex].disabled && this.items[startIndex].type !== 'separator')) {
             return startIndex;
         }
-        return this.items.findIndex(item => !item.disabled);
+        return this.items.findIndex(item => !item.disabled && item.type !== 'separator');
     }
 
     render() {
@@ -26,6 +26,9 @@ class Menu extends BaseComponent {
         let itemContent = '';
 
         switch (item.type) {
+            case 'separator':
+                itemContent = `<span class="menu-separator-content">${item.label || '---'}</span>`;
+                break;
             case 'attribute':
                 itemContent = `
                     <span class="menu-item-label">${item.label}</span>
@@ -110,9 +113,9 @@ class Menu extends BaseComponent {
         do {
             newIndex = (newIndex + direction + numItems) % numItems;
             attempts++;
-        } while (this.items[newIndex].disabled && attempts < numItems);
+        } while ((this.items[newIndex].disabled || this.items[newIndex].type === 'separator') && attempts < numItems);
 
-        if (!this.items[newIndex].disabled) {
+        if (!this.items[newIndex].disabled && this.items[newIndex].type !== 'separator') {
             this.focusedIndex = newIndex;
         }
 

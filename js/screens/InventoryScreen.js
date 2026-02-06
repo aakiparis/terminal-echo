@@ -51,10 +51,10 @@ class InventoryScreen extends BaseScreen {
 
         // Add a back button
         menuItems.push({
-            id: 'delimiter',
-            label: `--- --- ---`,
-            disabled: true // delimiters are not selectable
-        });
+            id: 'separator',
+            label: `------`,
+            type: 'separator'
+        },);
         menuItems.push({
             id: 'back',
             label: '[ BACK ]',

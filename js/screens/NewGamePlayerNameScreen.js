@@ -12,9 +12,9 @@ class NewGamePlayerNameScreen extends BaseScreen {
                 value: this.playerName,
             },
             {
-                id: 'delimiter',
-                label: `--- --- ---`,
-                disabled: true // delimiters are not selectable
+                id: 'separator',
+                label: `------`,
+                type: 'separator'
             },
             { id: 'confirm', label: '[ CONFIRM ]', type: 'action', action: () => this.confirmName() },
             { id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGameMode' }) },

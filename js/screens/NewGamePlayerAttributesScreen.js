@@ -2,8 +2,8 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
     initComponents() {
         if (!this.attributes) {
             this.totalPoints = 15;
-            this.attributes = { str: 5, int: 5, lck: 5 };
-            this.pointsRemaining = this.totalPoints - 15;
+            this.attributes = { str: 1, int: 1, lck: 1 };
+            this.pointsRemaining = this.totalPoints - 3;
         }
         
         this.updateComponents();
@@ -19,9 +19,9 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
             { id: 'int', label: 'Intelligence (INT)', type: 'attribute', value: this.attributes.int, onAdjust: (val) => this.adjustAttribute('int', val) },
             { id: 'lck', label: 'Luck (LCK)', type: 'attribute', value: this.attributes.lck, onAdjust: (val) => this.adjustAttribute('lck', val) },
             {
-                id: 'delimiter',
-                label: `--- --- ---`,
-                disabled: true // delimiters are not selectable
+                id: 'separator',
+                label: `------`,
+                type: 'separator'
             },
             { id: 'confirm', label: '[ CONFIRM ]', type: 'action', action: () => this.confirmAttributes(), disabled: this.pointsRemaining > 0 },
             { id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGamePlayerName' }) },

@@ -18,10 +18,10 @@ class WorldMapScreen extends BaseScreen {
 
         // Add static options as per the spec
         menuItems.push({
-            id: 'delimiter',
-            label: `--- --- ---`,
-            disabled: true // delimiters are not selectable
-        });
+            id: 'separator',
+            label: `------`,
+            type: 'separator'
+        },);
         // menuItems.push({
         //     id: 'inventory',
         //     label: '[ INVENTORY ]',

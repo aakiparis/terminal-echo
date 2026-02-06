@@ -15,9 +15,9 @@ class NewGameModeScreen extends BaseScreen {
                 action: () => this.showWaitingListPopup()
             },
             {
-                id: 'delimiter',
-                label: `--- --- ---`,
-                disabled: true // delimiters are not selectable
+                id: 'separator',
+                label: `------`,
+                type: 'separator'
             },
             { id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'MainMenu' }) },
         ];
