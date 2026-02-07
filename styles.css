@@ -38,7 +38,7 @@ body {
     color: var(--color-text);
     /*overflow:  scroll;*/
     /* cursor: none; */
-    /*user-select: none;*/
+    user-select: none;
     letter-spacing: 1px;
 }
 
@@ -158,6 +158,7 @@ body {
     display: flex;
     justify-content: space-between;
     font-weight: bold;
+    user-select: none;
 }
 
 .status-left,
@@ -230,6 +231,7 @@ body {
     flex-direction: column;
     height: 100%;
     width: 100%;
+    user-select: none;
 }
 
 .screen.active {
@@ -272,6 +274,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none;
+    touch-action: manipulation;
 }
 
 .menu-item:hover {
@@ -582,7 +586,7 @@ body {
         --spacing-lg: 10px;
 
         /* cursor: pointer; */
-        user-select: all;
+        /* user-select: all; */
     }
 
     .terminal-frame {
