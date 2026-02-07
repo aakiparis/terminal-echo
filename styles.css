@@ -586,7 +586,7 @@ body {
     }
 }
 
-@media (max-width:  768px) {
+@media (min-width: 401px) and (max-width: 768px) {
     :root {
         --font-size-base: 22px;
         --spacing-sm: 5px;
