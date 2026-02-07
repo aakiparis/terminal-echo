@@ -22,6 +22,9 @@
     --font-primary: 'VT323', monospace;
     --font-size-base: 30px;
     --text-shadow: 0 0 10px #ffb000; /* amber glow: #ffe3a6;*/
+    --scan-line-color: rgba(255, 176, 0, 0); /* scanning line gradient start */
+    --scan-line-color-mid: rgba(255, 176, 0, 0.08); /* scanning line gradient middle */
+    --scan-line-color-end: rgba(255, 176, 0, 0.15); /* scanning line gradient end */
     
     --spacing-sm: 10px;
     --spacing-md: 15px;
@@ -95,9 +98,9 @@ body {
     height: 100px;
     background: linear-gradient(
         to bottom,
-        #FFB00000 0%,
-        #FFB00015 50%,
-        #FFB00025 100%
+        var(--scan-line-color) 0%,
+        var(--scan-line-color-mid) 50%,
+        var(--scan-line-color-end) 100%
     );
     pointer-events: none;
     z-index: 11;

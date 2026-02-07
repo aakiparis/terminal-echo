@@ -18,7 +18,25 @@ class Menu extends BaseComponent {
         const html = `<ul class="menu-list">${itemsHtml}</ul>`;
         this.element = this._createElementFromHTML(html);
         this.updateFocus();
+        this.bindHoverEvents();
         return this.element;
+    }
+    
+    bindHoverEvents() {
+        if (!this.element) return;
+        
+        this.element.querySelectorAll('.menu-item').forEach((li) => {
+            const itemId = li.dataset.id;
+            const item = this.items.find(i => i.id === itemId);
+            
+            if (item && item.onHover) {
+                li.addEventListener('mouseenter', () => {
+                    if (!item.disabled) {
+                        item.onHover();
+                    }
+                });
+            }
+        });
     }
     
     renderItem(item, index) {
@@ -116,10 +134,16 @@ class Menu extends BaseComponent {
         } while ((this.items[newIndex].disabled || this.items[newIndex].type === 'separator') && attempts < numItems);
 
         if (!this.items[newIndex].disabled && this.items[newIndex].type !== 'separator') {
+            const oldItem = this.items[this.focusedIndex];
             this.focusedIndex = newIndex;
+            this.updateFocus();
+            
+            // Trigger hover callback when navigating with keyboard
+            const newItem = this.items[newIndex];
+            if (newItem && newItem.onHover) {
+                newItem.onHover();
+            }
         }
-
-        this.updateFocus();
     }
 
     // New method to surgically update an item's value

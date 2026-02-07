@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Core Systems
+            // Core Systems - Initialize ThemeManager first to apply saved theme
+            const themeManager = new ThemeManager();
             const eventBus = new EventBus();
             const analyticsManager = new AnalyticsManager();
             const stateManager = new StateManager(eventBus);
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             screens.forEach(ScreenClass => {
                 const screenInstance = new ScreenClass({
                     name: ScreenClass.name.replace('Screen', ''),
-                    eventBus, stateManager, navigationManager, analyticsManager
+                    eventBus, stateManager, navigationManager, analyticsManager, themeManager
                 });
                 navigationManager.registerScreen(screenInstance);
             });

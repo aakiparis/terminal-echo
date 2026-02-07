@@ -26,6 +26,7 @@ class MainMenuScreen extends BaseScreen {
         const menuItems = [
             { id: 'new-game', label: '[ NEW GAME ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGameMode' }) },
             { id: 'load-game', label: '[ LOAD GAME ]', type: 'action', action: () => this.loadGame() },
+            { id: 'appearance', label: '[ THEME ]', type: 'action', action: () => this.showAppearancePopup() },
             { id: 'credits', label: '[ CREDITS ]', type: 'action', action: () => this.showCredits() },
         ];
 
@@ -39,6 +40,60 @@ class MainMenuScreen extends BaseScreen {
 
     showCredits() {
         this.eventBus.emit('log', { text: 'Created by Andrei Kiparis with Terminal Echo GPT' });
+    }
+
+    showAppearancePopup() {
+        if (!this.themeManager) {
+            this.eventBus.emit('log', { text: 'Theme manager not available.', type: 'error' });
+            return;
+        }
+
+        // Store original theme to restore if cancelled
+        const originalTheme = this.themeManager.getCurrentTheme();
+        const allThemes = this.themeManager.getAllThemes();
+
+        const menuItems = allThemes.map(themeKey => {
+            const themeName = this.themeManager.getThemeName(themeKey);
+            const isCurrent = themeKey === originalTheme;
+            const label = isCurrent ? `[ ${themeName.toUpperCase()} ] (CURRENT)` : `[ ${themeName.toUpperCase()} ]`;
+            
+            return {
+                id: `theme-${themeKey}`,
+                label: label,
+                type: 'action',
+                action: () => {
+                    this.themeManager.applyTheme(themeKey);
+                    this.navigationManager.closePopup();
+                },
+                onHover: () => {
+                    // Preview theme on hover/focus
+                    this.themeManager.applyTheme(themeKey);
+                }
+            };
+        });
+
+        menuItems.push({
+            id: 'separator',
+            label: '------',
+            type: 'separator'
+        });
+
+        menuItems.push({
+            id: 'cancel',
+            label: '[ CANCEL ]',
+            type: 'action',
+            action: () => {
+                // Restore original theme if user cancels
+                this.themeManager.applyTheme(originalTheme);
+                this.navigationManager.closePopup();
+            }
+        });
+
+        this.navigationManager.showPopup({
+            title: 'TERMINAL APPEARANCE',
+            message: 'Select a color scheme for your terminal.',
+            menuItems: menuItems
+        });
     }
 
     loadGame() {
