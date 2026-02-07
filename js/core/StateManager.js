@@ -29,7 +29,9 @@ class StateManager {
             locked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] } - NPCs that were locked via NPC_LOCK
             currentScreen: 'MainMenu',
             quests: {},
-            eventHistory: []
+            eventHistory: [],
+            has_new_location_unlocked: false,
+            newly_unlocked_location_id: null
         };
     }
 

@@ -73,9 +73,15 @@ class LocationScreen extends BaseScreen {
             type: 'action',
             action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
         });
+        // Check if there's a new location unlocked
+        const hasNewLocation = state.has_new_location_unlocked || false;
+        const worldMapLabel = hasNewLocation 
+            ? `[ WORLD MAP<span class="location-pulse-indicator"></span> ]`
+            : '[ WORLD MAP ]';
+        
         menuItems.push({
             id: 'travel',
-            label: '[ WORLD MAP ]',
+            label: worldMapLabel,
             type: 'navigation',
             action: () => {
                 this.navigationManager.navigateTo({ screen: 'WorldMap' })

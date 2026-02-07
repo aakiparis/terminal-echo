@@ -6,11 +6,17 @@ class WorldMapScreen extends BaseScreen {
         this.components.description = new ScreenDescription({ text: 'Select a destination to travel to.', centered: true });
 
         const unlockedLocations = state.unlocked_locations || [];
+        const newlyUnlockedLocationId = state.newly_unlocked_location_id;
         const menuItems = unlockedLocations.map(locId => {
             const locationData = LOCATION_DATA[locId];
+            const isNewlyUnlocked = locId === newlyUnlockedLocationId;
+            const locationLabel = locationData ? locationData.name : 'Unknown Location';
+            const label = isNewlyUnlocked 
+                ? `${locationLabel}<span class="location-pulse-indicator"></span>`
+                : locationLabel;
             return {
                 id: `loc-${locId}`,
-                label: locationData ? locationData.name : 'Unknown Location',
+                label: label,
                 type: 'navigation',
                 action: () => this.travelTo(locId),
             };
@@ -103,7 +109,14 @@ class WorldMapScreen extends BaseScreen {
     }
     
     travelTo(locationId) {
-        this.stateManager.updateState({ currentLocation: locationId });
+        const state = this.stateManager.getState();
+        // Clear the new location indicator if player visits the newly unlocked location
+        const updates = { currentLocation: locationId };
+        if (state.newly_unlocked_location_id === locationId) {
+            updates.has_new_location_unlocked = false;
+            updates.newly_unlocked_location_id = null;
+        }
+        this.stateManager.updateState(updates);
         this.navigationManager.navigateTo({ screen: 'Location', params: { id: locationId } });
         const locationData = LOCATION_DATA[locationId];
         const locationName = locationData?.name || locationId;

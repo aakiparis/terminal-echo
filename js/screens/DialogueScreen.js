@@ -195,6 +195,8 @@ class DialogueScreen extends BaseScreen {
                 case 'LOCATION_UNLOCK':
                      if (!state.unlocked_locations.includes(outcome.location_id)) {
                         rootUpdates.unlocked_locations = [...state.unlocked_locations, outcome.location_id];
+                        rootUpdates.has_new_location_unlocked = true;
+                        rootUpdates.newly_unlocked_location_id = outcome.location_id;
                         this.eventBus.emit('log', { text: `[New location unlocked: ${LOCATION_DATA[outcome.location_id].name}]`, type: 'system' });
                     }
                     break;

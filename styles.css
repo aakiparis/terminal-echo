@@ -200,6 +200,30 @@ body {
     }
 }
 
+/* Location Unlock Indicator */
+.location-pulse-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary);
+    animation: locationPulse 1s ease-in-out infinite;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+@keyframes locationPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
 /* === SCREEN BASE === */
 .screen {
     display: none;
