@@ -166,6 +166,40 @@ body {
     gap: var(--spacing-lg);
 }
 
+/* HP Low Warning */
+.hp-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.hp-display.hp-low {
+    color: #ff3333;
+    text-shadow: 0 0 10px #ff3333;
+}
+
+.hp-pulse-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ff3333;
+    box-shadow: 0 0 8px #ff3333;
+    animation: hpPulse 1s ease-in-out infinite;
+}
+
+@keyframes hpPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
 /* === SCREEN BASE === */
 .screen {
     display: none;

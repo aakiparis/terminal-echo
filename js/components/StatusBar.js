@@ -6,11 +6,18 @@ class StatusBar extends BaseComponent {
 
     render() {
         const { name, hp, maxHp, xp, level, caps, reputation } = this.state.stats || {};
+        const currentHp = hp || 0;
+        const currentMaxHp = maxHp || 0;
+        const isLowHp = currentMaxHp > 0 && currentHp <= currentMaxHp * 0.25;
+        const hpClass = isLowHp ? 'hp-low' : '';
+        const pulseCircle = isLowHp ? '<span class="hp-pulse-indicator"></span>' : '';
         const html = `
             <div class="terminal-status">
                 <div class="status-left">
                     <span>NAME: ${name || 'N/A'}</span>
-                    <span>HP: ${hp || 0}/${maxHp || 0}</span>
+                    <span class="hp-display ${hpClass}">
+                        HP: ${currentHp}/${currentMaxHp} ${pulseCircle}
+                    </span>
                     <!--<span>XP: ${xp || 0}</span>
                     <span>XP: ${xp || 0} (LVL: ${level || 1})</span>-->
                 </div>
