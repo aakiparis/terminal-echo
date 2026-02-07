@@ -138,6 +138,7 @@ body {
     flex: 1;
     padding:  var(--spacing-md) 0;
     overflow-y:  scroll;
+    cursor: default;
 }
 
 .terminal-footer {
@@ -232,6 +233,7 @@ body {
     height: 100%;
     width: 100%;
     user-select: none;
+    cursor: default;
 }
 
 .screen.active {
@@ -268,7 +270,7 @@ body {
     padding: var(--spacing-sm);
     /* margin: 5px 0; */
     transition: all var(--transition-fast);
-    /* cursor: pointer; */
+    cursor: pointer !important;
     font-size: var(--font-size-base);
     position: relative;
     display: flex;
@@ -279,10 +281,12 @@ body {
 }
 
 .menu-item:hover {
+    cursor: pointer !important;
     background: var(--color-bg-light);
 }
 
 .menu-item.focused {
+    cursor: pointer !important;
     background: var(--color-primary);
     color: var(--color-text-inverse);
     /*font-weight: bold;*/
@@ -313,6 +317,7 @@ body {
 .menu-item-label {
     flex: 1;
     padding-left: var(--spacing-lg);
+    cursor: pointer !important;
 }
 
 .menu-item-hotkey {
