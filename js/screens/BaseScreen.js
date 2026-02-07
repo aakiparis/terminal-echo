@@ -4,6 +4,7 @@ class BaseScreen {
         this.eventBus = config.eventBus;
         this.stateManager = config.stateManager;
         this.navigationManager = config.navigationManager;
+        this.analyticsManager = config.analyticsManager;
         this.element = null; // The root DOM element for this screen
         this.components = {}; // Holds component instances
     }

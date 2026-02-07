@@ -1,8 +1,9 @@
 class NavigationManager {
-    constructor(eventBus, stateManager, screenContainer) {
+    constructor(eventBus, stateManager, screenContainer, analyticsManager = null) {
         this.eventBus = eventBus;
         this.stateManager = stateManager;
         this.screenContainer = screenContainer;
+        this.analyticsManager = analyticsManager;
         this.screens = {};
         this.currentScreen = null;
         this.activePopup = null;
@@ -88,6 +89,11 @@ class NavigationManager {
     }
 
     showGameOverPopup() {
+        // Track game over event
+        if (this.analyticsManager) {
+            this.analyticsManager.gameOver();
+        }
+        
         this.activePopup = new PopupComponent({
             eventBus: this.eventBus,
             title: "GAME OVER",

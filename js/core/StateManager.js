@@ -112,6 +112,8 @@ class StateManager {
             if (this.state.gameMode !== 'gameOver') {
                 this.state.gameMode = 'gameOver'; // Set the state
                 this.eventBus.emit('gameOver');   // Emit the event
+                
+                // Track game over event (will be handled by NavigationManager or App)
             }
         }
     }
@@ -151,7 +153,7 @@ class StateManager {
                 oldLevel: currentLevel - 1
             });
             
-            // Emit PostHog event for level up
+            // Emit PostHog event for level up (keeping existing implementation)
             if (typeof window !== 'undefined' && window.posthog) {
                 window.posthog.capture('player_level_up', {
                     level: currentLevel,

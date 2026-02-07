@@ -60,14 +60,22 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
     confirmAttributes() {
         if (this.pointsRemaining === 0) {
             const playerState = this.stateManager.getState().player;
+            const updatedPlayer = {
+                ...playerState,
+                ...this.attributes,
+                maxHp: 20 + (this.attributes.str-1) * 2,
+                hp: 20 + (this.attributes.str-1) * 2
+            };
             this.stateManager.updateState({ 
-                player: { 
-                    ...playerState,
-                    ...this.attributes,
-                    maxHp: 20 + (this.attributes.str-1) * 2,
-                    hp: 20 + (this.attributes.str-1) * 2
-                } 
+                player: updatedPlayer
             });
+            
+            // Track game started event
+            if (this.analyticsManager) {
+                const gameMode = this.stateManager.getState().gameMode || 'scripted';
+                this.analyticsManager.gameStarted(gameMode, updatedPlayer);
+            }
+            
             this.eventBus.emit('log', { text: `Welcome to the world of Echo, ${playerState.name}` });
             this.navigationManager.navigateTo({ screen: 'WorldMap' });
         } else {

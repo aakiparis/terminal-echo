@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Core Systems
             const eventBus = new EventBus();
+            const analyticsManager = new AnalyticsManager();
             const stateManager = new StateManager(eventBus);
-            const navigationManager = new NavigationManager(eventBus, stateManager, screenContainer);
+            const navigationManager = new NavigationManager(eventBus, stateManager, screenContainer, analyticsManager);
             new InputManager(eventBus);
 
             // Global Components
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             screens.forEach(ScreenClass => {
                 const screenInstance = new ScreenClass({
                     name: ScreenClass.name.replace('Screen', ''),
-                    eventBus, stateManager, navigationManager
+                    eventBus, stateManager, navigationManager, analyticsManager
                 });
                 navigationManager.registerScreen(screenInstance);
             });

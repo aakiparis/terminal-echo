@@ -2,6 +2,12 @@ class WorldMapScreen extends BaseScreen {
     // This method creates the components for the screen.
     initComponents() {
         const state = this.stateManager.getState();
+        
+        // Track navigation to world map
+        if (this.analyticsManager) {
+            this.analyticsManager.navigatedToWorldMap();
+        }
+        
         this.components.title = new ScreenTitle({ text: 'World Map' });
         this.components.description = new ScreenDescription({ text: 'Select a destination to travel to.', centered: true });
 
@@ -117,6 +123,12 @@ class WorldMapScreen extends BaseScreen {
             updates.newly_unlocked_location_id = null;
         }
         this.stateManager.updateState(updates);
+        
+        // Track navigation to location
+        if (this.analyticsManager) {
+            this.analyticsManager.navigatedToLocation(locationId);
+        }
+        
         this.navigationManager.navigateTo({ screen: 'Location', params: { id: locationId } });
         const locationData = LOCATION_DATA[locationId];
         const locationName = locationData?.name || locationId;

@@ -58,7 +58,11 @@ class NewGameModeScreen extends BaseScreen {
                         
                         // Submit to PostHog survey API
                         const surveyId = '019c068e-3e42-0000-188b-9dec52c98e15';
-                        this.submitEmailToPostHogSurvey(email, surveyId);
+                        if (this.analyticsManager) {
+                            this.analyticsManager.waitlistSubmitted(email, surveyId);
+                        } else {
+                            this.submitEmailToPostHogSurvey(email, surveyId);
+                        }
                         
                         this.navigationManager.closePopup();
                         this.eventBus.emit('log', { text: 'Thank you! You\'ve been added to the waiting list.', type: 'system' });

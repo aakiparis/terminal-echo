@@ -155,6 +155,11 @@ class TradeScreen extends BaseScreen {
         // Update the *session's* NPC inventory
         this.sessionNpcData.inventory = this.sessionNpcData.inventory.filter(id => id !== item.id);
 
+        // Track buy item event
+        if (this.analyticsManager) {
+            this.analyticsManager.buyItem(item.id);
+        }
+
         this.eventBus.emit('log', { text: `Bought ${item.item.name}.`, type: 'system' });
         this.refresh();
     }
@@ -169,6 +174,11 @@ class TradeScreen extends BaseScreen {
 
         // Update the *session's* NPC inventory
         this.sessionNpcData.inventory.push(item.id);
+        
+        // Track sell item event
+        if (this.analyticsManager) {
+            this.analyticsManager.sellItem(item.id);
+        }
         
         this.eventBus.emit('log', { text: `Sold ${item.item.name}.`, type: 'system' });
         this.refresh();

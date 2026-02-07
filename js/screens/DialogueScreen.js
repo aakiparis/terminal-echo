@@ -35,6 +35,12 @@ class DialogueScreen extends BaseScreen {
         }
 
         this.currentNodeKey = targetNodeKey;
+        
+        // Track dialogue screen event
+        if (this.analyticsManager) {
+            const nodeType = targetNodeKey === 'start' || targetNodeKey === 'start_first_time' ? 'start' : 'return';
+            this.analyticsManager.dialogueScreen(this.npcId, nodeType);
+        }
         const node = this.npcData.dialogue_graph[this.currentNodeKey];
 
         if (!node) {
@@ -242,6 +248,11 @@ class DialogueScreen extends BaseScreen {
                     // Collect quest stage updates without losing other quest state
                     questsUpdates[outcome.quest_id] = { stage: outcome.stage };
                     this.eventBus.emit('log', { text: `[Quest '${QUEST_DATA[outcome.quest_id].title}' updated]`, type: 'system' });
+                    
+                    // Track quest update event
+                    if (this.analyticsManager) {
+                        this.analyticsManager.questUpdated(outcome.quest_id, outcome.stage);
+                    }
                     break;
             }
         });
