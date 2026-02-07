@@ -496,6 +496,26 @@ body {
     }
 }
 
+/* Small height screens (e.g., Chromebooks) */
+@media (max-height: 600px) {
+    :root {
+        --font-size-base: 26px;
+        --spacing-sm: 5px;
+        --spacing-md: 10px;
+        --spacing-lg: 10px;
+    }
+
+    .terminal-header {
+        height: 40px;
+        /* padding: var(--spacing-sm) 2px; */
+    }
+
+    .terminal-footer {
+        height: 80px;
+        /* padding: var(--spacing-sm); */
+    }
+}
+
 @media (max-width:  768px) {
     :root {
         --font-size-base: 22px;

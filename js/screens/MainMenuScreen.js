@@ -1,9 +1,26 @@
 class MainMenuScreen extends BaseScreen {
+    isDesktop() {
+        // Check if device is desktop (not mobile/tablet)
+        // Desktop typically has: wider screen, no touch or has mouse capability
+        const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const hasPointer = window.matchMedia('(pointer: fine)').matches;
+        const isWideScreen = window.innerWidth > 768;
+        const isTallEnough = window.innerHeight > 600; // Hide hint on small height screens (e.g., Chromebooks)
+        
+        // Consider it desktop if: wide screen AND tall enough AND (has fine pointer OR no touch)
+        return isWideScreen && isTallEnough && (hasPointer || !hasTouch);
+    }
+
     initComponents() {
         // This method is called by BaseScreen.enter()
         this.components.title = new ScreenTitle({ text: 'Terminal Echo' });
+        
+        const navigationHint = this.isDesktop() 
+            ? '<br>Use UP/DOWN keys on your keyboard to navigate.' 
+            : '';
+        
         this.components.description = new ScreenDescription(
-            { text: 'A Retro Terminal Conversational RPG<br>Use UP/DOWN keys on your keyboard to navigate.', centered: true }
+            { text: `A Retro Terminal Conversational RPG${navigationHint}`, centered: true }
         );
 
         const menuItems = [
