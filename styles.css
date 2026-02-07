@@ -586,7 +586,7 @@ body {
     }
 }
 
-@media (min-width: 401px) and (max-width: 768px) {
+@media (max-width: 768px) {
     :root {
         --font-size-base: 22px;
         --spacing-sm: 5px;
@@ -629,48 +629,6 @@ body {
 */
 }
 
-@media (max-width:  400px) {
-    :root {
-        --font-size-base: 20px;
-        --spacing-sm: 3px;
-        --spacing-md: 5px;
-        --spacing-lg: 5px;
-
-        /* cursor: pointer; */
-        /* user-select: all; */
-    }
-
-    .terminal-frame {
-        max-height: calc(100vh - 40px); /*space for safari non-hiding address menu*/
-    }
-    .terminal-frame::before {
-        background-size: 100% 3px, 5px 100%;
-    }
-    .terminal-header {
-        height: 30px;
-    }
-    .terminal-status{
-        font-size: 18px;
-    }
-    .terminal-footer {
-        height: 50px;
-    }
-/*    .screen-title {
-        margin-bottom: 10px;
-    }
-    .screen-description {
-        margin-bottom: 10px;
-    }
-
-
-
-    .status-left,
-    .status-right {
-        flex-direction:  column;
-        gap: 10px;
-    }
-*/
-}
 
 /* === ANIMATIONS === */
 @keyframes fadeIn {
