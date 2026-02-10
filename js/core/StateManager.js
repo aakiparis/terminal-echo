@@ -23,15 +23,16 @@ class StateManager {
                 convo_history: {},
             },
             gameMode: 'scripted',
-            currentLocation: 'neon_nexus',
-            unlocked_locations: ['neon_nexus'],
+            currentLocation: 'still_quarter',
+            unlocked_locations: ['still_quarter'],
             unlocked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] }
             locked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] } - NPCs that were locked via NPC_LOCK
             currentScreen: 'MainMenu',
             quests: {},
             eventHistory: [],
             has_new_location_unlocked: false,
-            newly_unlocked_location_id: null
+            newly_unlocked_location_id: null,
+            newly_unlocked_npcs: {} // { "location_id": ["npc_id1", ...] } — show pulse until player talks to that NPC once
         };
     }
 

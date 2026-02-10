@@ -1,4 +1,9 @@
 const LOCATION_DATA = {
+    "still_quarter": {
+        "name": "The Still Quarter (your home)",
+        "description": "A small, well-kept settlement built around local sufficiency. Hand-maintained generators hum quietly. The rules are clear, the paths are swept, and no one speaks of expansion. It is calm. Pleasant. Your place where you born, where you grew up, where you live now. Home.",
+        "npcs": ["caretaker_mira", "warden_cole", "keeper_lin", "relay_box", "signal_terminal"]
+    },
     "neon_nexus": {
         "name": "Neon Nexus",
         "description": "A bustling marketplace cobbled together in the ruins of an old subway station. The air hums with the glow of repurposed neon signs and the chatter of traders.",
@@ -37,6 +42,340 @@ const LOCATION_DATA = {
 };
 
 const NPC_DATA = {
+    "still_quarter": {
+        "caretaker_mira": {
+            "name": "Caretaker Mira",
+            "type": "npc",
+            "is_available": true,
+            "description": "A woman with calm eyes and work-worn hands. She tends the generators and speaks in even, measured tones.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "Hey. You look like you're chewing on something. What's up?",
+                    "destination_nodes": [
+                        { "node_id": "story_1" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "Back again. Still thinking about it?",
+                    "destination_nodes": [
+                        { "node_id": "story_1", "prompt_replacement": "Run it by me again — the stuff you always said about the Quarter." },
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "You used to say we keep things simple. No overreaching. Tell me that again.",
+                    "response": "You know this. We keep it simple. Hand-maintained generators, clear rules. No big hierarchy — just caretakers. Everyone knows their part. We don't overreach. Same as I've always said.",
+                    "destination_nodes": [
+                        { "node_id": "story_2" }
+                    ]
+                },
+                "story_2": {
+                    "prompt": "How long's it been like that? You always said we adapt — we don't build for tomorrow in ways we can't touch.",
+                    "response": "As long as anyone remembers. We adapt. We don't build for tomorrow in ways we can't touch today. The old world tried the other way. Didn't end well. You've heard it a hundred times.",
+                    "destination_nodes": [
+                        { "node_id": "story_3" }
+                    ]
+                },
+                "story_3": {
+                    "prompt": "I keep wondering though — why is 'good enough' enough? What if we could do better?",
+                    "response": "It works well enough. Why stir the pot? More complexity, more that can break. We've learned that. What we have here — we can see it, we can fix it. That's enough.",
+                    "destination_nodes": [
+                        { "node_id": "story_4" }
+                    ]
+                },
+                "story_4": {
+                    "prompt": "What if something breaks that's connected to other places? Not just us?",
+                    "response": "Then we adapt locally. Coordinating with the rest — that's too much. Safer to depend on what we can see and touch. Last time people relied on systems they couldn't hold in their hands, everything came down. We don't do that again.",
+                    "destination_nodes": [
+                        { "node_id": "story_5" }
+                    ]
+                },
+                "story_5": {
+                    "prompt": "So we're just okay with things failing? With not fixing them?",
+                    "response": "We're okay that not everything gets fixed. Some things go quiet and we get by anyway. It's not that we don't care. It's peace. You'll get it or you won't. Either way, we get on with the day.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I'll sit with that." }
+                    ]
+                },
+                "end": {
+                    "prompt": "I'll let you get back to it.",
+                    "response": "Go on. Think it over."
+                }
+            }
+        },
+        "warden_cole": {
+            "name": "Warden Cole",
+            "type": "npc",
+            "is_available": true,
+            "description": "A steady man with a clipboard and a tired smile. He watches the relay and the loads.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "Hey. Relay's still on my mind. You've got that look — something up?",
+                    "destination_nodes": [
+                        { "node_id": "story_1" },
+                        { "node_id": "quest_intro" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "Back. What do you need?",
+                    "destination_nodes": [
+                        { "node_id": "story_1", "prompt_replacement": "Remind me — the relay, how we're dealing with it." },
+                        { "node_id": "quest_intro", "prompt_replacement": "Anything I can do for the relay?" },
+                        { "node_id": "quest_reminder" },
+                        { "node_id": "quest_completion" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "You always watched the relay. Run me through what's going on — I want to hear it again.",
+                    "response": "You know the drill. I watch the relay. Or I did. Went offline last week. Nothing huge — we're managing. Rationing, shifting loads. East block's a bit dimmer, mill queue's a bit longer. Not ideal but we get by.",
+                    "destination_nodes": [
+                        { "node_id": "quest_intro" },
+                        { "node_id": "return", "prompt_replacement": "I'll think about it." }
+                    ]
+                },
+                "quest_intro": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "headroom", "stage": 0 }
+                        ]
+                    },
+                    "prompt": "I could help. What do you need?",
+                    "response": "Relay's down. We're adapting. If you want to pitch in, take this spare spool to the relay box by the old generator shed and slot it in. Might give us a bit more headroom. Nothing fancy — you know the box.",
+                    "destination_nodes": [
+                        { "node_id": "quest_accept" },
+                        { "node_id": "quest_reject" }
+                    ]
+                },
+                "quest_accept": {
+                    "prompt": "I'll take the spool. Where's the box again?",
+                    "response": "Good. Here. Box is by the generator shed — you can't miss it. Slot it in when you're ready. Thanks.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "headroom", "stage": 1 },
+                        { "type": "ITEM_GAIN", "item_id": "relay_spool" },
+                        { "type": "NPC_UNLOCK", "location_id": "still_quarter", "npc_id": "relay_box" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I'll get it done." }
+                    ]
+                },
+                "quest_reject": {
+                    "prompt": "Maybe not this time.",
+                    "response": "No problem. We'll get by either way.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Maybe another time." }
+                    ]
+                },
+                "quest_reminder": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "headroom", "stage": 1 }
+                        ]
+                    },
+                    "prompt": "I still have the spool. Where did you say the box was?",
+                    "response": "By the generator shed. Slot it in when you're ready. No rush — we're managing.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I'll do it soon." }
+                    ]
+                },
+                "quest_completion": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "headroom", "stage": 2 }
+                        ]
+                    },
+                    "prompt": "Done. Spool's in. Relay's humming.",
+                    "response": "You did? Good. That's a bit more headroom for everyone. Here — a little something. We look after our own.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "headroom", "stage": 100 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 100 },
+                        { "type": "ITEM_GAIN", "item_id": "stimpack" },
+                        { "type": "REPUTATION_CHANGE", "value": 5 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "the_question" }
+                    ]
+                },
+                "the_question": {
+                    "prompt": "Just before I go... I am curious. Why don't we just fix it properly? Get parts, run diagnostics, the whole thing?",
+                    "response": "Fix it how? We'd need parts from the old depot, coordination with the shed crew, someone willing to run the diagnostics. That's a lot of moving parts. Easier to adapt. We've got a spare spool — someone slots it in, we get a bit more headroom. That's as far as we go.",
+                    "destination_nodes": [
+                        { "node_id": "quest_intro" },
+                        { "node_id": "return", "prompt_replacement": "It sounds... odd. Are things happen that way always?" }
+                    ]
+                },
+                "end": {
+                    "prompt": "See you...",
+                    "response": "Take care."
+                }
+            }
+        },
+        "keeper_lin": {
+            "name": "Keeper Lin",
+            "type": "npc",
+            "is_available": true,
+            "description": "An older figure who sits near the edge of the quarter, where the old signal post gathers dust.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "You again. What brings you out here? You know there's nothing to see.",
+                    "destination_nodes": [
+                        { "node_id": "story_1" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "Back. Still curious about the post?",
+                    "destination_nodes": [
+                        { "node_id": "story_1", "prompt_replacement": "The stuff you always said about the old post — run it by me again." },
+                        { "node_id": "story_3", "prompt_replacement": "I want to go look at the signal post." },
+                        { "node_id": "end" }
+                    ]
+                },
+                "story_1": {
+                    "prompt": "You used to say the old post used to talk to other places. That if it mattered, it'd still be working. Tell me that again.",
+                    "response": "You've heard it. The signal post. Old world — terminal, dish, a lot of wiring. Used to talk to other places. Now it just hums. Nobody uses it. If it mattered, it would still be working. We leave it alone.",
+                    "destination_nodes": [
+                        { "node_id": "story_2" }
+                    ]
+                },
+                "story_2": {
+                    "prompt": "What was the signal supposed to be? A heartbeat or something? I never really asked.",
+                    "response": "I don't know. A heartbeat, maybe. Something that was part of a bigger system. Doesn't matter now. We're here. We're enough. The rest is noise.",
+                    "destination_nodes": [
+                        { "node_id": "story_3" }
+                    ]
+                },
+                "story_3": {
+                    "prompt": "Can I just go look? I've never really looked. Not properly.",
+                    "response": "Why? There's nothing there. Dead screen and a hum. Nobody's cared in years.",
+                    "destination_nodes": [
+                        { "node_id": "story_4" },
+                        { "node_id": "return", "prompt_replacement": "Fair enough." }
+                    ]
+                },
+                "story_4": {
+                    "prompt": "I want to see it for myself. Is that okay?",
+                    "response": "Fine. It's not forbidden. Just... nobody cares. Go look if it bothers you. Post is past the shed. You'll see the terminal. Don't expect answers.",
+                    "outcomes": [
+                        { "type": "NPC_UNLOCK", "location_id": "still_quarter", "npc_id": "signal_terminal" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Thanks. I'll take a look." }
+                    ]
+                },
+                "end": {
+                    "prompt": "I'll leave you to it.",
+                    "response": "Go on."
+                }
+            }
+        },
+        "relay_box": {
+            "name": "Relay Box",
+            "type": "device",
+            "is_available": false,
+            "description": "A metal box covered in dials and a single slot. The relay node. It's quiet now, waiting for a spare spool.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ A metal box covered in dials and a single slot. The relay node. It's quiet now. ]",
+                    "destination_nodes": [
+                        { "node_id": "install_spool" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The relay box stands by the shed. You can slot in a spool if you have one. ]",
+                    "destination_nodes": [
+                        { "node_id": "install_spool" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "install_spool": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "headroom", "stage": 1 },
+                            { "type": "HAVE_ITEM", "item_id": "relay_spool" }
+                        ]
+                    },
+                    "prompt": "[ Slot in the spare spool ]",
+                    "response": "[ You slot the spool into the port. The relay clicks, then hums. Lights on the dials flicker up a notch. A bit more headroom. Done. ]",
+                    "outcomes": [
+                        { "type": "ITEM_LOSE", "item_id": "relay_spool" },
+                        { "type": "QUEST_SET_STAGE", "quest_id": "headroom", "stage": 2 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end", "prompt_replacement": "[ Step back. ]" }
+                    ]
+                },
+                "end": {
+                    "prompt": "[ Leave the relay box ]",
+                    "response": "[ You step away. ]"
+                }
+            }
+        },
+        "signal_terminal": {
+            "name": "Signal Terminal",
+            "type": "device",
+            "is_available": false,
+            "description": "An old terminal and a dish, dust-covered. It hums faintly. The screen is dark.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ The screen flickers to life. Not a welcome message — a pulse. A rhythm. Something out there is still signalling. ]",
+                    "destination_nodes": [
+                        { "node_id": "signal_1" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The terminal still shows the same pulse. A heartbeat from somewhere else. ]",
+                    "destination_nodes": [
+                        { "node_id": "signal_1", "prompt_replacement": "[ Listen again ]" },
+                        { "node_id": "signal_3", "prompt_replacement": "[ Record the coordinates and go ]" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "signal_1": {
+                    "prompt": "[ Listen to the signal ]",
+                    "response": "[ It's not a distress call. No voice. Just a system heartbeat. Something that was built to talk to other places. Still trying. Still there. ]",
+                    "destination_nodes": [
+                        { "node_id": "signal_2" }
+                    ]
+                },
+                "signal_2": {
+                    "prompt": "[ Search for the source ]",
+                    "response": "[ The display scrolls fragments. Coordinates. Network IDs. All of it points outward. Away from here. To a place that used to be a junction. A nexus. Where the old world lingered a little longer. ]",
+                    "destination_nodes": [
+                        { "node_id": "signal_3" }
+                    ]
+                },
+                "signal_3": {
+                    "prompt": "[ Record the coordinates ]",
+                    "response": "[ You commit the data to memory. You know where to go. You could ignore it. Everyone else does. But you can't. An unfinished system. A thread. You need to see where it leads. The way to the Nexus is clear. ]",
+                    "outcomes": [
+                        { "type": "LOCATION_UNLOCK", "location_id": "neon_nexus" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "end", "prompt_replacement": "[ Step away from the terminal. ]" }
+                    ]
+                },
+                "end": {
+                    "prompt": "[ Step away ]",
+                    "response": "[ You leave the terminal. The hum follows you for a moment, then fades. ]"
+                }
+            }
+        }
+    },
     "neon_nexus": {
         "zane": {
             "name": "Zane",
@@ -2269,6 +2608,25 @@ const NPC_DATA = {
 };
 
 const QUEST_DATA = {
+    "headroom": {
+        "title": "Headroom",
+        "description": "Warden Cole's relay node is offline. Slot a spare spool into the relay box by the generator shed to give the Quarter a bit more power headroom.",
+        "location": "still_quarter",
+        "giver": "warden_cole",
+        "stages": {
+            "0": "Not started",
+            "1": "Take the spare spool to the relay box by the generator shed and slot it in.",
+            "100": "Completed"
+        },
+        "rewards": {
+            "items": [],
+            "stat_change": [
+                { "stat": "xp", "value": 100 },
+                { "stat": "caps", "value": 25 },
+                { "stat": "reputation", "value": 5 }
+            ]
+        }
+    },
     "glitch_in_the_system": {
         "title": "Glitch in the System",
         "description": "Zane, the technician in Neon Nexus, needs help resetting a failing power regulator by planting a data scrambler in the old service tunnels.",
@@ -2444,6 +2802,7 @@ const ITEMS_DATA = {
     "mutfruit": { "name": "Mutfruit", "tradeable": true, "type": "consumable", "stat_change": [{ "stat": "hp", "value": 5 }], "price": 10 },
     
     // quest items
+    "relay_spool": { "name": "Relay Spool", "tradeable": false, "type": "quest", "price": 0 },
     "signal_jammer": { "name": "Signal Jammer", "type": "quest", "tradeable": true, "price": 100 },
     "data_scrambler": { "name": "Data Scrambler", "tradeable": false, "type": "quest", "price": 0 },
     "glowing_pendant": { "name": "Glowing Pendant", "tradeable": false, "type": "quest", "price": 0 },

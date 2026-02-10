@@ -120,6 +120,19 @@ class DialogueScreen extends BaseScreen {
             this.npcId = params.npcId;
         }
         
+        // Clear "newly unlocked" pulse for this NPC once the player has talked to them
+        const locId = params.locationId || this.locationId;
+        const nId = params.npcId || this.npcId;
+        if (locId && nId) {
+            const state = this.stateManager.getState();
+            const newly = state.newly_unlocked_npcs || {};
+            const list = newly[locId] || [];
+            if (list.includes(nId)) {
+                const updated = { ...newly, [locId]: list.filter(id => id !== nId) };
+                this.stateManager.updateState({ newly_unlocked_npcs: updated });
+            }
+        }
+        
         // Use the passed nodeKey, or default to the NPC's starting node.
         this.currentNodeKey = params.nodeKey || NPC_DATA[this.locationId][this.npcId].dialogue_graph.start_node || 'start_first_time';
         
@@ -171,6 +184,8 @@ class DialogueScreen extends BaseScreen {
         const questsUpdates = { ...(state.quests || {}) };
         // Track unlocked NPCs separately to accumulate multiple unlocks
         let accumulatedUnlockedNpcs = { ...(state.unlocked_npcs || {}) };
+        // Track newly unlocked NPCs for the pulse indicator (cleared when player talks to them once)
+        let accumulatedNewlyUnlockedNpcs = { ...(state.newly_unlocked_npcs || {}) };
 
         outcomes.forEach(outcome => {
             switch (outcome.type) {
@@ -211,6 +226,11 @@ class DialogueScreen extends BaseScreen {
                     if (!locationNpcs.includes(outcome.npc_id)) {
                         // Update the accumulated object instead of creating a new one each time
                         accumulatedUnlockedNpcs[outcome.location_id] = [...locationNpcs, outcome.npc_id];
+                        // Track for pulse indicator until player talks to this NPC once
+                        const newlyList = accumulatedNewlyUnlockedNpcs[outcome.location_id] || [];
+                        if (!newlyList.includes(outcome.npc_id)) {
+                            accumulatedNewlyUnlockedNpcs[outcome.location_id] = [...newlyList, outcome.npc_id];
+                        }
                         const npcData = NPC_DATA[outcome.location_id]?.[outcome.npc_id];
                         const npcName = npcData?.name || outcome.npc_id;
                         this.eventBus.emit('log', { text: `[NPC unlocked: ${npcName}]`, type: 'system' });
@@ -230,6 +250,11 @@ class DialogueScreen extends BaseScreen {
                             [outcome.location_id]: locationNpcsForLock.filter(id => id !== outcome.npc_id)
                         };
                         rootUpdates.unlocked_npcs = updatedUnlockedNpcsForLock;
+                    }
+                    // Remove from newly_unlocked_npcs so pulse indicator is not shown for locked NPCs
+                    const newlyListForLock = accumulatedNewlyUnlockedNpcs[outcome.location_id] || [];
+                    if (newlyListForLock.includes(outcome.npc_id)) {
+                        accumulatedNewlyUnlockedNpcs[outcome.location_id] = newlyListForLock.filter(id => id !== outcome.npc_id);
                     }
                     
                     // Add to locked list if not already there
@@ -267,6 +292,8 @@ class DialogueScreen extends BaseScreen {
         if (Object.keys(accumulatedUnlockedNpcs).length > 0) {
             rootUpdates.unlocked_npcs = accumulatedUnlockedNpcs;
         }
+        // Set newly unlocked NPCs for pulse indicator (also updated when NPC_LOCK removes one)
+        rootUpdates.newly_unlocked_npcs = accumulatedNewlyUnlockedNpcs;
         if (Object.keys(rootUpdates).length > 0) this.stateManager.updateState(rootUpdates);
     }
 

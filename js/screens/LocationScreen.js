@@ -21,6 +21,8 @@ class LocationScreen extends BaseScreen {
         const locationUnlockedNpcs = unlockedNpcs[locationId] || [];
         const lockedNpcs = state.locked_npcs || {};
         const locationLockedNpcs = lockedNpcs[locationId] || [];
+        const newlyUnlockedNpcs = state.newly_unlocked_npcs || {};
+        const locationNewlyUnlockedNpcs = newlyUnlockedNpcs[locationId] || [];
         
         const menuItems = (locationData.npcs || [])
             .filter(npcId => {
@@ -51,6 +53,11 @@ class LocationScreen extends BaseScreen {
                     label = `Talk to ${npc.name}`;
                 } else if (npc.type === 'device' || npc.type === 'advanture') {
                     label = `[ ${npc.name} ]`;
+                }
+                
+                // Show pulse indicator for just-unlocked NPCs until player talks to them once
+                if (locationNewlyUnlockedNpcs.includes(npcId)) {
+                    label += '<span class="location-pulse-indicator"></span>';
                 }
                 
                 return {
