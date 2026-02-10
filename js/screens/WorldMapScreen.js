@@ -3,6 +3,12 @@ class WorldMapScreen extends BaseScreen {
     initComponents() {
         const state = this.stateManager.getState();
         
+        // Fire game_started when entering World Map for the first time (after onboarding)
+        if (!state.game_started_fired && this.analyticsManager) {
+            this.analyticsManager.gameStarted(state.gameMode || 'scripted', state.player || {});
+            this.stateManager.updateState({ game_started_fired: true });
+        }
+        
         // Track navigation to world map
         if (this.analyticsManager) {
             this.analyticsManager.navigatedToWorldMap();

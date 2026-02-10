@@ -22,17 +22,31 @@ class AnalyticsManager {
     }
 
     /**
-     * Game started event
+     * Onboarding started (first narrative screen entered)
+     */
+    onboardingStarted() {
+        this.capture('onboarding_started', {});
+    }
+
+    /**
+     * First quest completed (e.g. headroom in Still Quarter)
+     */
+    firstQuestCompleted(questId = '') {
+        this.capture('first_quest_completed', { quest_id: questId });
+    }
+
+    /**
+     * Game started — fired when the player enters the World Map for the first time (after onboarding).
      * @param {string} gameMode - The game mode selected (e.g., 'scripted')
      * @param {object} playerStats - Initial player stats
      */
     gameStarted(gameMode, playerStats = {}) {
         this.capture('game_started', {
             game_mode: gameMode,
-            player_name: playerStats.name,
-            str: playerStats.str,
-            int: playerStats.int,
-            lck: playerStats.lck
+            player_name: playerStats?.name,
+            str: playerStats?.str,
+            int: playerStats?.int,
+            lck: playerStats?.lck
         });
     }
 

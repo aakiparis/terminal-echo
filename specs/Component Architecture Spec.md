@@ -249,10 +249,30 @@ class NewGamePlayerName {
 
 **Menu allows**:
 - Type in player name
-- Confirm the name and navigate to player attributes screen
-- get back to game mode selection
+- Confirm the name and navigate to **Onboarding narrative** (onboarding flow)
+- Get back to game mode selection
 
-### 4. New Game Player Attributes allocation
+### 4. Onboarding Narrative Screen
+
+**Purpose**: Post–name onboarding: short narrative about the attenuation (multi-slide). Player advances with [Next]. After the last slide, game state is initialized and player is taken to the **home location** (Still Quarter).
+
+**Flow**:
+- Entering the first slide fires PostHog `onboarding_started`.
+- Last slide [Next] is labeled [ BEGIN ]: calls `stateManager.startGameStateFromOnboarding(playerName)` and navigates to Location (home). Player then plays dialogues and the initial quest at home.
+- When the player opens the World Map for the first time, they see the **World Map Intro** screen instead of the map.
+
+**Menu allows**:
+- [ NEXT ] / [ BEGIN ] to advance or start at home
+
+### 5. World Map Intro Screen
+
+**Purpose**: Shown the **first time** the player opens the World Map (after onboarding). Tells the story about the world and suggests picking stats.
+
+**Menu allows**:
+- [ PICK YOUR STATS ] — navigate to New Game Player Attributes (with `fromOnboarding: true`), then on confirm go to World Map. `game_started` is fired when entering World Map.
+- [ CONTINUE TO MAP ] — set `has_seen_world_map_intro`, navigate to World Map. `game_started` is fired when entering World Map.
+
+### 6. New Game Player Attributes allocation
 Pseudo code
 ```
 class NewGamePlayerAttributes {
@@ -273,13 +293,13 @@ class NewGamePlayerAttributes {
 
 **Menu allows**:
 - str: "<" <str_value> ">"
-  - shows current value, allows increase and decrese it
+  - shows current value, allows increase and decrease it
 - int, same as str
 - lck, same as str
-- Confirm and navigate to the worldmap screen
-- Navigate back to player name screen
+- Confirm and navigate to the World Map screen (or, when `fromOnboarding`, game_started is fired on first World Map enter)
+- Back: to player name screen (classic flow) or to World Map (when opened from onboarding)
 
-### 5. World Map Screen
+### 7. World Map Screen
 Pseudo code
 ```
 class WorldMapScreen {
@@ -307,7 +327,7 @@ Additionally, handles hotkeys:
 - i: navigates to inventory
 - m or esc: opens game menu pop up
 
-### 6. Location Screen
+### 8. Location Screen
 Pseudo code
 ```
 class LocationScreen {
@@ -335,7 +355,7 @@ Additionally, handles hotkeys:
 - i: opens inventory
 - m or esc: opens game menu pop up
 
-### 7. Dialogue Screen 
+### 9. Dialogue Screen 
 Pseudo code
 ```
 class DialogueScreen {
@@ -361,7 +381,7 @@ Once dialogue screen has entered a dialogue node, to render it properly, the log
 3. Those menu items which conditions are not meet must be shown but be inactive (disabled)
 
 
-### 8. Inventory Screen
+### 10. Inventory Screen
 Pseudo code
 ```
 class InventoryScreen {
@@ -383,7 +403,7 @@ class InventoryScreen {
 
 Additionally, menu allows get back to previous screen.
 
-### 9. Trading Screen 
+### 11. Trading Screen 
 
 Trading screen shows items in NPCs and players inventory and allows to sell them or buy.
 As player buies an item it moves from NPCs inventory into player's and player loses appropriate amount of caps.
@@ -417,7 +437,7 @@ class TradeScreen {
 ```
 
 
-### 10. Game Menu Popup
+### 12. Game Menu Popup
 Screen that shows up ontop of the screen which handled hotkey. Visaully it makes the main screen grayed out and looks as a centered half-sized pop up.
 
 Pseudo code
@@ -441,7 +461,7 @@ class GameMenuPopup {
 - save game to a file
 - close the pop up
 
-### 11. Game Over Popup
+### 13. Game Over Popup
 Pops up when user's HP hit 0. Visaully it makes the main screen grayed out and looks as a centered half-sized pop up.
 
 Pseudo code
@@ -525,4 +545,10 @@ Each component maintains internal state isolated from global state.  Communicati
 - Events (via EventBus)
 - Props (passed down)
 - State updates (callback functions)
+
+### Analytics (PostHog) events
+
+- **onboarding_started** — When the player enters the first onboarding narrative slide (after name, before home).
+- **first_quest_completed** — When any quest reaches stage 100 for the first time (e.g. headroom in Still Quarter). Fired once per game.
+- **game_started** — When the player enters the World Map for the first time (after onboarding; may be after World Map Intro and optional attribute selection).
 ```

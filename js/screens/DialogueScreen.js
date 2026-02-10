@@ -278,6 +278,11 @@ class DialogueScreen extends BaseScreen {
                     if (this.analyticsManager) {
                         this.analyticsManager.questUpdated(outcome.quest_id, outcome.stage);
                     }
+                    // Fire first_quest_completed once when any quest is completed (onboarding milestone)
+                    if (outcome.stage === 100 && !state.first_quest_completed_fired && this.analyticsManager) {
+                        this.analyticsManager.firstQuestCompleted(outcome.quest_id);
+                        rootUpdates.first_quest_completed_fired = true;
+                    }
                     break;
             }
         });

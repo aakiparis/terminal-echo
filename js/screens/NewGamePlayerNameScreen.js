@@ -36,7 +36,7 @@ class NewGamePlayerNameScreen extends BaseScreen {
 
         if (this.playerName.length > 0) {
             this.stateManager.updateState({ player: { name: this.playerName } });
-            this.navigationManager.navigateTo({ screen: 'NewGamePlayerAttributes' });
+            this.navigationManager.navigateTo({ screen: 'OnboardingNarrative', params: { slideIndex: 0 } });
         } else {
             this.eventBus.emit('log', { text: 'Name cannot be empty.', type: 'error' });
         }

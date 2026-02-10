@@ -32,8 +32,37 @@ class StateManager {
             eventHistory: [],
             has_new_location_unlocked: false,
             newly_unlocked_location_id: null,
-            newly_unlocked_npcs: {} // { "location_id": ["npc_id1", ...] } — show pulse until player talks to that NPC once
+            newly_unlocked_npcs: {}, // { "location_id": ["npc_id1", ...] } — show pulse until player talks to that NPC once
+            // Onboarding: show world map intro on first visit; fire game_started once; fire first_quest_completed once
+            has_seen_world_map_intro: false,
+            game_started_fired: false,
+            first_quest_completed_fired: false
         };
+    }
+
+    /**
+     * Called after onboarding narrative: set full game state with player name and default stats, then go to home location.
+     * @param {string} playerName - Name from the name screen
+     */
+    startGameStateFromOnboarding(playerName) {
+        const initial = this.getInitialState();
+        initial.player = {
+            ...initial.player,
+            name: playerName || initial.player.name,
+            str: 1,
+            int: 1,
+            lck: 1,
+            hp: 20,
+            maxHp: 20
+        };
+        initial.currentLocation = 'still_quarter';
+        initial.unlocked_locations = ['still_quarter'];
+        initial.currentScreen = 'Location';
+        initial.has_seen_world_map_intro = false;
+        initial.game_started_fired = false;
+        initial.first_quest_completed_fired = false;
+        this.state = initial;
+        this.eventBus.emit('stateUpdated', this.state);
     }
 
     getState() {

@@ -1,5 +1,6 @@
 class NewGamePlayerAttributesScreen extends BaseScreen {
-    initComponents() {
+    initComponents(params) {
+        this.fromOnboarding = params?.fromOnboarding === true;
         if (!this.attributes) {
             this.totalPoints = 15;
             this.attributes = { str: 1, int: 1, lck: 1 };
@@ -24,8 +25,10 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
                 type: 'separator'
             },
             { id: 'confirm', label: '[ CONFIRM ]', type: 'action', action: () => this.confirmAttributes(), disabled: this.pointsRemaining > 0 },
-            { id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGamePlayerName' }) },
         ];
+        if (!this.fromOnboarding) {
+            menuItems.push({ id: 'back', label: '[ BACK ]', type: 'navigation', action: () => this.navigationManager.navigateTo({ screen: 'NewGamePlayerName' }) });
+        }
         
         this.components.menu = new Menu({
             items: menuItems,
@@ -70,8 +73,8 @@ class NewGamePlayerAttributesScreen extends BaseScreen {
                 player: updatedPlayer
             });
             
-            // Track game started event
-            if (this.analyticsManager) {
+            // Game started is fired when entering World Map for the first time (onboarding) or here for classic flow
+            if (!this.fromOnboarding && this.analyticsManager) {
                 const gameMode = this.stateManager.getState().gameMode || 'scripted';
                 this.analyticsManager.gameStarted(gameMode, updatedPlayer);
             }

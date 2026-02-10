@@ -119,7 +119,7 @@ const NPC_DATA = {
                     "destination_nodes": [
                         { "node_id": "story_1" },
                         { "node_id": "quest_intro" },
-                        { "node_id": "end" }
+                        // { "node_id": "end" }
                     ]
                 },
                 "return": {
@@ -133,6 +133,11 @@ const NPC_DATA = {
                     ]
                 },
                 "story_1": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "headroom", "stage": 100, "op": "neq" }
+                        ]
+                    },
                     "prompt": "You always watched the relay. Run me through what's going on — I want to hear it again.",
                     "response": "You know the drill. I watch the relay. Or I did. Went offline last week. Nothing huge — we're managing. Rationing, shifting loads. East block's a bit dimmer, mill queue's a bit longer. Not ideal but we get by.",
                     "destination_nodes": [
@@ -206,7 +211,7 @@ const NPC_DATA = {
                     "prompt": "Just before I go... I am curious. Why don't we just fix it properly? Get parts, run diagnostics, the whole thing?",
                     "response": "Fix it how? We'd need parts from the old depot, coordination with the shed crew, someone willing to run the diagnostics. That's a lot of moving parts. Easier to adapt. We've got a spare spool — someone slots it in, we get a bit more headroom. That's as far as we go.",
                     "destination_nodes": [
-                        { "node_id": "quest_intro" },
+                        // { "node_id": "quest_intro" },
                         { "node_id": "return", "prompt_replacement": "It sounds... odd. Are things happen that way always?" }
                     ]
                 },
@@ -235,7 +240,7 @@ const NPC_DATA = {
                     "response": "Back. Still curious about the post?",
                     "destination_nodes": [
                         { "node_id": "story_1", "prompt_replacement": "The stuff you always said about the old post — run it by me again." },
-                        { "node_id": "story_3", "prompt_replacement": "I want to go look at the signal post." },
+                        // { "node_id": "story_3", "prompt_replacement": "I want to go look at the signal post." },
                         { "node_id": "end" }
                     ]
                 },
@@ -258,17 +263,18 @@ const NPC_DATA = {
                     "response": "Why? There's nothing there. Dead screen and a hum. Nobody's cared in years.",
                     "destination_nodes": [
                         { "node_id": "story_4" },
-                        { "node_id": "return", "prompt_replacement": "Fair enough." }
+                        //{ "node_id": "return", "prompt_replacement": "Fair enough." }
                     ]
                 },
                 "story_4": {
+                    // TODO: this option must be conditional and shows up only if the signal terminal is locked
                     "prompt": "I want to see it for myself. Is that okay?",
                     "response": "Fine. It's not forbidden. Just... nobody cares. Go look if it bothers you. Post is past the shed. You'll see the terminal. Don't expect answers.",
                     "outcomes": [
                         { "type": "NPC_UNLOCK", "location_id": "still_quarter", "npc_id": "signal_terminal" }
                     ],
                     "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Thanks. I'll take a look." }
+                        { "node_id": "end", "prompt_replacement": "Thanks. I'll take a look." }
                     ]
                 },
                 "end": {

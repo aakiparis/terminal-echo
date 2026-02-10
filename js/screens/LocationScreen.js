@@ -80,21 +80,26 @@ class LocationScreen extends BaseScreen {
             type: 'action',
             action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
         });
-        // Check if there's a new location unlocked
-        const hasNewLocation = state.has_new_location_unlocked || false;
-        const worldMapLabel = hasNewLocation 
-            ? `[ WORLD MAP<span class="location-pulse-indicator"></span> ]`
-            : '[ WORLD MAP ]';
-        
-        menuItems.push({
-            id: 'travel',
-            label: worldMapLabel,
-            type: 'navigation',
-            action: () => {
-                this.navigationManager.navigateTo({ screen: 'WorldMap' })
-                this.eventBus.emit('log', { text: `You've left ${locationData.name}` });
-            }
-        });
+        // During onboarding at Still Quarter: hide World Map until Neon Nexus is unlocked
+        const unlockedLocations = state.unlocked_locations || [];
+        const showWorldMap = locationId !== 'still_quarter' || unlockedLocations.includes('neon_nexus');
+        if (showWorldMap) {
+            const hasNewLocation = state.has_new_location_unlocked || false;
+            const worldMapLabel = hasNewLocation 
+                ? `[ WORLD MAP<span class="location-pulse-indicator"></span> ]`
+                : '[ WORLD MAP ]';
+            const hasSeenWorldMapIntro = state.has_seen_world_map_intro !== false;
+            const worldMapScreen = hasSeenWorldMapIntro ? 'WorldMap' : 'WorldMapIntro';
+            menuItems.push({
+                id: 'travel',
+                label: worldMapLabel,
+                type: 'navigation',
+                action: () => {
+                    this.navigationManager.navigateTo({ screen: worldMapScreen });
+                    this.eventBus.emit('log', { text: `You've left ${locationData.name}` });
+                }
+            });
+        }
         
         this.components.menu = new Menu({
             items: menuItems,
