@@ -36,7 +36,8 @@ class StateManager {
             // Onboarding: show world map intro on first visit; fire game_started once; fire first_quest_completed once
             has_seen_world_map_intro: false,
             game_started_fired: false,
-            first_quest_completed_fired: false
+            first_quest_completed_fired: false,
+            newly_unlocked_inventory: false // pulse on separator + inventory at Still Quarter until player opens inventory once
         };
     }
 
@@ -61,6 +62,7 @@ class StateManager {
         initial.has_seen_world_map_intro = false;
         initial.game_started_fired = false;
         initial.first_quest_completed_fired = false;
+        initial.newly_unlocked_inventory = false;
         this.state = initial;
         this.eventBus.emit('stateUpdated', this.state);
     }

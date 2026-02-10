@@ -68,18 +68,24 @@ class LocationScreen extends BaseScreen {
                 };
             });
 
-        // Add static options as per the spec
-        menuItems.push({
-            id: 'separator',
-            label: `------`,
-            type: 'separator'
-        },);
-        menuItems.push({
-            id: 'inventory',
-            label: '[ INVENTORY ]',
-            type: 'action',
-            action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
-        });
+        // At Still Quarter during onboarding: show separator + inventory only after first item; pulse until first open
+        const hasAnyItems = (state.player.inventory || []).length > 0;
+        const showInventoryBlock = locationId !== 'still_quarter' || hasAnyItems;
+        const newlyUnlockedInventory = state.newly_unlocked_inventory === true;
+        const pulseSpan = '<span class="location-pulse-indicator"></span>';
+        if (showInventoryBlock) {
+            menuItems.push({
+                id: 'separator',
+                label: `------`,
+                type: 'separator'
+            });
+            menuItems.push({
+                id: 'inventory',
+                label: newlyUnlockedInventory ? `[ INVENTORY ]${pulseSpan}` : '[ INVENTORY ]',
+                type: 'action',
+                action: () => this.navigationManager.navigateTo({ screen: 'Inventory' })
+            });
+        }
         // During onboarding at Still Quarter: hide World Map until Neon Nexus is unlocked
         const unlockedLocations = state.unlocked_locations || [];
         const showWorldMap = locationId !== 'still_quarter' || unlockedLocations.includes('neon_nexus');

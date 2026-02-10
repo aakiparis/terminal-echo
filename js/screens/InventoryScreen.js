@@ -8,6 +8,10 @@ class InventoryScreen extends BaseScreen {
     }
 
     initComponents() {
+        // Clear "newly unlocked inventory" pulse when player opens inventory for the first time
+        if (this.stateManager.getState().newly_unlocked_inventory === true) {
+            this.stateManager.updateState({ newly_unlocked_inventory: false });
+        }
         const state = this.stateManager.getPlayerStats();
         const effectiveStats = this.stateManager.getEffectivePlayerStats();
         

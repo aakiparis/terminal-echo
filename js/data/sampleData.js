@@ -118,7 +118,7 @@ const NPC_DATA = {
                     "response": "Hey. Relay's still on my mind. You've got that look — something up?",
                     "destination_nodes": [
                         { "node_id": "story_1" },
-                        { "node_id": "quest_intro" },
+                        // { "node_id": "quest_intro" },
                         // { "node_id": "end" }
                     ]
                 },
@@ -126,7 +126,7 @@ const NPC_DATA = {
                     "response": "Back. What do you need?",
                     "destination_nodes": [
                         { "node_id": "story_1", "prompt_replacement": "Remind me — the relay, how we're dealing with it." },
-                        { "node_id": "quest_intro", "prompt_replacement": "Anything I can do for the relay?" },
+                        //{ "node_id": "quest_intro", "prompt_replacement": "Anything I can do for the relay?" },
                         { "node_id": "quest_reminder" },
                         { "node_id": "quest_completion" },
                         { "node_id": "end" }
