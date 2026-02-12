@@ -29,6 +29,29 @@ class InventoryScreen extends BaseScreen {
         this.components.title = new ScreenTitle({ text: `${state.name} INVENTORY (${inventoryCount} / ${effectiveStats.carry_capacity})` });
         this.components.description = new ScreenDescription({ text: descriptionText });
 
+        // Quest log: list of quests with status (in progress / completed; completed = strikethrough)
+        const fullState = this.stateManager.getState();
+        const questsState = fullState.quests || {};
+        const questLogLines = [];
+        Object.keys(questsState).forEach(questId => {
+            const stage = questsState[questId].stage;
+            if (stage === 0) return; // not started — don't list
+            const questMeta = typeof QUEST_DATA !== 'undefined' && QUEST_DATA[questId];
+            const title = questMeta ? questMeta.title : questId;
+            const stageDesc = questMeta && questMeta.stages && questMeta.stages[String(stage)];
+            const stageLabel = stageDesc || (stage === 100 ? 'Completed' : 'In progress');
+            const line = `${title} — ${stageLabel}`;
+            if (stage === 100) {
+                questLogLines.push(`<s>${line}</s>`);
+            } else {
+                questLogLines.push(line);
+            }
+        });
+        const questLogText = questLogLines.length
+            ? '<strong>Quest log</strong><br>' + questLogLines.join('<br>')
+            : '<strong>Quest log</strong><br>No active quests.';
+        this.components.questLog = new ScreenDescription({ text: questLogText });
+
         const menuItems = (state.inventory || []).map(itemId => {
             const itemData = ITEMS_DATA[itemId];
             if (!itemData) {
@@ -54,11 +77,13 @@ class InventoryScreen extends BaseScreen {
         }).filter(Boolean); // Remove any nulls from missing items
 
         // Add a back button
-        menuItems.push({
-            id: 'separator',
-            label: `------`,
-            type: 'separator'
-        },);
+        if (inventoryCount > 0) {
+            menuItems.push({
+                id: 'separator',
+                label: `------`,
+                type: 'separator'
+            });
+        }
         menuItems.push({
             id: 'back',
             label: '[ BACK ]',
