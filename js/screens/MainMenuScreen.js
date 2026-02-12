@@ -39,7 +39,7 @@ class MainMenuScreen extends BaseScreen {
     }
 
     showCredits() {
-        this.eventBus.emit('log', { text: 'Created by Andrei Kiparis with Terminal Echo GPT' });
+        this.eventBus.emit('log', { text: 'Created by Andrei Kiparis in 2026' });
     }
 
     showAppearancePopup() {

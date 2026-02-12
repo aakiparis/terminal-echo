@@ -29,6 +29,13 @@ class AnalyticsManager {
     }
 
     /**
+     * Onboarding intro skipped (player went straight to attribute allocation)
+     */
+    onboardingSkipped() {
+        this.capture('onboarding_skipped', {});
+    }
+
+    /**
      * First quest completed (e.g. headroom in Still Quarter)
      */
     firstQuestCompleted(questId = '') {

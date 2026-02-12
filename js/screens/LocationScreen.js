@@ -68,9 +68,10 @@ class LocationScreen extends BaseScreen {
                 };
             });
 
-        // At Still Quarter during onboarding: show separator + inventory only after first item; pulse until first open
+        // At Still Quarter: show separator + inventory only after first item; once shown, keep showing even if inventory becomes empty
         const hasAnyItems = (state.player.inventory || []).length > 0;
-        const showInventoryBlock = locationId !== 'still_quarter' || hasAnyItems;
+        const inventoryUnlockedAtStillQuarter = state.inventory_unlocked_at_still_quarter === true;
+        const showInventoryBlock = locationId !== 'still_quarter' || hasAnyItems || inventoryUnlockedAtStillQuarter;
         const newlyUnlockedInventory = state.newly_unlocked_inventory === true;
         const pulseSpan = '<span class="location-pulse-indicator"></span>';
         if (showInventoryBlock) {
@@ -92,7 +93,7 @@ class LocationScreen extends BaseScreen {
         if (showWorldMap) {
             const hasNewLocation = state.has_new_location_unlocked || false;
             const worldMapLabel = hasNewLocation 
-                ? `[ WORLD MAP<span class="location-pulse-indicator"></span> ]`
+                ? `[ WORLD MAP ]<span class="location-pulse-indicator"></span> `
                 : '[ WORLD MAP ]';
             const hasSeenWorldMapIntro = state.has_seen_world_map_intro !== false;
             const worldMapScreen = hasSeenWorldMapIntro ? 'WorldMap' : 'WorldMapIntro';

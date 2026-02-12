@@ -37,7 +37,8 @@ class StateManager {
             has_seen_world_map_intro: false,
             game_started_fired: false,
             first_quest_completed_fired: false,
-            newly_unlocked_inventory: false // pulse on separator + inventory at Still Quarter until player opens inventory once
+            newly_unlocked_inventory: false, // pulse on inventory at Still Quarter until player opens inventory once
+            inventory_unlocked_at_still_quarter: false // once true, always show inventory block at Still Quarter even if empty
         };
     }
 
@@ -63,6 +64,7 @@ class StateManager {
         initial.game_started_fired = false;
         initial.first_quest_completed_fired = false;
         initial.newly_unlocked_inventory = false;
+        initial.inventory_unlocked_at_still_quarter = false;
         this.state = initial;
         this.eventBus.emit('stateUpdated', this.state);
     }

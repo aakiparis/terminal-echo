@@ -70,19 +70,34 @@ class TradeScreen extends BaseScreen {
             label: `--- Your Inventory ---`,
             type: 'separator'
         });
-        // 4. Add all items from the Player's inventory
-        (basePlayerState.inventory || []).forEach(itemId => {
+        // 4. Add all items from the Player's inventory (or a disabled placeholder if none tradeable)
+        const playerInventory = basePlayerState.inventory || [];
+        const tradeablePlayerItems = playerInventory.filter(itemId => {
             const itemData = ITEMS_DATA[itemId];
-            const effectSuffix = this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : '';
-            menuItems.push({
-                id: itemId,
-                source: 'player', // Mark item source
-                label: `[ SELL ] ${itemData.name}${effectSuffix} - Value: ${itemData.price}`,
-                actionText: '[ SELL ]',
-                disabled: itemData.tradeable === false,
-                item: itemData
-            });
+            return itemData && itemData.tradeable !== false;
         });
+        if (tradeablePlayerItems.length === 0) {
+            menuItems.push({
+                id: 'no_tradeable_items',
+                label: 'No tradeable items',
+                type: 'action',
+                source: 'placeholder',
+                disabled: true
+            });
+        } else {
+            playerInventory.forEach(itemId => {
+                const itemData = ITEMS_DATA[itemId];
+                const effectSuffix = this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : '';
+                menuItems.push({
+                    id: itemId,
+                    source: 'player', // Mark item source
+                    label: `[ SELL ] ${itemData.name}${effectSuffix} - Value: ${itemData.price}`,
+                    actionText: '[ SELL ]',
+                    disabled: itemData.tradeable === false,
+                    item: itemData
+                });
+            });
+        }
 
         // 5. Add the "Finish Trading" option
         menuItems.push({

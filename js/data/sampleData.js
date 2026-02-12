@@ -1,23 +1,29 @@
 const LOCATION_DATA = {
     "still_quarter": {
-        "name": "The Still Quarter (your home)",
-        "description": "A small, well-kept settlement built around local sufficiency. Hand-maintained generators hum quietly. The rules are clear, the paths are swept, and no one speaks of expansion. It is calm. Pleasant. Your place where you born, where you grew up, where you live now. Home.",
+        "name": "The Still Quarter",
+        "description": "A small, well-kept settlement built around local sufficiency.<br>Home. Your home.",
         "npcs": ["caretaker_mira", "warden_cole", "keeper_lin", "relay_box", "signal_terminal"]
     },
     "neon_nexus": {
         "name": "Neon Nexus",
-        "description": "A bustling marketplace cobbled together in the ruins of an old subway station. The air hums with the glow of repurposed neon signs and the chatter of traders.",
-        "npcs": ["zane", "mara", "rex", "selene"]
+        "description": "A tired knot of old-world infrastructure kept alive by habit and patchwork. Neon signage flickers like a heartbeat that refuses to stop, throwing washed-out color over tarp-stalls and salvaged wiring. ",
+        "npcs": ["station_noticeboard", "zane", "mara", "rex", "selene"]
     },
     "nexus_old_tunnel": {
-        "name": "Nexus Old Tunnel",
-        "description": "The service tunnels are a dark, cramped maze of pipes and forgotten machinery. The air is thick with the smell of ozone and decay.",
+        "name": "Nexus - Maintenance Tunnels",
+        "description": "Service corridors beneath the station. Tight, labeled, and meant for people who used to work here. Relay bundles hang like veins, chewed and re-spliced. Maintenance marks still cling to the walls. Something nests in the warmth where the signal spine still pulses.",
         "npcs": ["power_generator", "tunnel_passage"]
+    },
+    "nexus_calm_initiative_wing": {
+        "name": "Nexus - Calm Initiative Wing",
+        "description": "A sealed office-clinic wing with softened lighting panels and dead white-noise emitters. Posters promise emotional stability, compliance, and peace. Project timelines end mid-sentence. Biometric kiosks sit like polite threats, waiting for someone to remember why they were built.",
+        "npcs": ["project_board", "archive_terminal", "biometric_kiosk", ]
     },
     "the_forgotten_outpost": {
         "name": "The Forgotten Outpost",
-        "description": "An old, fortified communications outpost perched precariously on a rocky spire. Its main antenna twitches, broadcasting a faint, looping signal into the wastes.",
-        "npcs": ["elder_kian", "silas", "lena", "fixer_finn"]
+        "description": "WIP. To be contibued",
+        //"description": "An old, fortified communications outpost perched precariously on a rocky spire. Its main antenna twitches, broadcasting a faint, looping signal into the wastes.",
+        //"npcs": ["elder_kian", "silas", "lena", "fixer_finn"]
     },
     "global_seed_vault": {
         "name": "Global Seed Vault",
@@ -55,7 +61,7 @@ const NPC_DATA = {
                     "response": "Hey. You look like you're chewing on something. What's up?",
                     "destination_nodes": [
                         { "node_id": "story_1" },
-                        { "node_id": "end" }
+                        //{ "node_id": "end" }
                     ]
                 },
                 "return": {
@@ -66,14 +72,14 @@ const NPC_DATA = {
                     ]
                 },
                 "story_1": {
-                    "prompt": "You used to say we keep things simple. No overreaching. Tell me that again.",
-                    "response": "You know this. We keep it simple. Hand-maintained generators, clear rules. No big hierarchy — just caretakers. Everyone knows their part. We don't overreach. Same as I've always said.",
+                    "prompt": "You used to say we keep things simple. Tell me that again.",
+                    "response": "You know this. Hand-maintained generators, clear rules. No big hierarchy — just caretakers. Everyone knows their part. We don't overreach. Same as I've always said.",
                     "destination_nodes": [
                         { "node_id": "story_2" }
                     ]
                 },
                 "story_2": {
-                    "prompt": "How long's it been like that? You always said we adapt — we don't build for tomorrow in ways we can't touch.",
+                    "prompt": "How long's it been like that?",
                     "response": "As long as anyone remembers. We adapt. We don't build for tomorrow in ways we can't touch today. The old world tried the other way. Didn't end well. You've heard it a hundred times.",
                     "destination_nodes": [
                         { "node_id": "story_3" }
@@ -81,23 +87,23 @@ const NPC_DATA = {
                 },
                 "story_3": {
                     "prompt": "I keep wondering though — why is 'good enough' enough? What if we could do better?",
-                    "response": "It works well enough. Why stir the pot? More complexity, more that can break. We've learned that. What we have here — we can see it, we can fix it. That's enough.",
+                    "response": "More complexity, more that can break. We've learned that. What we have here is what we can see and what we can fix. That's enough.",
                     "destination_nodes": [
                         { "node_id": "story_4" }
                     ]
                 },
                 "story_4": {
                     "prompt": "What if something breaks that's connected to other places? Not just us?",
-                    "response": "Then we adapt locally. Coordinating with the rest — that's too much. Safer to depend on what we can see and touch. Last time people relied on systems they couldn't hold in their hands, everything came down. We don't do that again.",
+                    "response": "Other places? Coordinating with the rest? That's too much. Safer to depend on what we can see and touch. Last time people relied on systems they couldn't hold in their hands, everything came down. We don't do that again.",
                     "destination_nodes": [
                         { "node_id": "story_5" }
                     ]
                 },
                 "story_5": {
-                    "prompt": "So we're just okay with things failing? With not fixing them?",
-                    "response": "We're okay that not everything gets fixed. Some things go quiet and we get by anyway. It's not that we don't care. It's peace. You'll get it or you won't. Either way, we get on with the day.",
+                    "prompt": "So we're just okay with things failing?",
+                    "response": "We're okay that not everything gets fixed. Some things go quiet and we get by anyway. It's not that we don't care. It's balanced. You'll get it eventually.",
                     "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "I'll sit with that." }
+                        { "node_id": "end", "prompt_replacement": "I'll sit with that." }
                     ]
                 },
                 "end": {
@@ -142,7 +148,7 @@ const NPC_DATA = {
                     "response": "You know the drill. I watch the relay. Or I did. Went offline last week. Nothing huge — we're managing. Rationing, shifting loads. East block's a bit dimmer, mill queue's a bit longer. Not ideal but we get by.",
                     "destination_nodes": [
                         { "node_id": "quest_intro" },
-                        { "node_id": "return", "prompt_replacement": "I'll think about it." }
+                        { "node_id": "end", "prompt_replacement": "I'll think about it." }
                     ]
                 },
                 "quest_intro": {
@@ -212,7 +218,7 @@ const NPC_DATA = {
                     "response": "Fix it how? We'd need parts from the old depot, coordination with the shed crew, someone willing to run the diagnostics. That's a lot of moving parts. Easier to adapt. We've got a spare spool — someone slots it in, we get a bit more headroom. That's as far as we go.",
                     "destination_nodes": [
                         // { "node_id": "quest_intro" },
-                        { "node_id": "return", "prompt_replacement": "It sounds... odd. Are things happen that way always?" }
+                        { "node_id": "return", "prompt_replacement": "It sounds... odd. Do things used to happen that way always?" }
                     ]
                 },
                 "end": {
@@ -233,43 +239,34 @@ const NPC_DATA = {
                     "response": "You again. What brings you out here? You know there's nothing to see.",
                     "destination_nodes": [
                         { "node_id": "story_1" },
-                        { "node_id": "end" }
+                        // { "node_id": "end" }
                     ]
                 },
                 "return": {
                     "response": "Back. Still curious about the post?",
                     "destination_nodes": [
-                        { "node_id": "story_1", "prompt_replacement": "The stuff you always said about the old post — run it by me again." },
+                        { "node_id": "story_1", "prompt_replacement": "The stuff about the old post — run it by me again." },
                         // { "node_id": "story_3", "prompt_replacement": "I want to go look at the signal post." },
                         { "node_id": "end" }
                     ]
                 },
                 "story_1": {
-                    "prompt": "You used to say the old post used to talk to other places. That if it mattered, it'd still be working. Tell me that again.",
+                    "prompt": "You used to say the old post used to talk to other places. Tell me that again.",
                     "response": "You've heard it. The signal post. Old world — terminal, dish, a lot of wiring. Used to talk to other places. Now it just hums. Nobody uses it. If it mattered, it would still be working. We leave it alone.",
                     "destination_nodes": [
                         { "node_id": "story_2" }
                     ]
                 },
                 "story_2": {
-                    "prompt": "What was the signal supposed to be? A heartbeat or something? I never really asked.",
-                    "response": "I don't know. A heartbeat, maybe. Something that was part of a bigger system. Doesn't matter now. We're here. We're enough. The rest is noise.",
+                    "prompt": "What was the signal supposed to be? I never really asked.",
+                    "response": "I don't know. A heartbeat, maybe. Something that was part of a bigger system. Doesn't matter now, it is just a noise.",
                     "destination_nodes": [
                         { "node_id": "story_3" }
                     ]
                 },
                 "story_3": {
                     "prompt": "Can I just go look? I've never really looked. Not properly.",
-                    "response": "Why? There's nothing there. Dead screen and a hum. Nobody's cared in years.",
-                    "destination_nodes": [
-                        { "node_id": "story_4" },
-                        //{ "node_id": "return", "prompt_replacement": "Fair enough." }
-                    ]
-                },
-                "story_4": {
-                    // TODO: this option must be conditional and shows up only if the signal terminal is locked
-                    "prompt": "I want to see it for myself. Is that okay?",
-                    "response": "Fine. It's not forbidden. Just... nobody cares. Go look if it bothers you. Post is past the shed. You'll see the terminal. Don't expect answers.",
+                    "response": "Why? There's nothing there. Dead screen and a hum. Nobody's cared in years. But if you want, it's not forbidden. Go look if it bothers you. Post is past the shed. You'll see the terminal. Don't expect answers.",
                     "outcomes": [
                         { "type": "NPC_UNLOCK", "location_id": "still_quarter", "npc_id": "signal_terminal" }
                     ],
@@ -337,22 +334,29 @@ const NPC_DATA = {
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ The screen flickers to life. Not a welcome message — a pulse. A rhythm. Something out there is still signalling. ]",
+                    "response": "[ The terminal appears to be completely off. However, upon closer inspection, through the thick layer of dust on the screen, you notice that the cathode ray tube is still working, and you can see faint, barely distinguishable phosphorescent symbols.",
                     "destination_nodes": [
-                        { "node_id": "signal_1" },
-                        { "node_id": "end" }
+                        { "node_id": "signal_0" },
+                        // { "node_id": "end" }
                     ]
                 },
                 "return": {
                     "response": "[ The terminal still shows the same pulse. A heartbeat from somewhere else. ]",
                     "destination_nodes": [
-                        { "node_id": "signal_1", "prompt_replacement": "[ Listen again ]" },
+                        // { "node_id": "signal_1", "prompt_replacement": "[ Listen again ]" },
                         { "node_id": "signal_3", "prompt_replacement": "[ Record the coordinates and go ]" },
                         { "node_id": "end" }
                     ]
                 },
+                "signal_0": {
+                    "prompt": "[ Randomly push some buttons ]",
+                    "response": "[ The screen flickers to life. Something appers on the screen. Not a welcome message — a pulse. ]",
+                    "destination_nodes": [
+                        { "node_id": "signal_1" }
+                    ]
+                },
                 "signal_1": {
-                    "prompt": "[ Listen to the signal ]",
+                    "prompt": "[ Look into it ]",
                     "response": "[ It's not a distress call. No voice. Just a system heartbeat. Something that was built to talk to other places. Still trying. Still there. ]",
                     "destination_nodes": [
                         { "node_id": "signal_2" }
@@ -367,153 +371,238 @@ const NPC_DATA = {
                 },
                 "signal_3": {
                     "prompt": "[ Record the coordinates ]",
-                    "response": "[ You commit the data to memory. You know where to go. You could ignore it. Everyone else does. But you can't. An unfinished system. A thread. You need to see where it leads. The way to the Nexus is clear. ]",
+                    "response": "[ You commit the data to memory. You know where to go. You could ignore it. Everyone else does. But you can't. An unfinished system. A thread. You need to see where it leads to. The way to the Nexus is clear. ]",
                     "outcomes": [
                         { "type": "LOCATION_UNLOCK", "location_id": "neon_nexus" }
                     ],
                     "destination_nodes": [
-                        { "node_id": "end", "prompt_replacement": "[ Step away from the terminal. ]" }
+                        { "node_id": "end" }
                     ]
                 },
                 "end": {
                     "prompt": "[ Step away ]",
-                    "response": "[ You leave the terminal. The hum follows you for a moment, then fades. ]"
+                    "response": "[ You leave the terminal ]"
                 }
             }
         }
     },
     "neon_nexus": {
+        "station_noticeboard": {
+            "name": "Station Noticeboard",
+            "type": "device",
+            "is_available": true,
+            "description": "A warped sheet of plastic bolted to a pillar, layered with handwritten rules and old printed protocols.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "You see a warped bulletin board, tacked with printed notices, yellowed and faded with age, mixed with handwritten flyers. The notices overlap, like sediment.",
+                    "destination_nodes": [
+                        { "node_id": "read_more_1" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The board looks like a compromise that hardened into law. ]",
+                    "destination_nodes": [
+                        { "node_id": "read_more_1", "prompt_replacement": "[Read the older layers again]" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "read_more_1": {
+                    "prompt": "[ Look at the notices more closely ]",
+                    "response": "[ Beneath notes and flyers, 'Network Maintenance Schedule - Quarter 4' diagram is pinned... but the dates have been crossed out and replaced with handwritten 'When this is important' ]",
+                    "destination_nodes": [
+                        { "node_id": "read_more_2" }
+                    ]
+                },
+                "read_more_2": {
+                    "prompt": "[ Keep scanning the board ]",
+                    "response": "[ You see an old pinned flyers advertising 'G.C.I. - your way to get calm. Pop by at our local office to know more'. Someone circled it and wrote: 'DO NOT' ]",
+                    "destination_nodes": [
+                        { "node_id": "end", "prompt_replacement": " That's enough for now." }
+                    ]
+                },
+                "end": {
+                    "prompt": "[Step away]",
+                    "response": "[ The neon hum swallows the paper-thin authority of the board. ]"
+                }
+            }
+        },
         "zane": {
             "name": "Zane",
             "type": "npc",
             "is_available": true,
-            "description": "A jittery technician with a constant stream of data flowing through his cybernetic eye. He seems to be tinkering with a datapad.",
+            "description": "A twitchy station custodian-technician with a cybernetic eye that never stops refocusing. He speaks in diagnostics, but there’s a historian hiding behind the jargon.",
             "is_merchant": true,
-            "inventory": ["stimpack", "military_goggles", "harmonic_resonator"],
+            "inventory": ["stimpack", "military_goggles", "purified_water"],
             "dialogue_graph": {
-                // start node lists all possible sub-graphs
                 "start": {
-                    "response": "Whoa there, new face. Welcome to the Nexus. I'm Zane. You looking to trade, or just soaking in the ambiance?",
+                    "response": "Hold up—don’t touch the cables. People die that way. I'm Zane. I keep the Nexus breathing.<br>Trade, questions, or are you one of those types who looks at a system and feels the itch to <i>improve</i> it?",
                     "destination_nodes": [
-                        { "node_id": "nexus_story_1" },
-                        { "node_id": "quest_intro" },
+                        { "node_id": "zane_story_1" },
+                        //{ "node_id": "quest_gits_offer" },
                         { "node_id": "trade" },
                         { "node_id": "end" }
                     ]
                 },
-                // return node allows to remind the location storu again and ensures acces to all other available sub-graphs (i.e. trade and quest-related). Important: NPCs reposnse doesn't allude the quest was accepted or completed.
+
                 "return": {
-                    "response": "You're back. Good.",
+                    "response": "Back again. The hum didn’t scare you off. Good. Most people prefer places that don't remind them the world used to be bigger.",
                     "destination_nodes": [
-                        { "node_id": "nexus_story_1", "prompt_replacement": "Hey, can you remind me what this place is?"},
+                        { "node_id": "zane_story_1", "prompt_replacement": "Remind me what keeps this place running." },
+                        { "node_id": "quest_gits_offer" },
+                        { "node_id": "quest_gits_reminder" },
+                        { "node_id": "quest_gits_completion" },
+                        { "node_id": "quest_gits_calmwing_lead" },
                         { "node_id": "trade" },
-                        { "node_id": "quest_intro", "prompt_replacement": "You were saying something about problems with power supply, weren't you?" }, // this option is conditional and allows to get to the quest if it wasn't accepted the first time
-                        { "node_id": "quest_reminder" }, // this option is conditional and shows up only if Zane's quest was accepted
-                        { "node_id": "quest_completion" }, // this option is conditional for quest completion
                         { "node_id": "end" }
                     ]
                 },
-                // nexus_story_1 and nexus_story_2 tell the story. Then open a gate to a quest sub-graph
-                "nexus_story_1": {
-                    "prompt": "Tell me about this place.",
-                    "response": "This? This is the heart of the sector. Built from the bones of an old subway. We've got power, trade, and relative safety. What more could you want?",
+                "zane_story_1": {
+                    "prompt": "What is this place, really?",
+                    "response": "It's an old transit junction that refused to die. Power. Water recycling. Some comms. A skeleton of coordination. People come here because it still works but nobody wants it to become a promise.",
                     "destination_nodes": [
-                        { "node_id": "nexus_story_2" }
+                        { "node_id": "zane_story_2" }
                     ]
                 },
-                "nexus_story_2": {
-                    "prompt": "How do you keep the power on?",
-                    "response": "That's my department. Scavenged geothermal regulators. Tricky to maintain, but they keep the lights on and the mutants out. It's a constant battle, though. Parts are scarce.",
+                "zane_story_2": {
+                    "prompt": "Why not make it a promise?",
+                    "response": "Because promises become projects. Projects become dependencies. Dependencies become grief when they fail.<br>So we do local-loop trade. Walking distance. No routes. No invisible obligations.",
                     "destination_nodes": [
-                        { "node_id": "quest_intro" },
-                        { "node_id": "trade" },
-                        { "node_id": "end" }
+                        { "node_id": "zane_story_3" },
+                        { "node_id": "return", "prompt_replacement": "I want to ask about something else." }
+                    ]
+                },
+                "zane_story_3": {
+                    "prompt": "What's behind you? Looks as a plan or a book of work.",
+                    "response": "Come here. See that board? That used to be a schedule. Not for tomorrow—for quarters. Years.<br>Then one season, the dates just… stopped feeling real to people.",
+                    "destination_nodes": [
+                        { "node_id": "zane_story_4" }
+                    ]
+                },
+                "zane_story_4": {
+                    "prompt": "Why would that happen?",
+                    "response": "Nobody sabotaged it. Nobody rebelled. They just stopped volunteering their attention for things they'd never personally touch.<br>Maintenance became 'good enough'. Planning became 'indulgent'.",
+                    "destination_nodes": [
+                        { "node_id": "zane_story_5" }
+                    ]
+                },
+                "zane_story_5": {
+                    "prompt": "And you? You still plan.",
+                    "response": "I triage. I patch. I keep the machine from noticing it's dying.<br>Planning beyond the week makes people look at you like you’re asking them to hold a ghost.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I want to ask about something else." }
                     ]
                 },
                 "trade": {
-                    "prompt": "Let's see what you've got.",
-                    "response": "Always happy to barter. My gear is top-notch, you won't find better.",
+                    "prompt": "Let’s trade.",
+                    "response": "Good. Buy what you can carry. Depend on what you can repair. That’s the rule nobody writes down.",
                     "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Anything else I can help with?"}
+                        { "node_id": "return", "prompt_replacement": "Done. About something else…" }
                     ]
                 },
-                "quest_intro": {
+
+                // -------------------------
+                // Quest: Glitch in the System (maintenance + clue)
+                // -------------------------
+                "quest_gits_offer": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 0 }
                         ]
                     },
-                    "prompt": "You seem like you have a problem.",
-                    "response": "Astute observation. One of my critical regulators is failing. The diagnostic signature is... corrupted. I need someone to plant a data scrambler on the main junction box to force a reset. The problem is, it's deep in the old service tunnels.",
-                    "outcomes": [],
+                    "prompt": "Any maintenance emergencies?",
+                    "response": "The main regulator’s diagnostic signature is corrupted. I need you to plant a data scrambler on the generator service port in the maintenance tunnels. It'll force a clean reset.",
                     "destination_nodes": [
-                        { "node_id": "quest_accept" },
-                        { "node_id": "quest_details" },
-                        { "node_id": "quest_reject" }
+                        { "node_id": "quest_gits_details" },
+                        { "node_id": "quest_gits_accept" },
+                        { "node_id": "return", "prompt_replacement": "Not this time." }
                     ]
                 },
-                "quest_details": {
-                    "prompt": "Tell me more about these tunnels.",
-                    "response": "Dark, tight, and full of... well, let's just say the original maintenance crews aren't around anymore. But you look like you can handle yourself. The junction box is in the main control room. You can't miss it.",
+                "quest_gits_details": {
+                    "prompt": "What am I walking into down there?",
+                    "response": "A corridor that used to be boring. Now it's warm, damp, and full of improvised life.<br>Relays are chewed. Insulation is missing. The signal spine is… exposed. You'll know the generator room by the hum that makes your teeth itch.",
                     "destination_nodes": [
-                        { "node_id": "quest_accept" },
-                        { "node_id": "quest_reject" }
+                        { "node_id": "quest_gits_accept" },
+                        { "node_id": "return", "prompt_replacement": "Not this time." }
                     ]
                 },
-                "quest_accept": {
-                    "prompt": "I'll do it. Where's this scrambler?",
-                    "response": "That's the spirit! Here, take it. Just place it on the junction box. It'll do the rest. Be careful down there. The entrance to the tunnels is just past the market.",
+                "quest_gits_accept": {
+                    "prompt": "Alright. Give me the scrambler.",
+                    "response": "Good. Plant it in the service port and get out. If the system calms down, come back. And if you find anything... hmm,.. interesintg... Bring it to me.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 1 },
                         { "type": "ITEM_GAIN", "item_id": "data_scrambler" },
                         { "type": "LOCATION_UNLOCK", "location_id": "nexus_old_tunnel" },
-                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel" , "npc_id": "power_generator" },
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel", "npc_id": "power_generator" }
                     ],
                     "destination_nodes": [
                         { "node_id": "end" }
                     ]
                 },
-                "quest_reject": {
-                    "prompt": "Sounds too dangerous. I'm out.",
-                    "response": "Your loss. Don't come crying to me when the lights go out for good.",
-                    "destination_nodes": [
-                        { "node_id": "end" }
-                    ]
-                },
-                "quest_reminder": {
+
+// <br><br>And listen—if you see old labels, sealed doors, anything marked 'G.C.I.'… don’t get curious. Curiosity is how people start building again.
+
+                "quest_gits_reminder": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1 }
                         ]
                     },
-                    "prompt": "About that regulator...",
-                    "response": "The clock is ticking. Get that scrambler on the junction box before the whole grid goes dark. The tunnels aren't safe.",
+                    "prompt": "About that regulator reset...",
+                    "response": "Clock’s ticking. Every hour the signature stays corrupted, more subsystems drop into local fallback. That's how networks die: politely.",
                     "destination_nodes": [
-                        { "node_id": "quest_completion" }, // conditional, if player has the required item
-                        { "node_id": "end" }
+                        { "node_id": "return", "prompt_replacement": "I’m on it." },
                     ]
                 },
-                "quest_completion": {
+                "quest_gits_completion": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 }
                         ]
                     },
-                    "prompt": "I planted the scrambler. The system should be reset.",
-                    "response": "You did it? Fantastic! The diagnostic is clearing up already. You've saved the Nexus from going dark. I'm in your debt. Here, take this for your trouble. You've earned it.",
-                    "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 100 },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 300 },
-                        { "type": "STAT_CHANGE", "stat": "caps", "value": 250 },
-                        { "type": "REPUTATION_CHANGE", "value": 10 }
-                    ],
+                    "prompt": "Reset’s done. The generator stabilized.",
+                    "response": "You did it? ...Good. Good.<br><br>Did you notice anything weird? A file that shouldn’t exist. A label that felt… deliberate. Don’t lie. The station likes to leave breadcrumbs.",
                     "destination_nodes": [
-                        { "node_id": "end", "prompt_replacement": "Happy to help!" }
+                        { "node_id": "quest_gits_completion_reward" }
                     ]
                 },
+                "quest_gits_completion_reward": {
+                    "prompt": "It felt like there were hidden logs.",
+                    "response": "Of course there were.<br>Here’s your pay—caps for the body, not for the mind.<br><br>But if you actually want answers… there’s a sealed wing. 'Calm Initiative'. Most folks pretend it’s a rumor. If you go poking it, do it fast, do it clean, and don’t start preaching systems to people who came here to forget them.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 100 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 250 },
+                        { "type": "STAT_CHANGE", "stat": "caps", "value": 200 },
+                        { "type": "REPUTATION_CHANGE", "value": 5 },
+                        // { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "biometric_kiosk" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I’ll be careful." }
+                    ]
+                },
+                // find a way to unlock the wing in a more natural way
+                "quest_gits_calmwing_lead": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 100 }
+                        ]
+                    },
+                    "prompt": "About that Calm Initiative wing…",
+                    "response": "Don't make me regret saying it out loud. If the wing recognizes you—if it <i>responds</i>—bring me anything with coordinates or routing labels. That's evidence. That's… dangerous.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Understood." },
+                        { "node_id": "end", "prompt_replacement": "I’ll go now." }
+                    ]
+                },
+
                 "end": {
-                    "prompt": "See you around.",
-                    "response": "Stay sharp out there."
+                    "prompt": "I should go.",
+                    "response": "Keep your hands off the wrong cables."
                 }
             }
         },
@@ -521,125 +610,71 @@ const NPC_DATA = {
             "name": "Mara",
             "type": "npc",
             "is_available": true,
-            "description": "A stoic scavenger with a haunted look in her eyes. She carries a well-maintained rifle and watches the market crowds with suspicion.",
+            "description": "A scavenger with a stillness that reads like restraint. She watches the crowd the way people watch a fire—ready for it to change shape.",
+            "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "What do you want? I'm busy.",
+                    "response": "A scavenger with a stillness that reads like restraint. She watches the crowd the way people watch a fire—ready for it to change shape.",
                     "destination_nodes": [
                         { "node_id": "mara_story_1" },
-                        { "node_id": "mara_zane_story_1" },
-                        { "node_id": "zane_quest_reaction" }, // Reacts if player has started Zane's quest
-                        // { "node_id": "partner_item_story" }, // Reacts if player has the bone charm
+                        // { "node_id": "mara_react_gci" },
+                        { "node_id": "partner_item_story" },
                         { "node_id": "end" }
                     ]
                 },
                 "return": {
-                    "response": "You again. State your business.",
+                    "response": "You again. What is it?",
                     "destination_nodes": [
-                        { "node_id": "mara_story_1", "prompt_replacement": "Can you remind me what you do here?" },
-                        { "node_id": "mara_zane_story_1" },
-                        // { "node_id": "zane_quest_reaction" },
+                        { "node_id": "mara_story_1", "prompt_replacement": "Tell me about yourself again." },
+                        // { "node_id": "mara_react_gci" },
                         { "node_id": "partner_item_story" },
                         { "node_id": "end" }
                     ]
                 },
                 "mara_story_1": {
                     "prompt": "What's your story?",
-                    "response": "My story is written in scrap and survival. I was part of a scavenger crew out of the Rust Canyons. We were good. Too good.",
+                    "response": "Rust routes. Short hops. Never long ones. Long ones make you believe in maps.<br>I ran with a crew once. We thought the old world still had gifts.",
                     "destination_nodes": [
                         { "node_id": "mara_story_2" }
                     ]
                 },
                 "mara_story_2": {
-                    "prompt": "What happened to your crew?",
-                    "response": "We hit an old-world tech depot. Alarms, automated defenses... I was the only one who made it out. I carry their tags to remember them.",
+                    "prompt": "What happened?",
+                    "response": "We found a depot that still listened to rules nobody remembered. Alarms. Automated defenses. A system doing its job long after the job stopped mattering. I walked out. The rest... stayed.",
                     "destination_nodes": [
-                        { "node_id": "mara_story_3" },
-                        { "node_id": "mara_story_4" }
+                        { "node_id": "mara_story_3" }
                     ]
                 },
                 "mara_story_3": {
-                    "prompt": "That's rough. What are you doing here?",
-                    "response": "Lying low. Trading what I can find. The Nexus is safer than the wastes, but nowhere is truly safe. You learn that fast.",
+                    "prompt": "Why stay here in the Nexus?",
+                    "response": "Because it’s stable. Not safe—stable. People here like stable. They don't ask you what you want next year. They ask what you can carry today. And you know, that's fits me quite well. I even have managed to datу a guy here, but then... he just vanished.",
                     "destination_nodes": [
                         { "node_id": "mara_story_4" },
-                        { "node_id": "mara_zane_story_1" }, // allows to transit from mara_story sub-graph to mara_zane_story
-                        { "node_id": "return" , "prompt_replacement": "Let's talk about something else." }
+                        { "node_id": "return", "prompt_replacement": "Let’s talk about something else." }
                     ]
                 },
                 "mara_story_4": {
-                    "prompt": "Tell me more about the depot gates.",
-                    "response": "The gates... they're the first line of defense. Old-world security system, still active after all these years. The alarm system is brutal - automated turrets, gas traps, the works. But here's the thing: if you're lucky enough or strong enough, you can bypass the system entirely. The gates have a manual override that only responds to high luck or brute force. Anyone else tries to force it... well, let's just say the alarm doesn't discriminate.",
-                    "destination_nodes": [
-                        { "node_id": "mara_story_3" },
-                        { "node_id": "return", "prompt_replacement": "Thanks for the warning." },
-                        { "node_id": "depot_location_unlock" }
-                    ]
-                },
-                "depot_location_unlock": {
-                    "prompt": "Where is this depot?",
-                    "response": "East of here, past the Rust Canyons. You'll know it when you see it - massive reinforced gates, warning signs everywhere. If you're going there, remember what I told you. Luck or strength. Nothing else will get you through those gates alive.",
-                    "outcomes": [
-                        { "type": "LOCATION_UNLOCK", "location_id": "tech_depot" }
-                    ],
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "I'll keep that in mind." }
-                    ]
-                },
-                "mara_zane_story_1": {
-                    "prompt": "What do you know about Zane?",
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
-                        ]
-                    },
-                    "response": "The tech-head? He keeps the lights on, so people tolerate his... eccentricities. He's obsessed with the old tech. Thinks it holds all the answers.",
-                    "destination_nodes": [
-                        { "node_id": "mara_zane_story_2" }
-                    ]
-                },
-                "mara_zane_story_2": {
-                    "prompt": "You don't trust him?",
-                    "response": "I don't trust anyone who thinks machines are more reliable than people. He sent my last partner on a 'simple' salvage run into the tunnels. He never came back.",
-                    "outcomes": [
-                        // TO FIX: now can be reset to 0 after quest completion
-                        { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 0 }
-                    ],
-                    "destination_nodes": [
-                        { "node_id": "mara_zane_story_3" },
-                        { "node_id": "return" , "prompt_replacement": "Let's talk about something else."},
-                    ]
-                },
-                "mara_zane_story_3": {
-                    // TODO: add condition to check if either player has started Zane's quest or make sure this node is reachable at the time of returning to Mara
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" }
-                        ]
-                    },
-                    "prompt": "Zane sent me into those tunnels.",
-                    "response": "Did he now? Then be careful. His 'simple' runs have a way of getting complicated. My partner was looking for an 'adaptive circuit' for one of Zane's projects. Never even knew what it was for. Just a prize for Zane to play with.",
+                    "prompt": "That’s what happened to your partner?",
+                    "response": "He went into the tunnels on a 'simple' run. For Zane. Don't know what he actually looked for there. But he never came back. And nobody chased the why. They chased the next meal.",
                     "destination_nodes": [
                         { "node_id": "partner_item_story" },
-                        { "node_id": "end" }
+                        { "node_id": "return", "prompt_replacement": "I hear you." }
                     ]
                 },
-                "zane_quest_reaction": {
+
+                // to tell the story...
+                "mara_react_gci": {
                     "conditions": {
-                        "op": "AND",
                         "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 1, "op": "gte" },
-                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 100, "op": "neq" }
+                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 3, "op": "gte" }
                         ]
                     },
-                    "prompt": "About Zane's quest...",
-                    "response": "You're heading into the tunnels for him, aren't you? Be smart. Don't end up like my last partner. Keep your eyes open for more than just a junction box.",
-                    "outcomes": [],
+                    "prompt": "I found references to a 'Calm Initiative'.",
+                    "response": "People always want a reason. A label to pin blame on.<br>Here’s what I care about: whatever happened, it made people stop wanting to go back for the missing. Stop wanting to finish things.<br>If you find proof… don’t expect gratitude. Proof makes responsibilities. People hate responsibilities.",
                     "destination_nodes": [
-                        { "node_id": "partner_item_show" },
-                        { "node_id": "partner_item_keep" },
-                        { "node_id": "end"}
+                        { "node_id": "return", "prompt_replacement": "Fair." },
+                        { "node_id": "end", "prompt_replacement": "Thanks for the warning." }
                     ]
                 },
                 "partner_item_story": {
@@ -650,50 +685,41 @@ const NPC_DATA = {
                             { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 100, "op": "neq" }
                         ]
                     },
-                    "prompt": "I found something in the tunnels...",
+                    "prompt": "Zane send me to old Maintenance tunnels. I found something there.",
                     "response": "What?",
                     "destination_nodes": [
                         { "node_id": "partner_item_show" },
                         { "node_id": "partner_item_keep" },
-                        { "node_id": "end", "prompt_replacement": "Still nothing" }
+                        { "node_id": "return", "prompt_replacement": "Not now." }
                     ]
                 },
                 "partner_item_show": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "HAVE_ITEM", "item_id": "bone_charm" }
-                        ]
-                    },
-                    "prompt": "Here, look at it this tiny thing... It was... across someone's bones..",
-                    "response": "Bones? Let me see what you found... this charm... it was his. He carved it himself from a rat-king's femur. So that's where he ended up. At least... at least now I know. He always said it brought him luck. Looks like it ran out. Keep it. A reminder that luck is something you make, not find. You brought me closure. That's worth more than caps. You've earned my respect.",
+                    "prompt": "It was by bones. A charm.",
+                    "response": "...That’s my partner's work. He carved it from junk bone and superstition. So that’s where the tunnel paid him.<br>Keep it. Not as luck. As a receipt. Systems always send receipts—eventually.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 100 },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 100 },
-                        { "type": "REPUTATION_CHANGE", "value": 15 }
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 150 },
+                        { "type": "REPUTATION_CHANGE", "value": 10 }
                     ],
                     "destination_nodes": [
-                        { "node_id": "end", "prompt_replacement": "I'm sorry for your loss." }
+                        { "node_id": "return", "prompt_replacement": "I’m sorry." }
                     ]
                 },
                 "partner_item_keep": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "HAVE_ITEM", "item_id": "bone_charm" }
-                        ]
-                    },
-                    "prompt": "I wanted to let you know that I was in the tunnels, and... I've saw someone's bones next to the power generator.",
-                    "response": "I see. Just knowing where he fell... it's enough. Thank you for telling me. It's more than anyone else has done.",
+                    "prompt": "I just wanted you to know... I saw bones near the generator.",
+                    "response": "Taking into account, that my partner was sent by Zane there... Well. Knowing is... something. More than most people offer.<br>Thanks.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 100 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 150 },
                         { "type": "REPUTATION_CHANGE", "value": 5 }
                     ],
-                     "destination_nodes": [
-                        { "node_id": "end", "prompt_replacement": "He won't be forgotten." }
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "He won’t be forgotten." }
                     ]
                 },
                 "end": {
-                    "prompt": "I'll leave you to it.",
-                    "response": "Good."
+                    "prompt": "I’ll go.",
+                    "response": "Stay alive."
                 }
             }
         },
@@ -701,241 +727,313 @@ const NPC_DATA = {
             "name": "Rex",
             "type": "npc",
             "is_available": true,
-            "description": "A broad-shouldered man in patchwork armor, leaning against a support pillar. His gaze sweeps over the market, missing nothing.",
+            "description": "Security without ceremony. He doesn't posture—he audits. The kind of man who learned to fear promises more than threats.",
+            "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "Keep your hands where I can see them. I'm Rex. I handle security. Don't cause trouble, and we'll get along fine.",
+                    "response": "Don’t start anything. Don’t sell anyone a dream. This place stays standing because we keep it small.",
                     "destination_nodes": [
                         { "node_id": "rex_story_1" },
-                        { "node_id": "quest_pest_control_intro" },
-                        { "node_id": "selene_story_reaction" },
+                        // { "node_id": "quest_pest_offer" },
+                        // { "node_id": "selene_reaction" },
                         { "node_id": "end" }
                     ]
                 },
                 "return": {
-                    "response": "You again. Still keeping out of trouble?",
+                    "response": "You keeping your footprint light?",
                     "destination_nodes": [
-                        { "node_id": "quest_pest_control_intro" },
-                        //{ "node_id": "quest_pest_control_reminder" },
-                        { "node_id": "quest_pest_control_completion" },
-                        { "node_id": "selene_story_reaction" },
-                        { "node_id": "quest_selene_intro_reaction" },
+                        { "node_id": "rex_story_1", "prompt_replacement": "Why are you so strict about 'keeping it small'?" },
+                        { "node_id": "quest_pest_offer" },
+                        { "node_id": "quest_pest_reminder" },
+                        // { "node_id": "quest_pest_completion" },
+                        { "node_id": "selene_reaction" }, //?
                         { "node_id": "end" }
                     ]
                 },
+
                 "rex_story_1": {
-                    "prompt": "You're in charge here?",
-                    "response": "Someone has to be. The Nexus is a beacon, and beacons attract everything, good and bad. I make sure the bad doesn't stick around.",
-                    "destination_nodes": [ { "node_id": "rex_story_2" } ]
+                    "prompt": "Why keep it small?",
+                    "response": "Because expansions become networks. Networks become dependencies. Dependencies become panic when they fail.",
+                    "destination_nodes": [
+                        { "node_id": "rex_story_2" }
+                    ]
                 },
                 "rex_story_2": {
-                    "prompt": "Sounds like a tough job.",
-                    "response": "It's a necessary one. This place is one of the few things left that works. I aim to keep it that way.",
-                    "destination_nodes": [ { "node_id": "quest_pest_control_intro" }, { "node_id": "end" } ]
+                    "prompt": "Sounds like trauma.",
+                    "response": "Call it experience. The old world died because people trusted black boxes they couldn’t maintain.<br>We don’t do black boxes anymore.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Alright." }
+                    ]
                 },
-                "quest_pest_control_intro": {
+
+                // Quest: Pest Control reframed as relay integrity
+                "quest_pest_offer": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 0 }
                         ]
                     },
-                    "prompt": "Need any help with security?",
-                    "response": "Maybe. We've got Glow-Rats nesting in the lower tunnels. Getting bolder. Chewing on things they shouldn't. I need them cleared out before they cause a real problem.",
-                    "destination_nodes": [ { "node_id": "quest_pest_control_accept" }, { "node_id": "quest_pest_control_reject" }]
+                    "prompt": "Need help keeping the Nexus standing?",
+                    "response": "Maybe. Something’s chewing the relay insulation in the maintenance tunnels. Not just pests—system decay with teeth.<br>Clear the infestation pressure point. If the signal spine drops, half the station collapses into local fallback. That’s how places become villages.",
+                    "destination_nodes": [
+                        { "node_id": "quest_pest_accept" },
+                        { "node_id": "quest_pest_details" },
+                        { "node_id": "return", "prompt_replacement": "I’ll consider it later" }
+                    ]
                 },
-                "quest_pest_control_accept": {
-                    "prompt": "I can handle some rats.",
-                    "response": "Good. Don't get cocky. They're fast and there's more than a few. Take care of them and I'll make it worth your while.",
+
+                "quest_pest_details": {
+                    "prompt": "What am I looking for?",
+                    "response": "Chewed cabling. Warm nests near junction heat. Follow the stench and the scratch marks. If you find anything that looks like old station hardware—don’t pawn it. Bring it back.",
+                    "destination_nodes": [
+                        { "node_id": "quest_pest_accept" },
+                        { "node_id": "return", "prompt_replacement": "I’ll consider it later" }
+                    ]
+                },
+
+                "quest_pest_accept": {
+                    "prompt": "I’ll clear it.",
+                    "response": "Good. Don’t make it heroic. Make it finished.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 1 },
                         { "type": "LOCATION_UNLOCK", "location_id": "nexus_old_tunnel" },
-                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel" , "npc_id": "tunnel_passage" },
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel", "npc_id": "tunnel_passage" }
                     ],
-                    "destination_nodes": [ 
+                    "destination_nodes": [
                         { "node_id": "end" }
                     ]
                 },
-                "quest_pest_control_reject": {
-                    "prompt": "Not my problem.",
-                    "response": "Fine. More for the rest of us to deal with.",
-                    "destination_nodes": [ { "node_id": "end" } ]
+
+                "quest_pest_reminder": {
+                    "conditions": {
+                        "op": "AND",
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1, "op": "gte" },
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 100, "op": "neq" }
+                        ]
+                    },
+                    "prompt": "About the chewed relays…",
+                    "response": "Either you stop it, or the station adapts. Adaptation looks calm. It's just slow failure with manners.",
+                    "destination_nodes": [
+                        { "node_id": "quest_pest_completion" },
+                        { "node_id": "return", "prompt_replacement": "I’ll finish it." }
+                    ]
                 },
-                // "quest_pest_control_reminder": {
-                //     "condition": { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1 },
-                //     "prompt": "Update on the Glow-Rats.",
-                //     "response": "Update? Either they're gone or they're not. Get it done.",
-                //     "destination_nodes": [ { "node_id": "quest_pest_control_completion" }, { "node_id": "end" } ]
-                // },
-                "quest_pest_control_completion": {
+
+                "quest_pest_completion": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 3 }
                         ]
                     },
-                    "prompt": "The Glow-Rats are gone. I cleared the nest.",
-                    "response": "Good work. That's one less problem to worry about. I found this near the nesting site, looks like the alpha was hoarding it. Here's your payment. You earned it.",
+                    "prompt": "Infestation’s pressure point is gone.",
+                    "response": "Good. Now we shouldn't be bothered by annoying pests. Thank you.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 100 },
-                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 },
-                        // { "type": "ITEM_GAIN", "item_id": "glowing_pendant" },
-                        // { "type": "STAT_CHANGE", "stat": "xp", "value": 200 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 220 },
                         { "type": "STAT_CHANGE", "stat": "caps", "value": 150 },
-                        { "type": "REPUTATION_CHANGE", "value": 10 }
+                        { "type": "REPUTATION_CHANGE", "value": 5 },
                     ],
-                    "destination_nodes": [ { "node_id": "quest_pest_control_completion_selene" } ]
+                    "destination_nodes": [
+                        { "node_id": "amplifier" }
+                    ]
                 },
-                "quest_pest_control_completion_selene": {
-                    "prompt": "What's this pendant?",
-                    "response": "Glowing junk. The mystic, Selene, she's into this sort of thing. Maybe show it to her. Might be worth something to her.",
-                    "destination_nodes": [ { "node_id": "end" } ]
+                "amplifier": {
+                    // "conditions": {
+                    //     "condition": [
+                    //         { "type": "HAVE_ITEM", "item_id": "amplifier_token" }
+                    //     ]
+                    // },
+                    "prompt": "I pulled this out of the relay bundle near the nest.",
+                    "response": "Hm... It’s not jewelry. It’s station hardware—an old signal amplifier token.<br><br>Selene collects old meanings. If anyone can tell you what it interfaces with… it’s her.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "selene_reaction" },
+                        { "node_id": "return", "prompt_replacement": "I’ll talk to Selene." }
+                    ]
+                }, 
+                "selene_reaction": {
+                    "prompt": "What do you think of Selene?",
+                    "response": "She keeps people from turning fear into violence. I don’t care how she does it. Just… don’t let her talk you into starting a movement.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Fair." }
+                    ]
                 },
-                "selene_story_reaction": {
-                    "prompt": "What do you know about Selene?",
-                    "response": "The 'mystic'? She keeps to herself. Says the neon speaks to her. As long as she doesn't spook the traders, I leave her be.",
-                    "destination_nodes": [ { "node_id": "return", "prompt_replacement": "One more question..." } ]
-                },
-                "quest_selene_intro_reaction": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 }
-                        ]
-                    },
-                    "prompt": "Selene sent me. We need to open a maintenance hatch.",
-                    "response": "She did, huh? That hatch hasn't been opened in years. Fine. But if you break anything, you answer to me. Stand back.",
-                    "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }],
-                    "destination_nodes": [ { "node_id": "end" } ]
-                },
-                "end": { "prompt": "Stay safe.", "response": "You too." }
+
+                "end": {
+                    "prompt": "I’ll go.",
+                    "response": "Keep it small."
+                }
             }
         },
         "selene": {
             "name": "Selene",
             "type": "npc",
             "is_available": true,
-            "description": "A woman with unnervingly bright eyes sits cross-legged on a worn rug, surrounded by strange trinkets and humming softly to the neon glow.",
+            "description": "A listener more than a prophet. Her mysticism is a coping language for patterns others refuse to see.",
             "is_merchant": false,
+            "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "The light brings another seeker. Welcome. Do you listen to the hum, or are you just passing through the noise?",
+                    "response": "The neon repeats its old prayers. Most people call that comfort. I call it a signal trying not to be forgotten.<br>Do you listen… or do you only look?",
                     "destination_nodes": [
                         { "node_id": "selene_story_1" },
-                        { "node_id": "quest_echoes_intro" },
+                        { "node_id": "quest_echoes_offer" },
                         { "node_id": "end" }
                     ]
                 },
                 "return": {
-                    "response": "The pattern repeats. You are here again. What does the light wish you to know?",
+                    "response": "The pattern returns. What do you want from the hum?",
                     "destination_nodes": [
-                        { "node_id": "selene_story_1", "prompt_replacement": "What do you mean by 'the hum'?" },
-                        { "node_id": "quest_echoes_intro" },
+                        { "node_id": "selene_story_1", "prompt_replacement": "Explain what you mean by 'signal' again." },
+
+                        { "node_id": "quest_echoes_offer", "prompt_replacement": "About that amplifier token…" },
                         { "node_id": "quest_echoes_reminder" },
                         { "node_id": "quest_echoes_completion" },
+
                         { "node_id": "end" }
                     ]
                 },
+
                 "selene_story_1": {
-                    "prompt": "What do you mean 'the hum'?",
-                    "response": "The voice of the old world. The stories trapped in the glass and gas. Most people just see light. I hear the echoes.",
-                    "destination_nodes": [ { "node_id": "selene_story_2" } ]
+                    "prompt": "What do you mean by 'signal'?",
+                    "response": "Old systems spoke in routines. They still do—quietly. People learned to call the quiet 'peace'.<br>I hear it as unfinished sentences.",
+                    "destination_nodes": [
+                        { "node_id": "selene_story_2" }
+                    ]
                 },
                 "selene_story_2": {
-                    "prompt": "So you're a mystic?",
-                    "response": "A label for those who cannot hear. I am a listener. The station remembers everything. The fear, the hope... the day the trains stopped.",
-                    "destination_nodes": [ { "node_id": "end" } ]
+                    "prompt": "So you’re a mystic?",
+                    "response": "A listener. A translator. Sometimes a nuisance.<br>When people lose appetite for abstraction, they start calling patterns 'superstition'. It’s easier than responsibility.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Let’s talk about something else." }
+                    ]
                 },
-                "quest_echoes_intro": {
+
+                // Quest: Echoes of the Past (proof via infrastructure)
+                "quest_echoes_offer": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 }
                         ]
                     },
-                    "prompt": "Rex said to show you this pendant.",
-                    "response": "Ah, the light returns to its source. This was... a key. An amplifier for the station's voice. A great beast held it, but the true echo is locked away, in a place only the founders knew. Will you help me find it?",
-                    "destination_nodes": [ { "node_id": "quest_echoes_accept" }, { "node_id": "quest_echoes_reject" } ]
+                    "prompt": "Rex said you’d know what this amplifier token is.",
+                    "response": "Yes. Not a charm—an interface. The station used it to amplify archival traces into something humans could… tolerate.<br><br>There is a wing where calm was manufactured into policy. The machines there will only speak to certain signatures. If they recognize you, they will show you a route label—something real. Coordinates. A map. Evidence.",
+                    "destination_nodes": [
+                        { "node_id": "quest_echoes_accept" },
+                        { "node_id": "quest_echoes_reject" }
+                    ]
                 },
+
                 "quest_echoes_accept": {
-                    "prompt": "I'll help you find this 'echo'.",
-                    "response": "Good. The pendant is a key, but the lock is rusted shut. A maintenance hatch in the western corridor. Rex, the guardian, is the only one strong enough to open it. Show him you are worthy, and he will listen.",
-                    "outcomes": [{ "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 }],
-                    "destination_nodes": [ { "node_id": "end" } ]
+                    "prompt": "Tell me where.",
+                    "response": "Calm Initiative Wing. Sealed for a reason.<br>Bring the token. Use it at the biometric kiosk. If the kiosk accepts you, the archive terminal will open its deeper layer.<br><br>And listen: I will speak like a mystic if it keeps you alive—but what you’ll bring back is not a vision. It’s a system trace.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 },
+                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "biometric_kiosk" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I’ll go." }
+                    ]
                 },
+
                 "quest_echoes_reject": {
-                    "prompt": "This is too weird for me.",
-                    "response": "The hum is not for everyone. Go back to the noise. The light will wait.",
-                    "destination_nodes": [ { "node_id": "end" } ]
+                    "prompt": "No. Too strange.",
+                    "response": "Then stay in the noise. It’s kinder than truth, most days.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Maybe later." }
+                    ]
                 },
+
                 "quest_echoes_reminder": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 }
                         ]
                     },
-                    "prompt": "About that rusted lock...",
-                    "response": "The guardian, Rex, must be convinced. His strength is the key to the next path. The light will not be denied.",
-                    "destination_nodes": [ { "node_id": "end" } ]
+                    "prompt": "Remind me what I’m doing in the Calm Wing.",
+                    "response": "You’re not chasing a ghost. You’re extracting a routing label. Something the old world used to connect places.<br>Bring me coordinates. Bring me a charter fragment. Bring me proof.",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Got it." },
+                        { "node_id": "end", "prompt_replacement": "I’m going now." }
+                    ]
                 },
+
                 "quest_echoes_completion": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
                         ]
                     },
-                    "prompt": "The hatch is open.",
-                    "response": "You have done it! The echo is clear now... a memory. Not of the fall, but of the beginning. This was a shelter. A promise. The founders built an outpost, a beacon of hope. Its location is inside this memory. You have unlocked The Forgotten Outpost.",
+                    "prompt": "The archive opened. I pulled a route trace.",
+                    "response": "Then the station recognized you.<br><br>That trace will point outward—to where coordination almost became real again. The place people politely abandoned instead of defending.<br>Follow it. If you want to understand what was done to us, you’ll find the next argument there.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 100 },
                         { "type": "LOCATION_UNLOCK", "location_id": "the_forgotten_outpost" },
-                        { "type": "ITEM_LOSE", "item_id": "glowing_pendant" },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 400 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 350 },
                         { "type": "REPUTATION_CHANGE", "value": 5 }
                     ],
-                    "destination_nodes": [ { "node_id": "end" } ]
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "I’ll follow the trace." }
+                    ]
                 },
-                "end": { "prompt": "I should go.", "response": "The light fades, but is never gone." }
+
+                "end": {
+                    "prompt": "I should go.",
+                    "response": "The hum continues. Whether you listen is the only choice you still own."
+                }
             }
         }
     },
     "nexus_old_tunnel": {
         "power_generator": {
-            "name": "Power Generator",
+            "name": "Generator Control Room",
             "type": "device",
             "is_available": false,
-            "description": "A massive, humming piece of old-world machinery. A control panel flickers erratically, covered in warning glyphs. This is the junction box Zane mentioned.",
+            "description": "A humming generator assembly with a flickering panel. Labels are still legible if you look too closely.",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ The generator hums with a low, guttural frequency. A service port is open on its side, waiting. ]",
+                    "response": "[ The room is cramped with equipment racks. The generator’s hum is steady-but-strained, like a tired throat holding a note. Relay bundles run along the walls—some gnawed, some re-wrapped with scavenged tape. ]",
                     "destination_nodes": [
                         { "node_id": "install_scrambler" },
-                        { "node_id": "end" }
-                    ]
-                },
-                "return": {
-                    "response": "[ The generator hums with a low, guttural frequency. A service port is open on its side, waiting. ]",
-                    "destination_nodes": [
-                        { "node_id": "install_scrambler" },
-                        { "node_id": "investigate_aftermath" },
                         { "node_id": "check_history" },
                         { "node_id": "end" }
                     ]
                 },
+                "return": {
+                    "response": "[ The panel flickers. The system feels like it's waiting for permission to simplify itself. ]",
+                    "destination_nodes": [
+                        { "node_id": "install_scrambler", "prompt_replacement": "[Work the service port]" },
+                        { "node_id": "check_history", "prompt_replacement": "[Try the maintenance index again]" },
+                        { "node_id": "investigate_aftermath" },
+                        { "node_id": "end" }
+                    ]
+                },
+
                 "install_scrambler": {
                     "conditions": {
                         "condition": [
                             { "type": "HAVE_ITEM", "item_id": "data_scrambler" }
                         ]
                     },
-                    "prompt": "[ Access the service port to install the scrambler ]",
-                    "response": "[ Suddenly, you hear a frantic skittering from the darkness. ]",
+                    "prompt": "[Access the service port and insert the scrambler]",
+                    "response": "[ As you open the service port, the heat draws movement—small bodies skittering in the cable trays. ]",
                     "destination_nodes": [
-                        { "node_id": "rat_attack" }
+                        { "node_id": "rat_pressure_1" }
                     ]
                 },
-                "rat_attack": {
-                    "prompt": "[ Defend ]",
-                    "response": "[ A swarm of glow-rats bursts from a nearby conduit, enraged by the energy fluctuations! You fight them off, but not before one sinks its teeth into your leg.]",
+
+                "rat_pressure_1": {
+                    "prompt": "[Hold your ground]",
+                    "response": "[ A burst of glow-rats spills from a warm duct, panicked by the power fluctuation. You drive them back, but not before teeth find skin. ]",
                     "outcomes": [
                         { "type": "STAT_CHANGE", "stat": "hp", "value": -10 }
                     ],
@@ -944,110 +1042,131 @@ const NPC_DATA = {
                     ]
                 },
                 "install_scrambler_2": {
-                    "prompt": "[ Install the scrambler ]",
-                    "response": "[ You slide the data scrambler into the port. Lights on the panel flash wildly as the device begins its work. The generator emits a steady, calm hum. The scrambler has done its job. ]",
+                    "prompt": "[Seat the scrambler and close the port]",
+                    "response": "[ The scrambler clicks into place. The panel strobes, then settles into a calm pulse. A hidden maintenance index blinks briefly—like it noticed you noticing it. ]",
                     "outcomes": [
                         { "type": "ITEM_LOSE", "item_id": "data_scrambler" },
-                        { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 }
+                        { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 2 },
+                        //{ "type": "ITEM_GAIN", "item_id": "gci_archive_fragment" }
                     ],
                     "destination_nodes": [
-                        { "node_id": "investigate_aftermath" },
-                        { "node_id": "check_history" },
-                        { "node_id": "end" }
+                        { "node_id": "return", "prompt_replacement": "[Step back from the panel]" }
                     ]
                 },
+
                 "investigate_aftermath": {
                     "conditions": {
                         "condition": [
                             { "type": "NO_ITEM", "item_id": "bone_charm" }
                         ]
                     },
-                    "prompt": "[ Look around the area ]",
-                    "response": "[ With the generator reset and the rats gone, the area is quiet. The steady hum is almost peaceful. In the dim light, you spot something lying in the dust next to the generator, entangled in what looks like old, brittle bones. ]",
+                    "prompt": "[Look around the relay bundles]",
+                    "response": "[ With the generator stabilized, the room feels less hostile. In the dust near a rack, you spot brittle bones tangled in old cable ties—someone used to work here. Something small rests among them. ]",
                     "destination_nodes": [
                         { "node_id": "find_item" },
-                        { "node_id": "check_history" },
-                        { "node_id": "end" }
+                        { "node_id": "return", "prompt_replacement": "Leave it." }
                     ]
                 },
+
                 "find_item": {
-                    "prompt": "[ Pick up the item ]",
-                    "response": "[ You pick up a small, crudely carved charm made of bone. It feels strangely lucky. ]",
+                    "prompt": "[Pick up the small object]",
+                    "response": "[ A crude bone charm. Not valuable—personal. The kind of thing someone makes when the world stops making sense. ]",
                     "outcomes": [
                         { "type": "ITEM_GAIN", "item_id": "bone_charm" }
                     ],
                     "destination_nodes": [
-                        { "node_id": "check_history" },
-                        { "node_id": "end" }
+                        { "node_id": "return", "prompt_replacement": "Put it away." }
                     ]
                 },
+                // now can be triggered multiple times. Think about another way to unlock the wing
                 "check_history": {
-                    // TODO: now can be triggered multiple times, but should be triggered only once
                     "conditions": {
                         "condition": [
-                            { "type": "STAT_CHECK", "stat": "lck", "min": 6 }
+                            { "type": "STAT_CHECK", "stat": "int", "min": 3 }
                         ]
                     },
-                    "prompt": "[ Try to access the generator's logs ]",
-                    "response": "[ You feel a strange intuition and press a sequence of faded buttons on the console. A hidden log file opens, detailing the station's final hours before the fall. It speaks of a 'shelter protocol' and a last-ditch effort to save a handful of personnel. A fragment of history preserved. ]",
-                     "outcomes": [
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 100 }
+                    "prompt": "Try the maintenance index sequence",
+                    "response": "[ Your fingers move like you’ve done this before. A hidden menu opens: <i>\"G.C.I. ACCESS — BIOMETRIC GATE\"</i> and a route label: <i>\"CALM WING: NORTH SERVICE DOOR\"</i>.]",
+                    "outcomes": [
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 150 },
+                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "biometric_kiosk" },
+                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" }
                     ],
                     "destination_nodes": [
-                        { "node_id": "end" }
+                        { "node_id": "return", "prompt_replacement": "[Close the menu]" }
                     ]
                 },
+
                 "end": {
-                    "prompt": "[ Leave the generator ]",
-                    "response": "[ You head back towards the light of the Neon Nexus. ]"
+                    "prompt": "[Leave the control room]",
+                    "response": "[ You follow the maintenance markings back toward the neon glow. ]"
                 }
             }
         },
         "tunnel_passage": {
-            "name": "Tunnel Passage",
+            "name": "Relay Crawlspace",
             "type": "advanture",
             "is_available": false,
-            "description": "A dark, narrow passage branching off from the main tunnel. Strange scratching noises echo from within.",
+            "description": "A narrow service branch where relay lines converge. The air is warm with power leakage and animal breath.",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "This passage seems to be the source of the infestation. The air is thick with a foul, musky odor.",
-                    "destination_nodes": [ { "node_id": "enter_nest" }, { "node_id": "end" } ]
-                },
-                "return": {
-                    "response": "The foul stench from the passage is a grim invitation to proceed.",
+                    "response": "[ The crawlspace is labeled in faded stencil: <i>\"SIGNAL SPINE — DO NOT OBSTRUCT\"</i>.<br>Something has been living here anyway. ]",
                     "destination_nodes": [
                         { "node_id": "enter_nest" },
-                        { "node_id": "story_3", "prompt_replacement": "Continue disovery" },
-                        { "node_id": "end" } ]
+                        { "node_id": "end" }
+                    ]
                 },
+                "return": {
+                    "response": "[ Warmth, scratch marks, and the quiet certainty that entropy is patient. ]",
+                    "destination_nodes": [
+                        { "node_id": "enter_nest", "prompt_replacement": "[Follow the chewed relay line]" },
+                        { "node_id": "story_3" },
+                        { "node_id": "end" }
+                    ]
+                },
+
                 "enter_nest": {
                     "conditions": {
                         "condition": [
                             { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1 }
                         ]
                     },
-                    "prompt": "[Enter the rat's nest.]",
-                    "response": "You push deeper, the walls slick with grime. Old graffiti from the before-times tells a story. 'The trains will save us,' says one scrawl. A newer one underneath says, 'The trains are tombs.'",
-                    "destination_nodes": [ { "node_id": "story_2" } ]
+                    "prompt": "[Enter the crawlspace]",
+                    "response": "[ You push deeper. Relay bundles hang like nerves. Some are gnawed clean. Someone patched them once with care—then stopped returning. ]",
+                    "destination_nodes": [
+                        { "node_id": "story_2" }
+                    ]
                 },
+
                 "story_2": {
-                    "prompt": "[Continue forward.]",
-                    "response": "Further in, you see hastily constructed barricades, long since torn apart. It seems people tried to make a stand here. The scratchings on the wall become more frantic.",
-                    "destination_nodes": [ { "node_id": "ambush" } ]
+                    "prompt": "[Keep going]",
+                    "response": "[ You find old chalk marks: dates, initials, a maintenance rota—then nothing. The last date ends mid-line, like the writer got bored of the future. The scratching grows louder. ]",
+                    "destination_nodes": [
+                        { "node_id": "ambush_1" }
+                    ]
                 },
-                "ambush": {
-                    "prompt": "[Press on.]",
-                    "response": "As you squeeze through a narrow gap, glowing rats swarm from hidden crevices in the walls! You fight them back, but they are relentless and you take a few nasty bites.",
+                "ambush_1": {
+                    "prompt": "[Press on]",
+                    "response": "[ Glow-rats surge from a heat pocket in the wall. ]",
+                    "destination_nodes": [
+                        { "node_id": "ambush_2" }
+                    ]
+                },
+                "ambush_2": {
+                    "prompt": "[Defend yourself]",
+                    "response": "[ You fight through them, breathing insulation dust and animal panic. This is what happens when maintenance becomes reaction. ]",
                     "outcomes": [
                         { "type": "STAT_CHANGE", "stat": "hp", "value": -10 },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 200 },
-                        { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 2},
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 150 },
+                        { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 2 }
                     ],
                     "destination_nodes": [
                         { "node_id": "story_3" },
-                        { "node_id": "end", "prompt_replacement": "Get back from the tunnels to recover" },
+                        { "node_id": "end", "prompt_replacement": "[Back out and regroup]" }
                     ]
                 },
                 "story_3": {
@@ -1056,28 +1175,175 @@ const NPC_DATA = {
                             { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 2 }
                         ]
                     },
-                    "prompt": "[Push towards the source.]",
-                    "response": "The passage opens into a large cavern. In the center is a massive, pulsating nest made of scrap metal, wire, and bone. Atop it sits a monstrously large Glow-Rat, its eyes burning with intelligence. The Queen.",
-                    "destination_nodes": [ { "node_id": "fight_queen" } ]
+                    "prompt": "[Follow the warmth to the source]",
+                    "response": "[ The space opens into a relay junction cavern. In the center: a nest built from wire, tags, and bone—wrapped around an old signal coupler like it’s an altar. Atop it sits the queen, eyes bright with borrowed electricity. ]",
+                    "destination_nodes": [
+                        { "node_id": "fight_queen" }
+                    ]
                 },
+
                 "fight_queen": {
-                    "prompt": "[Fight the Rat Queen]",
-                    "response": "The battle is fierce. The Queen is fast and powerful, commanding her brood. With a final, desperate lunge, you bring the beast down. As it collapses, something shiny falls from the nest it was guarding.",
+                    "prompt": "[Destroy the pressure point]",
+                    "response": "[ You end it. Not heroic—mechanical. When the queen falls, the relay junction exhales. Something heavy clinks free from the nest: a token stamped with station glyphs. ]",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 3 },
-                        { "type": "ITEM_GAIN", "item_id": "glowing_pendant" },
                         { "type": "STAT_CHANGE", "stat": "hp", "value": -15 },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 300 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 260 },
+                        { "type": "ITEM_GAIN", "item_id": "amplifier_token" }
                     ],
-                    "destination_nodes": [ { "node_id": "end", "prompt_replacement": "[Leave the now-silent nest.]" } ]
+                    "destination_nodes": [
+                        { "node_id": "end", "prompt_replacement": "[Leave the now-quiet junction]" }
+                    ]
                 },
-                "leave": {
-                    "prompt": "[ Back away from the passage ]",
-                    "response": "You decide not to venture into the darkness today."
+
+                "end": {
+                    "prompt": "[Back away]",
+                    "response": "[ You retreat toward the wider tunnel, leaving the relay lines to their fragile hum. ]"
+                }
+            }
+        }
+    },
+    "nexus_calm_initiative_wing": {
+        "biometric_kiosk": {
+            "name": "Biometric Kiosk",
+            "type": "device",
+            "is_available": true,
+            "description": "A waist-high kiosk with a palm reader and a soft glow that feels like a smile you didn't ask for.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ The kiosk wakes as you approach. A polite chime. A prompt: <i>\"PLACE HAND — CALM ACCESS\"</i>. ]",
+                    "destination_nodes": [
+                        { "node_id": "use_token" },
+                        { "node_id": "try_without_token" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The kiosk waits. Patient. Certain. ]",
+                    "destination_nodes": [
+                        { "node_id": "use_token", "prompt_replacement": "[Use the amplifier token]" },
+                        { "node_id": "try_without_token", "prompt_replacement": "[Try anyway]" },
+                        { "node_id": "end" }
+                    ]
+                },
+
+                "use_token": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "HAVE_ITEM", "item_id": "amplifier_token" }
+                        ]
+                    },
+                    "prompt": "[Place hand and present the token]",
+                    "response": "[ The token’s glyphs align with the kiosk’s light. A tone like relief. The screen flashes: <i>\"RESONANCE MATCH — USER VARIANT DETECTED\"</i>.<br><br>A door control icon appears: <i>\"ARCHIVE LAYER: UNLOCK\"</i>. ]",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "[Step back]" }
+                    ]
+                },
+
+                "try_without_token": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "NO_ITEM", "item_id": "amplifier_token" }
+                        ]
+                    },
+                    "prompt": "[Place hand]",
+                    "response": "[ The kiosk reads you. Pauses. Then displays: <i>\"INSUFFICIENT AUTHORIZATION\"</i>.<br>A softer line follows: <i>\"COMPLIANCE IMPROVES WELLBEING\"</i>. ]",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Right." }
+                    ]
+                },
+
+                "end": {
+                    "prompt": "[Leave the kiosk]",
+                    "response": "[ The glow dims, as if disappointed. ]"
+                }
+            }
+        },
+        "archive_terminal": {
+            "name": "Archive Terminal",
+            "type": "device",
+            "is_available": true,
+            "description": "A wall terminal with layered permissions and dust in the seams of its touch surface.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ The terminal shows a friendly interface that feels curated: soft colors, short words, no scary graphs. A corner icon reads: <i>\"G.C.I. ARCHIVE\"</i>. ]",
+                    "destination_nodes": [
+                        { "node_id": "open_public_layer" },
+                        { "node_id": "open_deeper_layer" },
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The terminal’s public layer idles. Deeper functions feel present, like locked drawers. ]",
+                    "destination_nodes": [
+                        { "node_id": "open_public_layer", "prompt_replacement": "[Browse the public layer]" },
+                        { "node_id": "open_deeper_layer", "prompt_replacement": "[Try the deeper layer]" },
+                        { "node_id": "end" }
+                    ]
+                },
+
+                "open_public_layer": {
+                    "prompt": "[Browse public records]",
+                    "response": "[ You see slogans and training scripts: <i>\"Reduce panic\"</i>, <i>\"Stabilize communities\"</i>, <i>\"Lower cognitive overload\"</i>. It reads like a kindness that learned to enforce itself. ]",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Try something else." }
+                    ]
+                },
+
+                "open_deeper_layer": {
+                    "conditions": {
+                        "condition": [
+                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
+                        ]
+                    },
+                    "prompt": "[Access restricted layer]",
+                    "response": "[ The screen shifts. Raw logs. Routing labels. A file titled: <i>\"MAINTENANCE ROUTE — FO NODE\"</i> and another: <i>\"UNFINISHED CHARTER\"</i>.<br><br>You extract a strip of coordinates and a federation draft header. It’s not a vision. It’s a plan that died politely. ]",
+                    "outcomes": [
+                        { "type": "ITEM_GAIN", "item_id": "maintenance_route_map" },
+                        { "type": "ITEM_GAIN", "item_id": "charter_fragment" },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 300 }
+                    ],
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "[Close the files]" }
+                    ]
+                },
+
+                "end": {
+                    "prompt": "[Step away]",
+                    "response": "[ The terminal returns to its soft, curated calm. ]"
+                }
+            }
+        },
+        "project_board": {
+            "name": "Project Board",
+            "type": "advanture",
+            "is_available": true,
+            "description": "A wall of timelines and milestones. Many lines terminate without explanation.",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ Project rows run across the board in clean print. Then, abruptly, the ink changes to handwriting.\"DEFER.\", \"NO LONG-TERM.\", \"LOCAL SATISFACTION THRESHOLD MET.\". One timeline ends mid-word: \"Federat...\" ]",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
+                },
+                "return": {
+                    "response": "[ The board looks like a society deciding to stop wanting. ]",
+                    "destination_nodes": [
+                        { "node_id": "end" }
+                    ]
                 },
                 "end": {
-                    "prompt": "[ Back away from the passage ]",
-                    "response": "Back away from the passage."
+                    "prompt": "[Leave it]",
+                    "response": "[ You feel the strange weight of a future cancelled by consensus. ]"
                 }
             }
         }
@@ -2809,6 +3075,13 @@ const ITEMS_DATA = {
     
     // quest items
     "relay_spool": { "name": "Relay Spool", "tradeable": false, "type": "quest", "price": 0 },
+    "gci_archive_fragment": { "name": "G.C.I. Archive Fragment", "tradeable": false, "type": "quest", "price": 0 },
+    "amplifier_token": { "name": "Station Amplifier Token", "tradeable": false, "type": "quest", "price": 0 },
+    "maintenance_route_map": { "name": "Maintenance Route Map (FO Node)", "tradeable": false, "type": "quest", "price": 0 },
+    "charter_fragment": { "name": "Unfinished Charter Fragment", "tradeable": false, "type": "quest", "price": 0 },
+
+
+
     "signal_jammer": { "name": "Signal Jammer", "type": "quest", "tradeable": true, "price": 100 },
     "data_scrambler": { "name": "Data Scrambler", "tradeable": false, "type": "quest", "price": 0 },
     "glowing_pendant": { "name": "Glowing Pendant", "tradeable": false, "type": "quest", "price": 0 },

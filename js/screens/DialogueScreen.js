@@ -202,9 +202,10 @@ class DialogueScreen extends BaseScreen {
                     if (!state.player.inventory.includes(outcome.item_id)) {
                         playerUpdates.inventory = [...state.player.inventory, outcome.item_id];
                         this.eventBus.emit('log', { text: `[Received ${ITEMS_DATA[outcome.item_id].name}]`, type: 'system' });
-                        // First item (e.g. relay spool): show inventory + separator at Still Quarter with pulse until first open
+                        // First item (e.g. relay spool): show inventory at Still Quarter; pulse until first open; keep showing even if item used/lost
                         if (state.player.inventory.length === 0) {
                             rootUpdates.newly_unlocked_inventory = true;
+                            rootUpdates.inventory_unlocked_at_still_quarter = true;
                         }
                     }
                     break;
