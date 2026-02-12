@@ -241,7 +241,8 @@ class DialogueScreen extends BaseScreen {
                         }
                         const npcData = NPC_DATA[outcome.location_id]?.[outcome.npc_id];
                         const npcName = npcData?.name || outcome.npc_id;
-                        this.eventBus.emit('log', { text: `[NPC unlocked: ${npcName}]`, type: 'system' });
+                        const unlockLog = npcData?.type === 'npc' ? `[NPC unlocked: ${npcName}]` : `[Unlocked: ${npcName}]`;
+                        this.eventBus.emit('log', { text: unlockLog, type: 'system' });
                     }
                     break;
                 case 'NPC_LOCK':
@@ -274,7 +275,8 @@ class DialogueScreen extends BaseScreen {
                         rootUpdates.locked_npcs = updatedLockedNpcs;
                         const npcDataForLock = NPC_DATA[outcome.location_id]?.[outcome.npc_id];
                         const npcNameForLock = npcDataForLock?.name || outcome.npc_id;
-                        this.eventBus.emit('log', { text: `[NPC locked: ${npcNameForLock}]`, type: 'system' });
+                        const lockLog = npcDataForLock?.type === 'npc' ? `[NPC locked: ${npcNameForLock}]` : `[Locked: ${npcNameForLock}]`;
+                        this.eventBus.emit('log', { text: lockLog, type: 'system' });
                     }
                     break;
                 case 'QUEST_SET_STAGE':
