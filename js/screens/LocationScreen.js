@@ -120,7 +120,8 @@ class LocationScreen extends BaseScreen {
         this.navigationManager.navigateTo({ screen: 'Dialogue', params: { locationId, npcId } });
         const npcData = NPC_DATA[locationId]?.[npcId];
         const npcName = npcData?.name || npcId;
-        this.eventBus.emit('log', { text: `You're talking to ${npcName}` });
+        const logText = npcData?.type === 'npc' ? `You're talking to ${npcName}` : npcName;
+        this.eventBus.emit('log', { text: logText });
     }
 
     // This method was missing, causing inputs to be ignored.
