@@ -277,7 +277,16 @@ class DialogueScreen extends BaseScreen {
                 case 'QUEST_SET_STAGE':
                     // Collect quest stage updates without losing other quest state
                     questsUpdates[outcome.quest_id] = { stage: outcome.stage };
-                    this.eventBus.emit('log', { text: `[Quest '${QUEST_DATA[outcome.quest_id].title}' updated]`, type: 'system' });
+                    const questTitle = QUEST_DATA[outcome.quest_id].title;
+                    let questLogText;
+                    if (outcome.stage === 1) {
+                        questLogText = `[New quest "${questTitle}"]`;
+                    } else if (outcome.stage === 100) {
+                        questLogText = `[Quest "${questTitle}" completed]`;
+                    } else {
+                        questLogText = `[Quest "${questTitle}" updated]`;
+                    }
+                    this.eventBus.emit('log', { text: questLogText, type: 'system' });
                     
                     // Track quest update event
                     if (this.analyticsManager) {
