@@ -64,6 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 navigationManager.handleInput(input);
             });
 
+            // HP loss: 2s red heartbeat flash on the terminal
+            const terminalFrame = document.querySelector('.terminal-frame');
+            eventBus.on('playerLostHp', () => {
+                if (!terminalFrame) return;
+                const overlay = document.createElement('div');
+                overlay.className = 'hp-loss-overlay';
+                terminalFrame.appendChild(overlay);
+                setTimeout(() => overlay.remove(), 2000);
+            });
+
             // Start the game
             navigationManager.navigateTo({ screen: 'MainMenu' });
             eventBus.emit('log', { text: 'POST checks.' });

@@ -192,6 +192,9 @@ class DialogueScreen extends BaseScreen {
                 case 'STAT_CHANGE':
                     playerUpdates[outcome.stat] = (state.player[outcome.stat] || 0) + outcome.value;
                     this.eventBus.emit('log', { text: `[${outcome.stat.toUpperCase()} changed by ${outcome.value}]`, type: 'system' });
+                    if (outcome.stat === 'hp' && outcome.value < 0) {
+                        this.eventBus.emit('playerLostHp', { amount: outcome.value });
+                    }
                     break;
                 case 'REPUTATION_CHANGE':
                     playerUpdates.reputation = (state.player.reputation || 0) + outcome.value;
