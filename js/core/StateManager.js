@@ -1,8 +1,45 @@
+const GAME_STATE_STORAGE_KEY = 'terminal-echo-game-state';
+const SAVE_DEBOUNCE_MS = 400;
+
 class StateManager {
     constructor(eventBus) {
         this.eventBus = eventBus;
         this.state = this.getInitialState();
+        this.restoredFromStorage = false;
+        const saved = this._loadFromStorage();
+        if (saved && typeof saved === 'object' && saved.player && Array.isArray(saved.unlocked_locations)) {
+            this.state = { ...this.getInitialState(), ...saved };
+            this.restoredFromStorage = true;
+        }
+        this._saveDebounceTimer = null;
         this.eventBus.on('updateState', (newState) => this.updateState(newState));
+    }
+
+    _loadFromStorage() {
+        try {
+            const raw = typeof localStorage !== 'undefined' && localStorage.getItem(GAME_STATE_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    _saveToStorage() {
+        try {
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem(GAME_STATE_STORAGE_KEY, JSON.stringify(this.state));
+            }
+        } catch (e) {
+            console.warn('Could not save game state to localStorage:', e);
+        }
+    }
+
+    _scheduleSave() {
+        if (this._saveDebounceTimer) clearTimeout(this._saveDebounceTimer);
+        this._saveDebounceTimer = setTimeout(() => {
+            this._saveDebounceTimer = null;
+            this._saveToStorage();
+        }, SAVE_DEBOUNCE_MS);
     }
 
     getInitialState() {
@@ -91,10 +128,14 @@ class StateManager {
         updated.dialogue_nodes_visited_once[onceKey] = [...list, nodeId];
         this.state = updated;
         this.eventBus.emit('stateUpdated', this.state);
+        this._saveToStorage();
     }
 
     resetState() {
         this.state = this.getInitialState();
+        try {
+            if (typeof localStorage !== 'undefined') localStorage.removeItem(GAME_STATE_STORAGE_KEY);
+        } catch (e) {}
         console.log("State reset to initial state");
         this.eventBus.emit('stateUpdated', this.state);
     }
@@ -109,6 +150,7 @@ class StateManager {
         const initialState = this.getInitialState();
         this.state = { ...initialState, ...savedState };
         
+        this._saveToStorage();
         console.log("State loaded from save file");
         this.eventBus.emit('stateUpdated', this.state);
     }
@@ -153,6 +195,7 @@ class StateManager {
         this.state = updatedState;
         console.log("State updated:", this.state);
         this.eventBus.emit('stateUpdated', this.state);
+        this._scheduleSave();
 
         // Level up Check
         if (newState.player && newState.player.xp !== undefined) {

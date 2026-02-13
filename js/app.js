@@ -74,8 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => overlay.remove(), 2000);
             });
 
-            // Start the game
-            navigationManager.navigateTo({ screen: 'MainMenu' });
+            // Start the game: restore last screen if state was loaded from localStorage
+            if (stateManager.restoredFromStorage) {
+                const state = stateManager.getState();
+                const restorable = ['MainMenu', 'Location', 'WorldMap'];
+                const screen = restorable.includes(state.currentScreen) ? state.currentScreen : 'Location';
+                const params = screen === 'Location' ? { id: state.currentLocation } : (screen === 'WorldMap' ? {} : {});
+                navigationManager.navigateTo({ screen, params });
+                eventBus.emit('log', { text: 'Game state restored.', type: 'system' });
+            } else {
+                navigationManager.navigateTo({ screen: 'MainMenu' });
+            }
             eventBus.emit('log', { text: 'POST checks.' });
             eventBus.emit('log', { text: 'Welcome to Terminal Echo. v1-26.' });
         }
