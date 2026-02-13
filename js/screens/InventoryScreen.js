@@ -40,7 +40,7 @@ class InventoryScreen extends BaseScreen {
             const title = questMeta ? questMeta.title : questId;
             const stageDesc = questMeta && questMeta.stages && questMeta.stages[String(stage)];
             const stageLabel = stageDesc || (stage === 100 ? 'Completed' : 'In progress');
-            const line = `${title} — ${stageLabel}`;
+            const line = `${title}: ${stageLabel}`;
             if (stage === 100) {
                 questLogLines.push(`<s>${line}</s>`);
             } else {
@@ -48,8 +48,8 @@ class InventoryScreen extends BaseScreen {
             }
         });
         const questLogText = questLogLines.length
-            ? '<strong>Quest log</strong><br>' + questLogLines.join('<br>')
-            : '<strong>Quest log</strong><br>No active quests.';
+            ? '<strong>QUEST LOG</strong><br>' + questLogLines.join('<br>')
+            : '<strong>QUEST LOG</strong><br>No active quests.';
         this.components.questLog = new ScreenDescription({ text: questLogText });
 
         const menuItems = (state.inventory || []).map(itemId => {

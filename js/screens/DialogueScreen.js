@@ -65,7 +65,9 @@ class DialogueScreen extends BaseScreen {
 
         // --- Initialize Components ---
         this.components.title = new ScreenTitle({ text: this.npcData.name });
-        if (this.currentNodeKey === 'start' || this.currentNodeKey === 'return') {
+        // Show NPC description only when entering dialogue from location (no nodeKey), not when landing on start/return from a dialogue choice
+        const enteredFromLocation = !params.nodeKey;
+        if (enteredFromLocation && (this.currentNodeKey === 'start' || this.currentNodeKey === 'return')) {
             this.components.npcDescription = new ScreenDescription({ text: this.npcData.description || '' });
         }
         this.components.description = new ScreenDescription({ text: node.response });
