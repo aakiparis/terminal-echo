@@ -63,6 +63,12 @@ class DialogueScreen extends BaseScreen {
             this.processOutcomes(node.outcomes);
         }
 
+        // Record "once" node as visited after outcomes (use dedicated method so update is not lost in merge)
+        const onceKey = `${this.locationId}|${this.npcId}`;
+        if (node.once === true) {
+            this.stateManager.recordDialogueNodeVisitedOnce(this.locationId, this.npcId, this.currentNodeKey);
+        }
+
         // --- Initialize Components ---
         this.components.title = new ScreenTitle({ text: this.npcData.name });
         // Show NPC description only when entering dialogue from location (no nodeKey), not when landing on start/return from a dialogue choice
@@ -72,15 +78,23 @@ class DialogueScreen extends BaseScreen {
         }
         this.components.description = new ScreenDescription({ text: node.response });
 
+        // "Once" nodes: hide options that lead to a node already visited (player can enter that node only once)
+        const visitedOnce = this.stateManager.getState().dialogue_nodes_visited_once || {};
+        const visitedOnceForNpc = new Set(visitedOnce[onceKey] || []);
+
         // Map destination_nodes to menu items
         const menuItems = (node.destination_nodes || [])
         .filter(dest => {
+                const targetNode = this.npcData.dialogue_graph[dest.node_id];
+                // Exclude destination if it's a "once" node already visited
+                if (targetNode?.once && visitedOnceForNpc.has(dest.node_id)) {
+                    return false;
+                }
                 // If the flag is false, always show the item (current behavior).
                 if (!HIDE_UNMET_CONDITIONS) {
                     return true;
                 }
                 // Otherwise, only include it if its conditions are met.
-                const targetNode = this.npcData.dialogue_graph[dest.node_id];
                 return this.checkConditions(targetNode?.conditions || targetNode?.condition);
         })
         .map((dest, index) => {

@@ -38,7 +38,9 @@ class StateManager {
             game_started_fired: false,
             first_quest_completed_fired: false,
             newly_unlocked_inventory: false, // pulse on inventory at Still Quarter until player opens inventory once
-            inventory_unlocked_at_still_quarter: false // once true, always show inventory block at Still Quarter even if empty
+            inventory_unlocked_at_still_quarter: false, // once true, always show inventory block at Still Quarter even if empty
+            // Dialogue "once" nodes: player can enter only once per NPC. Key: "locationId|npcId", value: ["node_id", ...]
+            dialogue_nodes_visited_once: {}
         };
     }
 
@@ -71,6 +73,24 @@ class StateManager {
 
     getState() {
         return this.state;
+    }
+
+    /**
+     * Records that a "once" dialogue node was visited. Updates state directly so it is not lost in merge.
+     * @param {string} locationId
+     * @param {string} npcId
+     * @param {string} nodeId
+     */
+    recordDialogueNodeVisitedOnce(locationId, npcId, nodeId) {
+        const onceKey = `${locationId}|${npcId}`;
+        const prev = this.state.dialogue_nodes_visited_once || {};
+        const list = prev[onceKey] || [];
+        if (list.includes(nodeId)) return;
+        const updated = JSON.parse(JSON.stringify(this.state));
+        if (!updated.dialogue_nodes_visited_once) updated.dialogue_nodes_visited_once = {};
+        updated.dialogue_nodes_visited_once[onceKey] = [...list, nodeId];
+        this.state = updated;
+        this.eventBus.emit('stateUpdated', this.state);
     }
 
     resetState() {
@@ -122,8 +142,8 @@ class StateManager {
 
         for (const key in newState) {
             if (typeof newState[key] === 'object' && newState[key] !== null && !Array.isArray(newState[key])) {
-                // Merge objects (like player, quests, convo_history)
-                updatedState[key] = { ...updatedState[key], ...newState[key] };
+                // Merge objects (like player, quests, dialogue_nodes_visited_once); use {} if key was missing (e.g. old save)
+                updatedState[key] = { ...(updatedState[key] || {}), ...newState[key] };
             } else {
                 // Overwrite primitives and arrays
                 updatedState[key] = newState[key];

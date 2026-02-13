@@ -132,6 +132,7 @@ Base node structure:
 ```javascript
 node_id: {
     condition: {}, // Optional
+    once: true/false, // Optional, by default false
     prompt:  "What Player says", // Mandatory if not special node
     response:  "What NPC answers", 
     outcomes: [],  // Optional: effects when node is triggered

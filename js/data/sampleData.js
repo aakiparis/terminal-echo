@@ -1012,7 +1012,7 @@ const NPC_DATA = {
                     "response": "[ The panel flickers. The system feels like it's waiting for permission to simplify itself. ]",
                     "destination_nodes": [
                         { "node_id": "install_scrambler", "prompt_replacement": "[Work the service port]" },
-                        { "node_id": "check_history", "prompt_replacement": "[Try the maintenance index again]" },
+                        { "node_id": "check_history" },
                         { "node_id": "investigate_aftermath" },
                         { "node_id": "end" }
                     ]
@@ -1080,6 +1080,7 @@ const NPC_DATA = {
                 },
                 // now can be triggered multiple times. Think about another way to unlock the wing
                 "check_history": {
+                    "once": true,
                     "conditions": {
                         "condition": [
                             { "type": "STAT_CHECK", "stat": "int", "min": 3 }
