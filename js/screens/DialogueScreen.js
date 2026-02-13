@@ -65,6 +65,9 @@ class DialogueScreen extends BaseScreen {
 
         // --- Initialize Components ---
         this.components.title = new ScreenTitle({ text: this.npcData.name });
+        if (this.currentNodeKey === 'start' || this.currentNodeKey === 'return') {
+            this.components.npcDescription = new ScreenDescription({ text: this.npcData.description || '' });
+        }
         this.components.description = new ScreenDescription({ text: node.response });
 
         // Map destination_nodes to menu items
