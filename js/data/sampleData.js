@@ -3398,7 +3398,7 @@ const ENEMIES_DATA = {
         "lck": 1,
         "health": 10,
         "minDamage": 2,
-        "maxDamage": 10,
+        "maxDamage": 8,
         "xp": 100
     },
     "queen_rat": {
@@ -3406,7 +3406,7 @@ const ENEMIES_DATA = {
         "lck": 5,
         "health": 20,
         "minDamage": 3,
-        "maxDamage": 13,
+        "maxDamage": 12,
         "xp": 200
     }
 };
