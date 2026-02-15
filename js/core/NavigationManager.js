@@ -103,8 +103,9 @@ class NavigationManager {
                     id: 'restart',
                     label: '[ Main Menu ]',
                     action: () => {
-                        // Reloading the page is the simplest way to restart.
-                        window.location.reload();
+                        this.closePopup();
+                        this.stateManager.resetState(); // Clear in-memory state and localStorage (same as "to main menu")
+                        this.navigateTo({ screen: 'MainMenu' });
                     }
                 }
             ]
