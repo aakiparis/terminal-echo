@@ -115,15 +115,19 @@ class InventoryScreen extends BaseScreen {
             return;
         }
 
-        const itemId = selectedItem.item_id || selectedItem.id;
-        const itemData = ITEMS_DATA[itemId] || selectedItem.item;
+        // Resolve actual item_id (menu id can be compound e.g. "slot-0-stimpack")
+        let itemId = selectedItem.item_id;
+        if (itemId == null && typeof selectedItem.id === 'string' && selectedItem.id.startsWith('slot-')) {
+            const parts = selectedItem.id.split('-');
+            itemId = parts.slice(2).join('-');
+        }
+        if (itemId == null) itemId = selectedItem.id;
+        const itemData = selectedItem.item || (itemId && ITEMS_DATA[itemId]);
+        if (!itemData) return;
 
-        // For now, we'll use a simple alert/prompt system for actions.
-        // A more complex implementation would use a sub-menu.
         if (itemData.type === 'consumable') {
             this.confirmConsumeItem(itemId, itemData);
         } else {
-            // Default action for gear, junk, etc. is to drop.
             this.confirmDropItem(itemId, itemData);
         }
     }
@@ -185,7 +189,7 @@ class InventoryScreen extends BaseScreen {
     }
 
     consumeItem(itemId, itemData) {
-        // Apply stat changes from the consumable
+        if (!itemId || !itemData) return;
         const state = this.stateManager.getPlayerStats();
         const statChanges = itemData.stat_change || [];
         let updatedStats = {};
