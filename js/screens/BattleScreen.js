@@ -5,11 +5,18 @@
  */
 class BattleScreen extends BaseScreen {
     // Luck table (L 1, 5, 10): self, miss, hit, crit (percent) — matches damage-probabilities illustration
-    static LUCK_TABLE = [
-        { luck: 1, self: 15, miss: 25, hit: 60, crit: 0 },
-        { luck: 5, self: 8, miss: 22, hit: 62, crit: 8 },
-        { luck: 10, self: 0, miss: 10, hit: 75, crit: 15 }
-    ];
+    static LUCK_TABLE = {
+        "luck_1": { self: 15, miss: 40, hit: 45, crit: 0 },
+        "luck_2": { self: 10, miss: 40, hit: 50, crit: 0 },
+        "luck_3": { self: 10, miss: 35, hit: 50, crit: 5 },
+        "luck_4": { self: 10, miss: 30, hit: 55, crit: 5 },
+        "luck_5": { self: 5, miss: 30, hit: 55, crit: 10 },
+        "luck_6": { self: 5, miss: 25, hit: 60, crit: 10 },
+        "luck_7": { self: 5, miss: 20, hit: 65, crit: 10 },
+        "luck_8": { self: 0, miss: 20, hit: 65, crit: 15 },
+        "luck_9": { self: 0, miss: 15, hit: 70, crit: 15},
+        "luck_10": { self: 0, miss: 10, hit: 70, crit: 20 }
+    }
 
     enter(params) {
         this.battleParams = params || this.battleParams;
@@ -110,18 +117,14 @@ class BattleScreen extends BaseScreen {
 
     getLuckProbabilities(luck) {
         const L = BattleScreen.LUCK_TABLE;
-        const clamp = (l) => Math.max(1, Math.min(10, l));
-        const l = clamp(luck);
-        if (l <= 1) return { self: 0.2, miss: 0.3, hit: 0.5, crit: 0 };
-        if (l >= 10) return { self: 0, miss: 0.1, hit: 0.7, crit: 0.2 };
-        const low = l <= 5 ? L[0] : L[1];
-        const high = l <= 5 ? L[1] : L[2];
-        const t = l <= 5 ? (l - 1) / 4 : (l - 5) / 5;
+        const l = Math.max(1, Math.min(10, Math.floor(Number(luck)) || 1));
+        const row = L["luck_" + l];
+        if (!row) return { self: 0.1, miss: 0.35, hit: 0.45, crit: 0.1 };
         return {
-            self: (low.self + t * (high.self - low.self)) / 100,
-            miss: (low.miss + t * (high.miss - low.miss)) / 100,
-            hit: (low.hit + t * (high.hit - low.hit)) / 100,
-            crit: (low.crit + t * (high.crit - low.crit)) / 100
+            self: row.self / 100,
+            miss: row.miss / 100,
+            hit: row.hit / 100,
+            crit: row.crit / 100
         };
     }
 
