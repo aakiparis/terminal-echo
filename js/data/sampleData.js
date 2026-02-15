@@ -1036,7 +1036,7 @@ const NPC_DATA = {
                   ]
                 },
                 "prompt": "I have found a fragment about the Forgotten Outpost in the archive terminal.",
-                "response": "The Forgotthen Outpost... Hmm... I recall someone coming from there a few times when I was just a kid. They traded with us, we weren't quite open to them, as we didn't get why they traded with someone outside their comminuty. I completly forgot about them. But now, as you just questestioned me about them, I see how similar your talkings with theirs speaches. They disappeared. I wonder if they are still alive. I know where that place is. It's in the north-west of the station, near the old junction of trade routes. I'll show you the way.", 
+                "response": "The Forgotthen Outpost... Hmm... I recall someone coming from there a few times when I was just a kid. They traded with us, we weren't quite open to them, as we didn't get why they traded with someone outside their comminuty. I completly forgot about them. But now, as you just questestioned me about them, I see how similar your talkings with theirs speeches. They disappeared. I wonder if they are still alive. I know where that place is. It's in the north-west of the station, near the old junction of trade routes. I'll show you the way.", 
                 "outcomes": [
                   { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 100 },
                   { "type": "STAT_CHANGE", "stat": "xp", "value": 500 },
