@@ -15,6 +15,7 @@ const LOCATION_DATA = { /* ... */ };
 const NPC_DATA = { /* ... */ };
 const QUEST_DATA = { /* ... */ };
 const ITEMS_DATA = { /* ... */ };
+const ENEMIES_DATA = { /* ... */ };
 ```
 
 ## 1. Location Data
@@ -293,6 +294,31 @@ outcomes: [
 ]
 ```
 
+#### 3.6 Battle nodes
+
+A dialogue node can represent an **encounter** that triggers the interactive Battle Screen instead of showing a single response. Use this for hostile creatures, hazards, or scripted fights.
+
+**Battle node structure:**
+```javascript
+node_id: {
+    mode: "battle",
+    enemy: "enemy_id",   // key in ENEMIES_DATA
+    prompt: "[Hold your ground]",
+    response: "[ Flavor text after battle, or when entering. ]",
+    outcomes: [ /* applied when battle ends (e.g. STAT_CHANGE, QUEST_SET_STAGE) */ ],
+    destination_nodes: [
+        { "node_id": "next_node_id" }  // where to go after victory
+    ]
+}
+```
+
+*   **`mode: "battle"`** — Identifies this node as a battle; entering it navigates to the Battle Screen.
+*   **`enemy`** — Required; must match a key in `ENEMIES_DATA` (e.g. `"rat"`).
+*   **`prompt`** — Shown on the previous node as the player’s choice (e.g. “[Hold your ground]”).
+*   **`response`** — Narrative showned after the battle as post-victory flavor.
+*   **`outcomes`** — Applied when the battle ends (e.g. HP/XP changes, quest stage). On player defeat, standard Game Over applies; node outcomes are not applied.
+
+When the player selects an option whose **destination** is a battle node, the client must navigate to the Battle Screen with `locationId`, `npcId`, `battleNodeKey` (the node’s id), and `enemyId` (`enemy`), rather than opening the Dialogue Screen for that node.
 
 ### Dialogue guidance and recommendations
 
@@ -469,6 +495,83 @@ const QUEST_DATA = {
 - Multi-step chat: Talks to NPC_A, then to NPC_B, return to NPC_A. Could be 2-3 iterations. Example: conlfict negotiation.
 8. REPUTATION UNLOCK - "Proving Your Worth" - NPC_A won't help until player completes any quest in the location
 9. MORAL CHOICE - "The Double Deal" - Two NPCs offer conflicting quests for the same objective. Player can only complete one.
+
+
+## 4.5 Enemy Data (ENEMIES_DATA)
+
+Enemies are used by **battle nodes** in the dialogue graph. Each enemy defines combat stats and display name.
+
+```javascript
+const ENEMIES_DATA = {
+    enemy_id: {
+        name: "Display Name",      // e.g. "Rat"
+        lck: 1,                    // luck (1–10 typical); affects hit/crit/miss/self-harm chances
+        health: 10,                // max HP
+        minDamage: 2,
+        maxDamage: 10,
+        xp: 50                     // optional; XP granted on victory
+    }
+};
+```
+
+*   **`name`** — Shown in the Battle Screen and in combat log lines (e.g. “Rat does 3 damage”).
+*   **`lck`** — Creature’s luck; used to resolve the attacker’s outcome (deal damage, critical, miss, self-harm) when the creature attacks.
+*   **`health`** — Starting and maximum HP for this enemy.
+*   **`minDamage`** / **`maxDamage`** — Normal hit damage is a random integer in `[minDamage, maxDamage]` (inclusive). Critical hit damage = **`maxDamage * 1.5`** (rounded as defined in Combat Rules).
+*   **`xp`** — Optional; if present, can be granted to the player on victory (implementation may apply this via battle node outcomes instead).
+
+
+## 4.6 Combat Rules
+
+These rules apply on the Battle Screen when resolving each turn (creature turn, then player turn, per round).
+
+### Damage formulas
+
+*   **Creature damage (vs player):**
+    *   Source: `ENEMIES_DATA[enemyId].minDamage`, `maxDamage`, `health`.
+    *   Normal hit: random integer in `[minDamage, maxDamage]`.
+    *   Critical hit: **`maxDamage * 1.5`** (round to integer; e.g. `Math.floor(maxDamage * 1.5)`).
+*   **Player damage (vs creature):**
+    *   **minDamage = max(str * 0.7, 1)** (str = player STR). Round to integer.
+    *   **maxDamage = str * 1.3** (use integer if desired, e.g. floor).
+    *   Normal hit: random in `[minDamage, maxDamage]`.
+    *   Critical hit: **`maxDamage * 1.5`** (round to integer).
+
+### Turn outcome (luck-based)
+
+Each turn, the **attacker** gets exactly one of four outcomes. The attacker is either the creature (use creature’s `lck`) or the player (use player’s `lck`). The probabilities are derived from the attacker’s **luck** value as follows.
+
+**Probability distribution (from damage-probabilities table):**
+
+The illustration defines exact probabilities per 5% segments for **Luck 1**, **Luck 5**, and **Luck 10**. Use the following canonical table; for other luck values (2–4, 6–9), **linearly interpolate** between the two nearest rows.
+
+| Luck | (d) Harm to self | (c) Miss | (a) Deals damage | (b) Critical hit |
+|------|------------------|----------|------------------|------------------|
+| **1**  | 20% | 30% | 50% | 0%  |
+| **5**  | 10% | 20% | 60% | 10% |
+| **10** | 0%  | 10% | 70% | 20% |
+
+*   **(d) Harm to self** — Attacker takes damage applied to self. **Self-harm damage range:** creature **`[1, minDamage]`** (creature’s min only); player **`[1, str*0.7]`** (i.e. 1 to player min damage, same floor as normal min).
+*   **(c) Miss** — No damage to target.
+*   **(a) Deals damage** — Normal damage to target (random in min–max range).
+*   **(b) Critical hit** — Critical damage (maxDamage × 1.5) to target.
+
+**Implementation:** Given attacker luck L (1–10), compute P(d), P(c), P(a), P(b) from the table (interpolate for L ∉ {1, 5, 10}). Roll once per turn to choose one of the four outcomes; then apply the chosen outcome. For (a)/(b), use the attacker’s normal or critical damage roll to the target. For (d), use a damage roll in **`[1, minDamage]`** for a creature (attacker’s min only) or **`[1, max(str*0.7, 1)]`** for the player (1 to player min damage), applied to self.
+
+### Combat log messages
+
+Use short, consistent lines so the log stays readable. Examples:
+
+*   Creature hits player: **`"{Enemy name} does {N} damage"`**
+*   Player hits creature: **`"You damage the {enemy name} by {N} points"`** or **`"You do {N} damage to the {enemy name}"`**
+*   Creature misses: **`"{Enemy name} misses you"`**
+*   Player misses: **`"You miss the {enemy name}"`**
+*   Creature critical: **`"{Enemy name} does {N} critical damage"`**
+*   Player critical: **`"You do {N} critical damage"`** or **`"You do {N} critical damage to the {enemy name}"`**
+*   Self-harm (creature): **`"{Enemy name} hurts itself for {N} damage"`**
+*   Self-harm (player): **`"You hurt yourself for {N} damage"`**
+
+Battle ends when the creature’s current HP ≤ 0 (victory) or the player’s current HP ≤ 0 (defeat → Game Over). On victory, apply the battle node’s **outcomes** and navigate to the node’s **destination_nodes** (first valid destination).
 
 
 ## Items

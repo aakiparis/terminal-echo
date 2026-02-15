@@ -127,6 +127,37 @@ The player character is defined by a combination of baseline attributes set at c
     *   Quest status updates (started, completed).
 *   The log must be persistent and readable by the player at any time.
 
+### G) Interactive Battle System
+
+When the player chooses a dialogue option that leads to a **battle node** (e.g. “[Hold your ground]”), the game shall navigate to a dedicated **Battle Screen** instead of showing a single dialogue response. Combat is turn-based and more engaging: each round, the creature acts first, then the player.
+
+#### 1. Battle Trigger and Flow
+*   **Trigger:** Entering a dialogue node that has `mode: "battle"` and an `enemy` reference (see Game Data Spec).
+*   **Flow:** The game opens the Battle Screen with the specified enemy. If the player defeats the creature (creature reaches 0 HP), dialogue enters into the node (shows reponse, outcome and gives a choice of destination nodes). If the player reaches 0 HP first, Game Over.
+
+#### 2. Turn Structure
+*   **Order:** Each round, the **creature** acts first, then the **player**.
+*   **Per turn,** the acting side gets one of four outcomes (see Game Data Spec for luck-based probabilities):
+    *   **a) Deal damage** — Normal hit; damage is within the attacker’s min–max range.
+    *   **b) Critical hit** — An increased damage.
+    *   **c) Miss** — No damage to the target.
+    *   **d) Self-harm** — The attacker damages themselves: damage is in **`[1, minDamage]`** for a creature, or **`[1, str*0.7]`** for the player (see Game Data Spec).
+
+#### 3. Damage and Stats
+*   **Creature:** Damage range and HP come from **ENEMIES_DATA** (`minDamage`, `maxDamage`, `health`). Critical damage = `maxDamage * 1.7`.
+*   **Player:** Damage is derived from **Strength (STR):** `minDamage = max(str * 0.7)`, `maxDamage = str * 1.3`. Critical damage = player’s `maxDamage * 1.7`.
+*   **Luck:** The chances of (a), (b), (c), and (d) are determined by the **attacker’s Luck** (player’s LCK or creature’s `lck`). Higher luck favors normal hits and criticals; lower luck increases miss and self-harm. See an illustration of the function on `Damage probabilities.png` and see Game Data Spec for the exact function.
+
+#### 4. Battle Presentation
+*   **Creature HP:** The current enemy’s HP (e.g. “Rat: 7 / 10”) is visible on the Battle Screen.
+*   **Combat flow:**  A creature acts first. Then player pushes `[Attack]` and if the creature still alive it damages back. Then the player `[Attack]` again.
+*   **Combat log:** A scrollable log of recent actions, one line per event, e.g.:
+    *   “Rat does 3 damage”
+    *   “You damage the rat by 5 points”
+    *   “Rat misses you”
+    *   “You do 20 critical damage”
+*   **Battle end:** When the creature’s HP reaches 0, the player wins; the combat log shows "Rat defeated" and player sees next action `[Next]` that takes them back to dialogue. When the player’s HP reaches 0, the game triggers Game Over. The battle node’s outcomes are applied on victory; defeat is handled by the existing Game Over flow.
+
 ## 4. Game Content & Modes
 
 ### A) Pre-scripted Mode Content

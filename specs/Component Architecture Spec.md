@@ -380,8 +380,50 @@ Once dialogue screen has entered a dialogue node, to render it properly, the log
 2. Shape menu items from prompts of the destination nodes
 3. Those menu items which conditions are not meet must be shown but be inactive (disabled)
 
+**Battle node handling:** When the player selects an option whose **destination node** has `mode: "battle"` and `enemy`, do not navigate to the Dialogue screen for that node. Instead, emit `navigate` to the **Battle** screen with params: `{ locationId, npcId, battleNodeKey: destination.node_id, enemyId: targetNode.enemy }`. After the battle ends, the Battle screen applies outcomes and navigates to the battle node’s first destination (or triggers Game Over on player defeat).
 
-### 10. Inventory Screen
+
+### 10. Battle Screen
+
+**Purpose:** Run the interactive turn-based battle when the player enters a battle node (e.g. “[Hold your ground]”). Shows creature HP, a combat log, and advances rounds (creature acts, then player) until the creature or the player reaches 0 HP.
+
+**Params (from navigation):** `locationId`, `npcId`, `battleNodeKey`, `enemyId`. Optionally pass battle node `response` for intro or flavor text.
+
+**Pseudo code**
+```
+class BattleScreen {
+  constructor(config) {
+  ...
+    this.components = [
+      StatusBar,
+      ScreenTitle,           # e.g. "Battle" or enemy name
+      ScreenDescription,     # optional intro/flavor from node.response
+      CreatureHpDisplay,     # e.g. "Rat: 7 / 10"
+      CombatLog,             # scrollable log of recent combat lines
+      Menu,                   # e.g. [ Continue ] to advance next round (or auto-advance)
+      EventLog
+    ]
+  }
+  ...
+}
+```
+
+**Behavior:**
+- **Enter:** Initialize battle state from `ENEMIES_DATA[enemyId]` and current player HP/STR/LCK. Creature HP = enemy `health`; combat log empty. Optionally show node `response` as intro.
+- **Rounds:** Each round = creature turn (resolve outcome via luck, update HP, append log line), then player turn (same). If either side reaches HP ≤ 0, end battle.
+- **Display:** CreatureHpDisplay shows current enemy HP (e.g. `"Rat: 7 / 10"`). CombatLog shows the last N lines (e.g. “Rat does 3 damage”, “You damage the rat by 5 points”, “Rat misses you”, “You do 20 critical damage”). See Game Data Spec for damage formulas and log message format.
+- **Input:** Either a single “[ Continue ]” (or “[ Next round ]”) that advances one round, or automatic advancement with a short delay; implementation choice. No need for per-action menu (attack/defend) unless PRD is extended.
+- **On victory (creature HP ≤ 0):** Process the battle node’s **outcomes** (same as DialogueScreen.processOutcomes). Then navigate to the battle node’s first **destination_node** (e.g. next dialogue node) with the same pattern as dialogue (Dialogue screen with `nodeKey` set to that destination, or Trade/end/location as appropriate).
+- **On defeat (player HP ≤ 0):** Persist player HP in state (0), then trigger existing **Game Over** flow (e.g. `eventBus.emit('gameOver')`). Do not apply the battle node’s outcomes.
+
+**Component notes:**
+- **CreatureHpDisplay:** Simple text or small component: `"{Enemy name}: {currentHp} / {maxHp}"`.
+- **CombatLog:** Scrollable list of strings; new entries at top or bottom per design. Max entries (e.g. 15–20) to keep layout stable. No need to persist across sessions.
+
+**State:** Battle state (creature current HP, combat log lines, round index) is **local to the screen** (or a dedicated battle controller). Global state is updated only when the battle ends (player HP, outcomes, and navigation).
+
+
+### 11. Inventory Screen
 Pseudo code
 ```
 class InventoryScreen {
@@ -403,7 +445,7 @@ class InventoryScreen {
 
 Additionally, menu allows get back to previous screen.
 
-### 11. Trading Screen 
+### 12. Trading Screen 
 
 Trading screen shows items in NPCs and players inventory and allows to sell them or buy.
 As player buies an item it moves from NPCs inventory into player's and player loses appropriate amount of caps.
@@ -437,7 +479,7 @@ class TradeScreen {
 ```
 
 
-### 12. Game Menu Popup
+### 13. Game Menu Popup
 Screen that shows up ontop of the screen which handled hotkey. Visaully it makes the main screen grayed out and looks as a centered half-sized pop up.
 
 Pseudo code
@@ -461,7 +503,7 @@ class GameMenuPopup {
 - save game to a file
 - close the pop up
 
-### 13. Game Over Popup
+### 14. Game Over Popup
 Pops up when user's HP hit 0. Visaully it makes the main screen grayed out and looks as a centered half-sized pop up.
 
 Pseudo code

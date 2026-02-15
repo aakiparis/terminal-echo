@@ -174,4 +174,12 @@ class AnalyticsManager {
     gameOver() {
         this.capture('game_over');
     }
+
+    /**
+     * Combat started — fired when the player enters a battle.
+     * @param {string} enemyName - Display name of the enemy (e.g. "Rat")
+     */
+    combatStarted(enemyName) {
+        this.capture('combat_started', { enemy_name: enemyName });
+    }
 }

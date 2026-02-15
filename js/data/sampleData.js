@@ -1090,10 +1090,13 @@ const NPC_DATA = {
                 },
 
                 "rat_pressure_1": {
+                    "mode": "battle",
+                    "enemy": "rat",
                     "prompt": "[Hold your ground]",
                     "response": "[ A burst of glow-rats spills from a warm duct, panicked by the power fluctuation. You drive them back, but not before teeth find skin. ]",
                     "outcomes": [
-                        { "type": "STAT_CHANGE", "stat": "hp", "value": -10 }
+                        // { "type": "STAT_CHANGE", "stat": "hp", "value": -10 }
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 100 },
                     ],
                     "destination_nodes": [
                         { "node_id": "install_scrambler_2" }
@@ -1322,10 +1325,12 @@ const NPC_DATA = {
                 },
                 "ambush_2": {
                     "prompt": "[Defend yourself]",
+                    "mode": "battle",
+                    "enemy": "rat",
                     "response": "[ You fight through them, breathing insulation dust and animal panic. This is what happens when maintenance becomes reaction. ]",
                     "outcomes": [
-                        { "type": "STAT_CHANGE", "stat": "hp", "value": -10 },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 150 },
+                        //{ "type": "STAT_CHANGE", "stat": "hp", "value": -10 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 100 },
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 2 }
                     ],
                     "destination_nodes": [
@@ -1346,12 +1351,14 @@ const NPC_DATA = {
                     ]
                 },
                 "fight_queen": {
+                    "mode": "battle",
+                    "enemy": "queen_rat",
                     "prompt": "[Destroy the pressure point]",
                     "response": "[ You end it. Not heroic—mechanical. When the queen falls, the relay junction exhales. Something heavy clinks free from the nest: a token stamped with station glyphs. ]",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "pest_control", "stage": 3 },
-                        { "type": "STAT_CHANGE", "stat": "hp", "value": -15 },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 260 },
+                        //{ "type": "STAT_CHANGE", "stat": "hp", "value": -15 },
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 200 },
                         { "type": "ITEM_GAIN", "item_id": "amplifier_token" }
                     ],
                     "destination_nodes": [
@@ -3382,6 +3389,25 @@ const ITEMS_DATA = {
     // "scrap_metal": { "name": "Scrap Metal", "tradeable": true, "type": "junk", "price": 10 },
     // "energy_cell": { "name": "Energy Cell", "tradeable": true, "type": "junk", "price": 25 },
 
+};
+
+const ENEMIES_DATA = {
+    "rat": {
+        "name": "Rat",
+        "lck": 1,
+        "health": 10,
+        "minDamage": 2,
+        "maxDamage": 10,
+        "xp": 100
+    },
+    "queen_rat": {
+        "name": "Queen Rat",
+        "lck": 7,
+        "health": 20,
+        "minDamage": 4,
+        "maxDamage": 15,
+        "xp": 200
+    }
 };
 
 console.log('game.js: LOCATION_DATA', LOCATION_DATA);

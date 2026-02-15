@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const screens = [
                 MainMenuScreen, NewGameModeScreen, NewGamePlayerNameScreen,
                 OnboardingNarrativeScreen, WorldMapIntroScreen, NewGamePlayerAttributesScreen,
-                WorldMapScreen, LocationScreen, DialogueScreen, InventoryScreen, TradeScreen
+                WorldMapScreen, LocationScreen, DialogueScreen, BattleScreen, InventoryScreen, TradeScreen
             ];
 
             screens.forEach(ScreenClass => {

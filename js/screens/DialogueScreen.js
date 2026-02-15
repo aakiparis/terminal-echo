@@ -180,6 +180,16 @@ class DialogueScreen extends BaseScreen {
             });
         } else if (destination.node_id === 'end') {
             this.navigationManager.navigateTo({ screen: 'Location', params: { id: this.locationId } });
+        } else if (targetNode?.mode === 'battle' && targetNode?.enemy) {
+            this.eventBus.emit('navigate', {
+                screen: 'Battle',
+                params: {
+                    locationId: this.locationId,
+                    npcId: this.npcId,
+                    battleNodeKey: destination.node_id,
+                    enemyId: targetNode.enemy
+                }
+            });
         } else {
             // Navigate to the next dialogue node within the same screen
             this.navigationManager.navigateTo({
