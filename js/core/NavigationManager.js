@@ -217,7 +217,7 @@ class NavigationManager {
                 },
                 {
                     id: 'delimiter',
-                    label: '---',
+                    label: `------`,
                     type: 'separator'
                 },
                 {

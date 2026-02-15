@@ -12,16 +12,16 @@ const LOCATION_DATA = {
     "nexus_old_tunnel": {
         "name": "Nexus - Maintenance Tunnels",
         "description": "Service corridors beneath the station. Tight, labeled, and meant for people who used to work here. Relay bundles hang like veins, chewed and re-spliced. Maintenance marks still cling to the walls. Something nests in the warmth where the signal spine still pulses.",
-        "npcs": ["power_generator", "tunnel_passage"]
+        "npcs": ["power_generator", "tunnel_passage", "north_service_door"]
     },
     "nexus_calm_initiative_wing": {
         "name": "Nexus - Calm Initiative Wing",
         "description": "A sealed office-clinic wing with softened lighting panels and dead white-noise emitters. Posters promise emotional stability, compliance, and peace. Project timelines end mid-sentence. Biometric kiosks sit like polite threats, waiting for someone to remember why they were built.",
-        "npcs": ["project_board", "archive_terminal", "biometric_kiosk", ]
+        "npcs": ["biometric_kiosk", "project_board", "archive_terminal" ]
     },
     "the_forgotten_outpost": {
         "name": "The Forgotten Outpost",
-        "description": "WIP. To be contibued",
+        "description": "WIP. To be contibued. Save the game, subscribe for the news and get back the continuation will arrive",
         //"description": "An old, fortified communications outpost perched precariously on a rocky spire. Its main antenna twitches, broadcasting a faint, looping signal into the wastes.",
         //"npcs": ["elder_kian", "silas", "lena", "fixer_finn"]
     },
@@ -206,7 +206,7 @@ const NPC_DATA = {
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "headroom", "stage": 100 },
                         { "type": "STAT_CHANGE", "stat": "xp", "value": 100 },
-                        { "type": "ITEM_GAIN", "item_id": "stimpack" },
+                        { "type": "ITEM_GAIN", "item_id": "purified_water" },
                         { "type": "REPUTATION_CHANGE", "value": 5 }
                     ],
                     "destination_nodes": [
@@ -284,12 +284,12 @@ const NPC_DATA = {
             "name": "Relay Box",
             "type": "device",
             "is_available": false,
-            "description": "A metal box covered in dials and a single slot. The relay node. It's quiet now, waiting for a spare spool.",
+            "description": "A metal box covered in dials and a single slot.",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ A metal box covered in dials and a single slot. The relay node. It's quiet now. ]",
+                    "response": "[ It's quiet now, waiting for a spare spool. ]",
                     "destination_nodes": [
                         { "node_id": "install_spool" },
                         { "node_id": "end" }
@@ -370,6 +370,7 @@ const NPC_DATA = {
                     ]
                 },
                 "signal_3": {
+                    "once": true,
                     "prompt": "[ Record the coordinates ]",
                     "response": "[ You commit the data to memory. You know where to go. You could ignore it. Everyone else does. But you can't. An unfinished system. A thread. You need to see where it leads to. The way to the Nexus is clear. ]",
                     "outcomes": [
@@ -391,7 +392,7 @@ const NPC_DATA = {
             "name": "Station Noticeboard",
             "type": "device",
             "is_available": true,
-            "description": "A warped sheet of plastic bolted to a pillar, layered with handwritten rules and old printed protocols.",
+            "description": "",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
@@ -411,7 +412,7 @@ const NPC_DATA = {
                 },
                 "read_more_1": {
                     "prompt": "[ Look at the notices more closely ]",
-                    "response": "[ Beneath notes and flyers, 'Network Maintenance Schedule - Quarter 4' diagram is pinned... but the dates have been crossed out and replaced with handwritten 'When this is important' ]",
+                    "response": "[ Beneath notes and flyers, you see 'Network Maintenance Schedule - Quarter 4' diagram. It has tasks and rota,.. but the dates have been crossed out and replaced with handwritten 'When this is important' ]",
                     "destination_nodes": [
                         { "node_id": "read_more_2" }
                     ]
@@ -436,9 +437,9 @@ const NPC_DATA = {
             "description": "A twitchy station custodian-technician with a cybernetic eye that never stops refocusing. He speaks in diagnostics, but there’s a historian hiding behind the jargon.",
             "is_merchant": true,
             "inventory": [
-                { "item_id": "stimpack", "quantity": 3 },
+                { "item_id": "stimpack", "quantity": 1 },
                 { "item_id": "military_goggles", "quantity": 1 },
-                { "item_id": "purified_water", "quantity": 1 }
+                { "item_id": "purified_water", "quantity": 2 }
             ],
             "dialogue_graph": {
                 "start": {
@@ -458,7 +459,6 @@ const NPC_DATA = {
                         { "node_id": "quest_gits_offer" },
                         { "node_id": "quest_gits_reminder" },
                         { "node_id": "quest_gits_completion" },
-                        { "node_id": "quest_gits_calmwing_lead" },
                         { "node_id": "trade" },
                         { "node_id": "end" }
                     ]
@@ -480,7 +480,7 @@ const NPC_DATA = {
                 },
                 "zane_story_3": {
                     "prompt": "What's behind you? Looks as a plan or a book of work.",
-                    "response": "Come here. See that board? That used to be a schedule. Not for tomorrow—for quarters. Years.<br>Then one season, the dates just… stopped feeling real to people.",
+                    "response": "Come here. See that board? That used to be a schedule. Not for tomorrow. For quarters. For years.<br>Then one season, the dates just… stopped feeling real to people.",
                     "destination_nodes": [
                         { "node_id": "zane_story_4" }
                     ]
@@ -545,9 +545,6 @@ const NPC_DATA = {
                         { "node_id": "end" }
                     ]
                 },
-
-// <br><br>And listen—if you see old labels, sealed doors, anything marked 'G.C.I.'… don’t get curious. Curiosity is how people start building again.
-
                 "quest_gits_reminder": {
                     "conditions": {
                         "condition": [
@@ -567,43 +564,17 @@ const NPC_DATA = {
                         ]
                     },
                     "prompt": "Reset’s done. The generator stabilized.",
-                    "response": "You did it? ...Good. Good.<br><br>Did you notice anything weird? A file that shouldn’t exist. A label that felt… deliberate. Don’t lie. The station likes to leave breadcrumbs.",
-                    "destination_nodes": [
-                        { "node_id": "quest_gits_completion_reward" }
-                    ]
-                },
-                "quest_gits_completion_reward": {
-                    "prompt": "It felt like there were hidden logs.",
-                    "response": "Of course there were.<br>Here’s your pay—caps for the body, not for the mind.<br><br>But if you actually want answers… there’s a sealed wing. 'Calm Initiative'. Most folks pretend it’s a rumor. If you go poking it, do it fast, do it clean, and don’t start preaching systems to people who came here to forget them.",
+                    "response": "You did it?...Let me check... Oh yes! It works. Good!<br>Here’s your pay—caps for the body, not for the mind.",
                     "outcomes": [
                         { "type": "QUEST_SET_STAGE", "quest_id": "glitch_in_the_system", "stage": 100 },
                         { "type": "STAT_CHANGE", "stat": "xp", "value": 250 },
                         { "type": "STAT_CHANGE", "stat": "caps", "value": 200 },
                         { "type": "REPUTATION_CHANGE", "value": 5 },
-                        // { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "biometric_kiosk" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" }
                     ],
                     "destination_nodes": [
                         { "node_id": "return", "prompt_replacement": "I’ll be careful." }
                     ]
                 },
-                // find a way to unlock the wing in a more natural way
-                "quest_gits_calmwing_lead": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "glitch_in_the_system", "stage": 100 }
-                        ]
-                    },
-                    "prompt": "About that Calm Initiative wing…",
-                    "response": "Don't make me regret saying it out loud. If the wing recognizes you—if it <i>responds</i>—bring me anything with coordinates or routing labels. That's evidence. That's… dangerous.",
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Understood." },
-                        { "node_id": "end", "prompt_replacement": "I’ll go now." }
-                    ]
-                },
-
                 "end": {
                     "prompt": "I should go.",
                     "response": "Keep your hands off the wrong cables."
@@ -619,7 +590,7 @@ const NPC_DATA = {
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "A scavenger with a stillness that reads like restraint. She watches the crowd the way people watch a fire—ready for it to change shape.",
+                    "response": "What do you want? I'm busy.",
                     "destination_nodes": [
                         { "node_id": "mara_story_1" },
                         // { "node_id": "mara_react_gci" },
@@ -652,7 +623,7 @@ const NPC_DATA = {
                 },
                 "mara_story_3": {
                     "prompt": "Why stay here in the Nexus?",
-                    "response": "Because it’s stable. Not safe—stable. People here like stable. They don't ask you what you want next year. They ask what you can carry today. And you know, that's fits me quite well. I even have managed to datу a guy here, but then... he just vanished.",
+                    "response": "Because it’s stable. Not safe—stable. People here like stable. They don't ask you what you want next year. They ask what you can carry today. And you know, that's fits me quite well. I even have managed to date a guy here, but then... he just vanished.",
                     "destination_nodes": [
                         { "node_id": "mara_story_4" },
                         { "node_id": "return", "prompt_replacement": "Let’s talk about something else." }
@@ -661,6 +632,9 @@ const NPC_DATA = {
                 "mara_story_4": {
                     "prompt": "That’s what happened to your partner?",
                     "response": "He went into the tunnels on a 'simple' run. For Zane. Don't know what he actually looked for there. But he never came back. And nobody chased the why. They chased the next meal.",
+                    "outcomes": [
+                        { "type": "QUEST_SET_STAGE", "quest_id": "maras_partner_fate", "stage": 1 }
+                    ],
                     "destination_nodes": [
                         { "node_id": "partner_item_story" },
                         { "node_id": "return", "prompt_replacement": "I hear you." }
@@ -686,6 +660,7 @@ const NPC_DATA = {
                         "op": "AND",
                         "condition": [
                             { "type": "HAVE_ITEM", "item_id": "bone_charm" },
+                            { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 1, "op": "gte" },
                             { "type": "QUEST_STAGE", "quest_id": "maras_partner_fate", "stage": 100, "op": "neq" }
                         ]
                     },
@@ -694,7 +669,7 @@ const NPC_DATA = {
                     "destination_nodes": [
                         { "node_id": "partner_item_show" },
                         { "node_id": "partner_item_keep" },
-                        { "node_id": "return", "prompt_replacement": "Not now." }
+                        //{ "node_id": "return", "prompt_replacement": "Not now." }
                     ]
                 },
                 "partner_item_show": {
@@ -789,7 +764,7 @@ const NPC_DATA = {
 
                 "quest_pest_details": {
                     "prompt": "What am I looking for?",
-                    "response": "Chewed cabling. Warm nests near junction heat. Follow the stench and the scratch marks. If you find anything that looks like old station hardware—don’t pawn it. Bring it back.",
+                    "response": "Chewed cabling. Warm nests near junction heat. Follow the stench and the scratch marks.",
                     "destination_nodes": [
                         { "node_id": "quest_pest_accept" },
                         { "node_id": "return", "prompt_replacement": "I’ll consider it later" }
@@ -881,117 +856,195 @@ const NPC_DATA = {
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
-                "start": {
-                    "response": "The neon repeats its old prayers. Most people call that comfort. I call it a signal trying not to be forgotten.<br>Do you listen… or do you only look?",
-                    "destination_nodes": [
-                        { "node_id": "selene_story_1" },
-                        { "node_id": "quest_echoes_offer" },
-                        { "node_id": "end" }
-                    ]
-                },
-                "return": {
-                    "response": "The pattern returns. What do you want from the hum?",
-                    "destination_nodes": [
-                        { "node_id": "selene_story_1", "prompt_replacement": "Explain what you mean by 'signal' again." },
+              "start": {
+                "response": "Most people come here to rest from wanting. You look like you came here because you can’t stop.",
+                "destination_nodes": [
+                  { "node_id": "story_small_1" },
+                  { "node_id": "story_calm_1" },
+                  { "node_id": "provocation_grow_1" },
+                  { "node_id": "gci_1" },
+                  { "node_id": "quest_token_1" },
+                  { "node_id": "end" }
+                ]
+              },
+              "return": {
+                "response": "You again. Tell me—are you still looking for a reason, or have you started looking for a pattern?",
+                "destination_nodes": [
+                  { "node_id": "story_small_1" },
+                  { "node_id": "story_calm_1" },
+                  { "node_id": "provocation_grow_1" },
+                  { "node_id": "gci_1" },
+                  { "node_id": "quest_token_1" },
+                  { "node_id": "end" }
+                ]
+              },
+              "end": {
+                "prompt": "I should go.",
+                "response": "Go softly. Don’t carry your questions like a weapon."
+              },
 
-                        { "node_id": "quest_echoes_offer", "prompt_replacement": "About that amplifier token…" },
-                        { "node_id": "quest_echoes_reminder" },
-                        { "node_id": "quest_echoes_completion" },
+              "story_small_1": {
+                "prompt": "Zane and Rex both talk about keeping things small. Why?",
+                "response": "Because they’re saying the same prayer, just in different uniforms. Rex fears panic. Zane fears breakdown. Both fear the moment people remember they could ask for more.",
+                "destination_nodes": [
+                  { "node_id": "story_small_2" }
+                ]
+              },
+              "story_small_2": {
+                "prompt": "So you agree with them?",
+                "response": "I understand them. Agreement is too clean a word.",
+                "destination_nodes": [
+                  { "node_id": "story_calm_1" },
+                  { "node_id": "return", "prompt_replacement": "Let’s talk about something else." }
+                ]
+              },
 
-                        { "node_id": "end" }
-                    ]
-                },
+              "story_calm_1": {
+                "prompt": "Rex said you keep people calm. How?",
+                "response": "I give them a place to put the feeling. When the lights flicker, people don’t want an explanation—they want a target. I make the target the history instead of a person.",
+                "destination_nodes": [
+                  { "node_id": "story_calm_2" }
+                ]
+              },
+              "story_calm_2": {
+                "prompt": "That sounds manipulative.",
+                "response": "It is. So is law. So is leadership. So is any attempt to keep hands from reaching for knives.",
+                "destination_nodes": [
+                  { "node_id": "story_calm_3" }
+                ]
+              },
+              "story_calm_3": {
+                "prompt": "What do you actually do when people get scared?",
+                "response": "I slow the room down. I name what’s happening out loud—so no one has to invent a name in the dark. I redirect the need to act into something harmless: a vigil, a chant, a circuit-check ritual, a trade of small offerings.",
+                "destination_nodes": [
+                  { "node_id": "story_calm_4" }
+                ]
+              },
+              "story_calm_4": {
+                "prompt": "Do you ever get it wrong?",
+                "response": "Often. I just try to get it wrong quietly.",
+                "destination_nodes": [
+                  { "node_id": "provocation_grow_1" },
+                  { "node_id": "return", "prompt_replacement": "I get it. Another question." }
+                ]
+              },
 
-                "selene_story_1": {
-                    "prompt": "What do you mean by 'signal'?",
-                    "response": "Old systems spoke in routines. They still do—quietly. People learned to call the quiet 'peace'.<br>I hear it as unfinished sentences.",
-                    "destination_nodes": [
-                        { "node_id": "selene_story_2" }
-                    ]
-                },
-                "selene_story_2": {
-                    "prompt": "So you’re a mystic?",
-                    "response": "A listener. A translator. Sometimes a nuisance.<br>When people lose appetite for abstraction, they start calling patterns 'superstition'. It’s easier than responsibility.",
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Let’s talk about something else." }
-                    ]
-                },
+              "provocation_grow_1": {
+                "once": true,
+                "prompt": "Do you want the Nexus to grow?",
+                "response": "Want is a dangerous verb here. Growth is not a moral good. It’s a liability you must maintain.",
+                "destination_nodes": [
+                  { "node_id": "provocation_grow_2" }
+                ]
+              },
+              "provocation_grow_2": {
+                "prompt": "Then what do you want?",
+                "response": "I want people to keep their kindness when the lights betray them.",
+                "destination_nodes": [
+                  { "node_id": "gci_1" },
+                  { "node_id": "return", "prompt_replacement": "Alright. About something else…" }
+                ]
+              },
 
-                // Quest: Echoes of the Past (proof via infrastructure)
-                "quest_echoes_offer": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 1 }
-                        ]
-                    },
-                    "prompt": "Rex said you’d know what this amplifier token is.",
-                    "response": "Yes. Not a charm—an interface. The station used it to amplify archival traces into something humans could… tolerate.<br><br>There is a wing where calm was manufactured into policy. The machines there will only speak to certain signatures. If they recognize you, they will show you a route label—something real. Coordinates. A map. Evidence.",
-                    "destination_nodes": [
-                        { "node_id": "quest_echoes_accept" },
-                        { "node_id": "quest_echoes_reject" }
-                    ]
+              "gci_1": {
+                "prompt": "What is G.C.I.?",
+                "response": "A clinic that tried to treat the world’s panic like a disease. It didn’t fail.",
+                "destination_nodes": [
+                  { "node_id": "gci_2" }
+                ]
+              },
+              "gci_2": {
+                "prompt": "What did they do?",
+                "response": "They didn’t build a weapon. They built a mood. They taught bodies how to settle. How to stop reaching for the far horizon. Imagine taking the ache of ‘not enough’ out of a person. You’d save them… and you’d erase the engine that builds bridges.",
+                "destination_nodes": [
+                  { "node_id": "gci_3" }
+                ]
+              },
+              "gci_3": {
+                "prompt": "So you believe the Calm Initiative caused the collapse?",
+                "response": "I believe it left fingerprints. That’s different. You don’t need a villain to end a civilisation. You only need everyone to stop caring about what they can’t immediately feel.",
+                "destination_nodes": [
+                  { "node_id": "gci_4" }
+                ]
+              },
+              "gci_4": {
+                "prompt": "How can I fing that clinic?",
+                "response": "It's not a secret where it's located, it's hearby. However, the clinic is sealed. The machines there will only speak to certain signatures.",
+                "destination_nodes": [
+                  { "node_id": "gci_5" },
+                  { "node_id": "gci_6" }
+                ]
+              },
+              "gci_5": {
+                "prompt": "Why is the wing sealed?",
+                "response": "Because it’s a mirror. People don’t like mirrors that show them choices they didn’t know they made. Because the records don’t say ‘we were attacked.’ They say ‘we decided.’ And that makes the room dangerous.",
+                "destination_nodes": [
+                    { "node_id": "gci_6" },
+                    { "node_id": "return", "prompt_replacement": "That’s...a lot. Let’s shift." }
+                ]
+              },
+              "gci_6": {
+                "prompt": "What do you mean, “speak to certain signatures”?",
+                "response": "Some doors were built for caretakers. Some for auditors. Some for the rare ones who can hold a system in their head without flinching. If you can make the wing answer, you’ll see a trace—coordinates, routing labels, unfinished charters. Proof with edges.",
+                "destination_nodes": [
+                    { "node_id": "gci_5" },
+                    { "node_id": "return", "prompt_replacement": "That’s...a lot. Let’s shift." }
+                ]
+              },
+              "quest_token_1": {
+                // "once": true,
+                "conditions": {
+                  "op": "AND",
+                  "condition": [
+                    { "type": "HAVE_ITEM", "item_id": "amplifier_token" },
+                    { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 1, "op": "gte" },
+                    { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 100, "op": "neq" },
+                  ]
                 },
+                "prompt": "I’ve found a token in old maintenance tunnels. Rex said you’d know what this is.",
+                "response": "[Selena takes the amplifier token and looks at it closely]<br> Hmm, a saw similar glyphs once... The G.C.I. Clinic, a place where calm was manufactured into policy. Considering you are the one who have found it and that you keep asking, it looks you are the right person to get there.",
+                "outcomes": [
+                  { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 },
+                  { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
+                ],
+                "destination_nodes": [
+                  { "node_id": "quest_token_2" },
+                  //{ "node_id": "return", "prompt_replacement": "I need to think." }
+                ]
+              },
 
-                "quest_echoes_accept": {
-                    "prompt": "Tell me where.",
-                    "response": "Calm Initiative Wing. Sealed for a reason.<br>Bring the token. Use it at the biometric kiosk. If the kiosk accepts you, the archive terminal will open its deeper layer.<br><br>And listen: I will speak like a mystic if it keeps you alive—but what you’ll bring back is not a vision. It’s a system trace.",
-                    "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 },
-                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "biometric_kiosk" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" }
-                    ],
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "I’ll go." }
-                    ]
+              "quest_token_2": {
+                "prompt": "What do you want me to do?",
+                "response": "If that amplifier is a key... Go, if you must. Look. Extract what’s real. Then decide what kind of person you are when you return to the community that chose not to know.",
+                "destination_nodes": [
+                  { "node_id": "quest_token_3" },
+                ]
+              },
+              "quest_token_3": {
+                "prompt": "Are you telling me to keep it secret?",
+                "response": "I can’t stop you. But I bet you not taking anything from there back to Neon Nexus. Anything you find there – your choice. We have made ours.",
+                "destination_nodes": [
+                  // { "node_id": "return", "prompt_replacement": "I’ll decide when I see it." },
+                  { "node_id": "end", "prompt_replacement": "I’m going." }
+                ]
+              },
+              "quest_fo_1": {
+                "conditions": {
+                  "condition": [
+                    { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 },
+                  ]
                 },
-
-                "quest_echoes_reject": {
-                    "prompt": "No. Too strange.",
-                    "response": "Then stay in the noise. It’s kinder than truth, most days.",
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Maybe later." }
-                    ]
-                },
-
-                "quest_echoes_reminder": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 2 }
-                        ]
-                    },
-                    "prompt": "Remind me what I’m doing in the Calm Wing.",
-                    "response": "You’re not chasing a ghost. You’re extracting a routing label. Something the old world used to connect places.<br>Bring me coordinates. Bring me a charter fragment. Bring me proof.",
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Got it." },
-                        { "node_id": "end", "prompt_replacement": "I’m going now." }
-                    ]
-                },
-
-                "quest_echoes_completion": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
-                        ]
-                    },
-                    "prompt": "The archive opened. I pulled a route trace.",
-                    "response": "Then the station recognized you.<br><br>That trace will point outward—to where coordination almost became real again. The place people politely abandoned instead of defending.<br>Follow it. If you want to understand what was done to us, you’ll find the next argument there.",
-                    "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 100 },
-                        { "type": "LOCATION_UNLOCK", "location_id": "the_forgotten_outpost" },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 350 },
-                        { "type": "REPUTATION_CHANGE", "value": 5 }
-                    ],
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "I’ll follow the trace." }
-                    ]
-                },
-
-                "end": {
-                    "prompt": "I should go.",
-                    "response": "The hum continues. Whether you listen is the only choice you still own."
-                }
+                "prompt": "I have found a fragment about the Forgotten Outpost in the archive terminal.",
+                "response": "The Forgotthen Outpost... Hmm... I recall someone coming from there a few times when I was just a kid. They traded with us, we weren't quite open to them, as we didn't get why they traded with someone outside their comminuty. I completly forgot about them. But now, as you just questestioned me about them, I see how similar your talkings with theirs speaches. They disappeared. I wonder if they are still alive. I know where that place is. It's in the north-west of the station, near the old junction of trade routes. I'll show you the way.", 
+                "outcomes": [
+                  { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 100 },
+                  { "type": "STAT_CHANGE", "stat": "xp", "value": 500 },
+                  { "type": "LOCATION_UNLOCK", "location_id": "the_forgotten_outpost" },
+                ],
+                "destination_nodes": [
+                  { "node_id": "end", "prompt_replacement": "Farewell." }
+                ]
+              }
             }
         }
     },
@@ -1000,7 +1053,7 @@ const NPC_DATA = {
             "name": "Generator Control Room",
             "type": "device",
             "is_available": false,
-            "description": "A humming generator assembly with a flickering panel. Labels are still legible if you look too closely.",
+            //"description": "A humming generator assembly with a flickering panel. Labels are still legible if you look too closely.",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
@@ -1013,10 +1066,10 @@ const NPC_DATA = {
                     ]
                 },
                 "return": {
-                    "response": "[ The panel flickers. The system feels like it's waiting for permission to simplify itself. ]",
+                    "response": "[ The panel flickers. ]",
                     "destination_nodes": [
                         { "node_id": "install_scrambler", "prompt_replacement": "[Work the service port]" },
-                        { "node_id": "check_history" },
+                        { "node_id": "check_history", "prompt_replacement": "[Try the maintenance index again]" },
                         { "node_id": "investigate_aftermath" },
                         { "node_id": "end" }
                     ]
@@ -1082,22 +1135,18 @@ const NPC_DATA = {
                         { "node_id": "return", "prompt_replacement": "Put it away." }
                     ]
                 },
-                // now can be triggered multiple times. Think about another way to unlock the wing
                 "check_history": {
                     "once": true,
                     "conditions": {
                         "condition": [
-                            { "type": "STAT_CHECK", "stat": "int", "min": 3 }
+                            { "type": "STAT_CHECK", "stat": "int", "min": 5 }
                         ]
                     },
                     "prompt": "Try the maintenance index sequence",
-                    "response": "[ Your fingers move like you’ve done this before. A hidden menu opens: <i>\"G.C.I. ACCESS — BIOMETRIC GATE\"</i> and a route label: <i>\"CALM WING: NORTH SERVICE DOOR\"</i>.]",
+                    "response": "[ Your fingers move like you’ve done this before. A hidden menu opens: <i>\"G.C.I. ACCESS — BIOMETRIC GATE\"</i>. GCI Personnel only.  and a route label: <i>\"CALM WING: NORTH SERVICE DOOR\"</i>.]",
                     "outcomes": [
                         { "type": "STAT_CHANGE", "stat": "xp", "value": 150 },
-                        { "type": "LOCATION_UNLOCK", "location_id": "nexus_calm_initiative_wing" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "biometric_kiosk" },
-                        // { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" }
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_old_tunnel", "npc_id": "north_service_door" },
                     ],
                     "destination_nodes": [
                         { "node_id": "return", "prompt_replacement": "[Close the menu]" }
@@ -1108,18 +1157,149 @@ const NPC_DATA = {
                     "prompt": "[Leave the control room]",
                     "response": "[ You follow the maintenance markings back toward the neon glow. ]"
                 }
+            },
+        },
+        "north_service_door": {
+            "name": "Calm Wing: North Service Room",
+            "type": "advanture",
+            "is_available": false,
+            "description": "",
+            "is_merchant": false,
+            "inventory": [],
+            "dialogue_graph": {
+                "start": {
+                    "response": "[ You almost miss it. Between a support column and a bundle of dead conduit, a narrow service door sits half-shadowed—unmarked except for a faded strip of tape and a maintenance stencil so old it looks like grime. No sealant. No lock. Just neglect as camouflage. The handle gives with a quiet, well-oiled refusal to make a scene. ]",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "[Enter the room]" },
+                        { "node_id": "end" }
+                    ]
+                },
+
+                "return": {
+                    "response": "[ The service door is still there in the corner of your eye—easy to ignore, easier to forget. ]",
+                    "destination_nodes": [
+                        { "node_id": "inspect_emitters" },
+                        { "node_id": "inspect_filters" },
+                        { "node_id": "inspect_notes" },
+                        { "node_id": "terminal_intro" },
+                        { "node_id": "end" }
+                    ]
+                },
+
+                "inspect_emitters": {
+                    "prompt": "[Look at the emitter row]",
+                    "response": "[ Small units sit in a neat line, each with a tiny status window that used to glow. Their labels are technical and unsettlingly gentle:<i>\"WHITE NOISE — COMPLIANCE\"</i>, <i>\"PHOTON SOFTENING\"</i>, <i>\"AGITATION DAMPING\"</i> ]",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Look elsewhere." }
+                    ]
+                },
+
+                "inspect_filters": {
+                    "prompt": "[Inspect the cartridge bays]",
+                    "response": "[ Filter housings, removable cartridges—most of them empty. One bay still holds a cracked capsule marked with a simple icon: a steady heart line. The inventory tag isn’t chemical. It’s procedural:<br><i>\"STABILIZATION MEDIUM — DO NOT DISCLOSE\"</i> ]",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "Step back." }
+                    ]
+                },
+
+                "inspect_notes": {
+                    "prompt": "[Read the taped maintenance notes]",
+                    "response": "[ A checklist is taped above the workbench. The print is clean, the handwriting less so.<br><i>\"Shift start: verify output.\"</i><br><i>\"If agitation persists: escalate.\"</i><br>Beneath, in darker ink: <i>\"Escalation works. But they stop asking.\"</i> ]",
+                    "destination_nodes": [
+                        { "node_id": "return", "prompt_replacement": "That’s enough." }
+                    ]
+                },
+
+                // -------------------------
+                // Terminal + record list
+                // -------------------------
+                "terminal_intro": {
+                "prompt": "[Approach the terminal]",
+                    "response": "[ A service terminal is bolted into a cabinet, screen dark under a film of dust. You brush it clean and the display wakes slowly, as if surprised anyone still knows it exists.<br><br>The interface is maintenance-grade: no friendly graphics, just folders, timestamps, and error codes. Many entries are flagged <i>CORRUPT</i>. Not enough remain to tell you what this room really served. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index" },
+                        { "node_id": "return", "prompt_replacement": "[Step away from terminal back to the room]" }
+                    ]
+                },
+
+                "terminal_index": {
+                    "prompt": "[Open the directory listing]",
+                    "response": "[ DIRECTORY: G.C.I. // NORTH SERVICE ROOM ]<br>• <i>OPS_LOG_14</i> (corrupt)<br>• <i>INCIDENT_NORTH_HALL</i> (corrupt)<br>• <i>MAINT_SOP_EMITTER_CAL</i> (intact)<br>• <i>OUTPUT_THRESHOLDS</i> (partial)<br>• <i>STAFF_NOTE__\"PLAN LESS\"</i> (partial)<br>• <i>ACCESS_CHANGE_RECORD</i> (partial)<br>[ The cursor blinks like it’s waiting for the next bad decision. ]",
+                    "destination_nodes": [
+                        { "node_id": "rec_ops_log_14" },
+                        { "node_id": "rec_incident_north_hall" },
+                        { "node_id": "rec_maint_sop" },
+                        { "node_id": "rec_output_thresholds" },
+                        { "node_id": "rec_staff_note" },
+                        { "node_id": "rec_access_change" },
+                        { "node_id": "return", "prompt_replacement": "[Close the direcoty. Step away from terminal back to the room]" }
+                    ]
+                },
+
+                "rec_ops_log_14": {
+                    "prompt": "[Open: OPS_LOG_14]",
+                    "response": "[ TEXT RECOVERY: 31% ]<br><br><i>\"…public compliance improving.\"</i><br><i>\"…panic incidents down 22%.\"</i><br><i>\"…violent altercations down 41%.\"</i><br><i>\"…unintended side effect: reduced participation in long-horizon maintenance.\"</i><br><br><i>\"…staff note: 'They smile more. They plan less.'\"</i><br><br>[ The last sentence repeats until the terminal gives up. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
+                    ]
+                },
+
+                "rec_incident_north_hall": {
+                    "prompt": "[Open: INCIDENT_NORTH_HALL]",
+                    "response": "[ TEXT RECOVERY: 19% ]<br><br><i>\"…agitation spike following rumor of corridor charter…\"</i><br><i>\"…recommend suppression of 'network expansion' language; triggers hostility.\"</i><br><i>\"…escalated stabilization output.\"</i><br><i>\"…Outcome: hostility subsided. Curiosity subsided.\"</i><br><br>[ The report ends with an error code that looks almost embarrassed. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
+                    ]
+                },
+
+                "rec_maint_sop": {
+                    "prompt": "[Open: MAINT_SOP_EMITTER_CAL]",
+                    "response": "[ INTACT FILE ]<br><br><i>\"Emitter Calibration Procedure — G.C.I. North Service\"</i><br>1) <i>Verify dampening frequency</i><br>2) <i>Flush medium line</i><br>3) <i>Confirm 'stability' output range</i><br>4) <i>Do not disclose parameters to non-staff</i><br><br>[ This is not a security protocol. It’s a social one. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
+                    ]
+                },
+
+                "rec_output_thresholds": {
+                    "prompt": "[Open: OUTPUT_THRESHOLDS]",
+                    "response": "[ TEXT RECOVERY: 44% ]<br><br><i>\"Threshold A: De-escalation\"</i><br><i>\"Threshold B: Compliance assistance\"</i><br><i>\"Threshold C: Volitional dampening\"</i><br><br><i>\"C only under Incident conditions.\"</i><br><br>[ Someone built a dial that reaches into the part of a person that says: <b>not enough</b>. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
+                    ]
+                },
+
+                "rec_staff_note": {
+                    "prompt": "[Open: STAFF_NOTE__\"PLAN LESS\"]",
+                    "response": "[ TEXT RECOVERY: 23% ]<br><br><i>\"We reduced panic. It worked.\"</i><br><i>\"They don’t fight.\"</i><br><i>\"They don’t volunteer.\"</i><br><i>\"They don't ask for routes.\"</i><br><br><i>\"Maybe that’s the point.\"</i><br><br>[ The last line is cut off mid-word. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
+                    ]
+                },
+
+                "rec_access_change": {
+                    "prompt": "[Open: ACCESS_CHANGE_RECORD]",
+                    "response": "[ TEXT RECOVERY: 28% ]<br><br><i>\"…moved wing operations to RESTRICTED ACCESS MODE.\"</i><br><i>\"…reason: community agitation correlated with disclosure.\"</i><br><i>\"…directive: do not discuss incident narrative; provide comfort framing only.\"</i><br><br>[ So the sealed wing isn’t this room. This room is the quiet back-end—the place that kept the mood-machine serviced while the public story stayed gentle. ]",
+                    "destination_nodes": [
+                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
+                    ]
+                },
+
+                "end": {
+                    "prompt": "[Leave the service room]",
+                    "response": "[ You step back into the neon spill. The door remains where it was—unlocked, unadvertised, and easy to pretend you never noticed. ]"
+                }
             }
         },
         "tunnel_passage": {
             "name": "Relay Crawlspace",
             "type": "advanture",
             "is_available": false,
-            "description": "A narrow service branch where relay lines converge. The air is warm with power leakage and animal breath.",
+            //"description": "A narrow service branch where relay lines converge. The air is warm with power leakage and animal breath.",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ The crawlspace is labeled in faded stencil: <i>\"SIGNAL SPINE — DO NOT OBSTRUCT\"</i>.<br>Something has been living here anyway. ]",
+                    "response": "[ A narrow service branch where relay lines converge. The air is warm with power leakage and animal breath. The crawlspace is labeled in faded stencil: <i>\"SIGNAL SPINE — DO NOT OBSTRUCT\"</i>.]",
                     "destination_nodes": [
                         { "node_id": "enter_nest" },
                         { "node_id": "end" }
@@ -1146,7 +1326,6 @@ const NPC_DATA = {
                         { "node_id": "story_2" }
                     ]
                 },
-
                 "story_2": {
                     "prompt": "[Keep going]",
                     "response": "[ You find old chalk marks: dates, initials, a maintenance rota—then nothing. The last date ends mid-line, like the writer got bored of the future. The scratching grows louder. ]",
@@ -1186,7 +1365,6 @@ const NPC_DATA = {
                         { "node_id": "fight_queen" }
                     ]
                 },
-
                 "fight_queen": {
                     "prompt": "[Destroy the pressure point]",
                     "response": "[ You end it. Not heroic—mechanical. When the queen falls, the relay junction exhales. Something heavy clinks free from the nest: a token stamped with station glyphs. ]",
@@ -1221,48 +1399,50 @@ const NPC_DATA = {
                     "response": "[ The kiosk wakes as you approach. A polite chime. A prompt: <i>\"PLACE HAND — CALM ACCESS\"</i>. ]",
                     "destination_nodes": [
                         { "node_id": "use_token" },
-                        { "node_id": "try_without_token" },
+                        // { "node_id": "try_without_token" },
                         { "node_id": "end" }
                     ]
                 },
                 "return": {
                     "response": "[ The kiosk waits. Patient. Certain. ]",
                     "destination_nodes": [
-                        { "node_id": "use_token", "prompt_replacement": "[Use the amplifier token]" },
-                        { "node_id": "try_without_token", "prompt_replacement": "[Try anyway]" },
+                        { "node_id": "use_token" },
+                        // { "node_id": "try_without_token" },
                         { "node_id": "end" }
                     ]
                 },
 
                 "use_token": {
+                    // "once": true,
                     "conditions": {
                         "condition": [
                             { "type": "HAVE_ITEM", "item_id": "amplifier_token" }
                         ]
                     },
                     "prompt": "[Place hand and present the token]",
-                    "response": "[ The token’s glyphs align with the kiosk’s light. A tone like relief. The screen flashes: <i>\"RESONANCE MATCH — USER VARIANT DETECTED\"</i>.<br><br>A door control icon appears: <i>\"ARCHIVE LAYER: UNLOCK\"</i>. ]",
+                    "response": "[ The token’s glyphs align with the kiosk’s light. A tone like relief.<br>The screen flashes: <i>\"RESONANCE MATCH — USER VARIANT DETECTED\"</i>.<br>A door control icon appears: <i>\"ARCHIVE LAYER: UNLOCK\"</i>. ]",
                     "outcomes": [
-                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
+                        { "type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 },
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "project_board" },
+                        { "type": "NPC_UNLOCK", "location_id": "nexus_calm_initiative_wing", "npc_id": "archive_terminal" },
+                        { "type": "ITEM_LOSE", "item_id": "amplifier_token" }
                     ],
                     "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "[Step back]" }
+                        { "node_id": "end", }
                     ]
                 },
-
-                "try_without_token": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "NO_ITEM", "item_id": "amplifier_token" }
-                        ]
-                    },
-                    "prompt": "[Place hand]",
-                    "response": "[ The kiosk reads you. Pauses. Then displays: <i>\"INSUFFICIENT AUTHORIZATION\"</i>.<br>A softer line follows: <i>\"COMPLIANCE IMPROVES WELLBEING\"</i>. ]",
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Right." }
-                    ]
-                },
-
+                // "try_without_token": {
+                //     "conditions": {
+                //         "condition": [
+                //             { "type": "NO_ITEM", "item_id": "amplifier_token" }
+                //         ]
+                //     },
+                //     "prompt": "[Place hand]",
+                //     "response": "[ The kiosk reads you. Pauses. Then displays: <i>\"INSUFFICIENT AUTHORIZATION\"</i>.<br>A softer line follows: <i>\"COMPLIANCE IMPROVES WELLBEING\"</i>. ]",
+                //     "destination_nodes": [
+                //         { "node_id": "return", "prompt_replacement": "Right." }
+                //     ]
+                // },
                 "end": {
                     "prompt": "[Leave the kiosk]",
                     "response": "[ The glow dims, as if disappointed. ]"
@@ -1272,64 +1452,181 @@ const NPC_DATA = {
         "archive_terminal": {
             "name": "Archive Terminal",
             "type": "device",
-            "is_available": true,
-            "description": "A wall terminal with layered permissions and dust in the seams of its touch surface.",
+            "is_available": false,
+            "description": "",
             "is_merchant": false,
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ The terminal shows a friendly interface that feels curated: soft colors, short words, no scary graphs. A corner icon reads: <i>\"G.C.I. ARCHIVE\"</i>. ]",
+                    "response": "[ The clinic terminal wakes with a gentle chime, as if calm can be enforced through user experience. A header fades in:<br><br><b>GCI CLINIC NODE: NN-04 // NEON NEXUS TRANSIT WING</b><br><b>PROGRAM:</b> CALM INITIATIVE (C.I.)<br><b>STATUS:</b> ARCHIVED / PARTIAL CORRUPTION<br><br><i>NOTE:</i> This terminal contains <b>local branch</b> distribution + observation logs. Research-level documentation was stored at <b>CENTRAL</b>. ]",
                     "destination_nodes": [
-                        { "node_id": "open_public_layer" },
-                        { "node_id": "open_deeper_layer" },
+                        { "node_id": "directory" },
                         { "node_id": "end" }
                     ]
                 },
+
                 "return": {
-                    "response": "[ The terminal’s public layer idles. Deeper functions feel present, like locked drawers. ]",
-                    "destination_nodes": [
-                        { "node_id": "open_public_layer", "prompt_replacement": "[Browse the public layer]" },
-                        { "node_id": "open_deeper_layer", "prompt_replacement": "[Try the deeper layer]" },
-                        { "node_id": "end" }
-                    ]
+                  "response": "[ The terminal idles in a muted palette. Calm as a default. ]",
+                  "destination_nodes": [
+                    { "node_id": "directory" },
+                    { "node_id": "end" }
+                  ]
                 },
 
-                "open_public_layer": {
-                    "prompt": "[Browse public records]",
-                    "response": "[ You see slogans and training scripts: <i>\"Reduce panic\"</i>, <i>\"Stabilize communities\"</i>, <i>\"Lower cognitive overload\"</i>. It reads like a kindness that learned to enforce itself. ]",
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "Try something else." }
-                    ]
+                "directory": {
+                  "prompt": "[Open record index]",
+                  "response": "[ The cursor blinks like it expects you to stop caring. ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_branch_identity" },
+
+                    { "node_id": "rec_distribution_w1" },
+                    // { "node_id": "rec_metrics_m1" },
+                    // { "node_id": "rec_clinical_m3" },
+                    // { "node_id": "rec_pharm_m6" },
+                    { "node_id": "rec_pediatric_y2" },
+                    // { "node_id": "rec_epid_y3" },
+                    // { "node_id": "rec_ethics_emerg" },
+                    { "node_id": "rec_ops_y4" },
+                    // { "node_id": "rec_ops_y5" },
+                    { "node_id": "rec_facility_auto" },
+                    { "node_id": "rec_manual_override" },
+                    // { "node_id": "rec_variant_cohort" },
+                    // { "node_id": "rec_fo_postmortem" },
+
+                    { "node_id": "end", "prompt_replacement": "[Close the terminal]" }
+                  ]
                 },
 
-                "open_deeper_layer": {
-                    "conditions": {
-                        "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
-                        ]
-                    },
-                    "prompt": "[Access restricted layer]",
-                    "response": "[ The screen shifts. Raw logs. Routing labels. A file titled: <i>\"MAINTENANCE ROUTE — FO NODE\"</i> and another: <i>\"UNFINISHED CHARTER\"</i>.<br><br>You extract a strip of coordinates and a federation draft header. It’s not a vision. It’s a plan that died politely. ]",
-                    "outcomes": [
-                        { "type": "ITEM_GAIN", "item_id": "maintenance_route_map" },
-                        { "type": "ITEM_GAIN", "item_id": "charter_fragment" },
-                        { "type": "STAT_CHANGE", "stat": "xp", "value": 300 }
-                    ],
-                    "destination_nodes": [
-                        { "node_id": "return", "prompt_replacement": "[Close the files]" }
-                    ]
+                // 0) Local branch identity
+                "rec_branch_identity": {
+                  "prompt": "[Open: BRANCH_IDENTITY.txt]",
+                  "response": "[ BRANCH IDENTITY — INTACT ]<br><br><b>Branch:</b> Neon Nexus Clinic Node (NN-04)<br><b>Affiliation:</b> GCI — <i>Global Calm Initiative</i><br><b>Mandate:</b> Reduce panic events, lower cognitive overload, stabilize civic cohesion in high-density transit shelters.<br><b>Distribution Type:</b> Voluntary enrollment + emergency stabilization protocol.<br><b>Staffing:</b> 12 clinical, 4 technical, 2 security liaison.<br><br><i>Addendum:</i> \"Do not describe the program as social engineering. Use 'public health stabilization'.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "directory", "prompt_replacement": "Back to records." }
+                  ]
+                },
+
+                // 1) Early distribution + success
+                "rec_distribution_w1": {
+                  "prompt": "[LOGS: MONTH 0-6]",
+                  "response": "[ DISTRIBUTION LOG — WEEK 1 (PARTIAL) ]<br>Enrollment exceeded projections. Residents describe the intervention as 'quiet' and 'finally breathable.'<br>Panic episodes decreased within 72 hours. Market disputes de-escalate faster; fewer retaliatory cycles. Self-harm incidence down. Sleep quality up.<br>No observed impairment to empathy or cooperation. ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_metrics_m1", "prompt_replacement": "[Next page]" },
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+                "rec_metrics_m1": {
+                  "prompt": "[Open: METRICS_SUMMARY - M1 rollout]",
+                  "response": "[ METRICS SUMMARY — MONTH 1 (INTACT) ]<br><br><b>Panic events:</b> -38%<br><b>Interpersonal violence:</b> -41%<br><b>Hoarding behavior:</b> -17%<br><b>Volunteer turnout (sanitation):</b> +12%<br><br>Clinician note: \"It works. People are kinder when they’re not flooded.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_clinical_m3", "prompt_replacement": "[Next page]" },
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+                "rec_clinical_m3": {
+                  "prompt": "[Open: CLINICAL_OBS - M3 Side-effects]",
+                  "response": "[ CLINICAL OBSERVATION — MONTH 3 (PARTIAL) ]<br> We observe unexpected behavioral shift: reduced engagement with long-horizon planning. Patients decline participation in multi-week maintenance schedules. We hear language trend: fewer conditional futures ('if we… next season…'). They report contentment. They also report diminished 'restlessness.'<br><br>Clinician comment: \"We are treating distress, not ambition. But the boundary is… less clear than our grant proposal implied.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_pharm_m6", "prompt_replacement": "[Next page]" },
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+                "rec_pharm_m6": {
+                  "prompt": "[Open: PHARM_NOTE - M6 Persistence]",
+                  "response": "[ PHARMACOKINETICS NOTE — MONTH 6 (PARTIAL) ]<br><br>Retention curve abnormal: effect persists beyond expected half-life. Follow-up dosing not required for many participants. Protocol adjustment recommended: reduce distribution volume; monitor long-term persistence.<br><br>Technician note: \"This is... revenue-ineffective.\"<br>Clinician note: \"We designed an intervention. We may have created a baseline.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+
+                // 2) Spread
+                "rec_pediatric_y2": {
+                  "prompt": "[LOGS: YEAR 2-3]",
+                  "response": "[ PEDIATRIC OBSERVATION — MONTH 18 (PARTIAL) ]<br><br>\"Infants born to enrolled participants show attenuated startle response and rapid autonomic recovery without direct administration. Crying episodes shorter; self-soothing latency reduced.<br><br>Clinician note: \"This is presenting as baseline temperament, not a transient effect.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_epid_y3", "prompt_replacement": "[Next page]" },
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+                "rec_epid_y3": {
+                  "prompt": "[Open: EPID_ALERT - Y2 Spread]",
+                  "response": "[ EPIDEMIOLOGY ALERT — YEAR 2 (FRAGMENT) ]<br><br>Effect markers appearing in non-enrolled cohorts. No evidence of clandestine dosing. Distribution pathways unknown. Hypothesis: expression shift / horizontal spread.<br><br>Recovered sentence: \"We didn’t distribute it fast enough to explain this.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_ethics_emerg", "prompt_replacement": "[Next page]" },
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+                "rec_ethics_emerg": {
+                  "prompt": "[Open: ETHICS_MINUTES_EMERG]",
+                  "response": "[ EMERGENCY ETHICS MINUTES (DAMAGED) ]<br><br>We initiated a global intervention.... public narrative must remain: 'temporary stabilization.', do not use the term 'genetic'...<br>Recovered line: \"The world will not tolerate learning it was softened.\" ]",
+                  "destination_nodes": [
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+
+                // 3) Y4+
+                "rec_ops_y4": {
+                  "prompt": "[LOGS: YEAR 4-10]",
+                  "response": "[ OPS LOG — YEAR 4 (INTACT) ]<br><br>All metrics stable. No incidents. Supplies adequate. Staff rotation unchanged. Community calm. ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_ops_y5", "prompt_replacement": "[Next page]" },
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+                "rec_ops_y5": {
+                  "prompt": "[Open: OPS_LOG_Y5]",
+                  "response": "[ OPS LOG — YEAR 5 (INTACT) ]<br><br> Calm. Calm. Calm.",
+                  "destination_nodes": [
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
+                },
+
+                // 4) Automated sealing (no staff present)
+                "rec_facility_auto": {
+                  "prompt": "[Open: AUTO LOG: FACILITY_STATUS]",
+                  "response": "[ FACILITY STATUS — AUTO (INTACT) ]<br><br>Personnel presence: 0. Clinic operations: unattended<br>Safety protocol: INITIATE SEALING. Action: lock research archives / lock distribution stores / lock central comms.<br><br>\"CENTRAL GCI RESEARCH CENTER: SEALED\"<br>\"ALL LOCAL NODES: ARCHIVE AND SHUTDOWN\"<br>\"Reason code: 'Public Stability Preservation' ]",
+                  "destination_nodes": [
+                    { "node_id": "directory", "prompt_replacement": "Back." }
+                  ]
+                },
+
+                // 5) Late manual access: Forgotten Outpost union attempt
+                "rec_manual_override": {
+                  "prompt": "[Open: ACCESS OVERRIDE: MANUAL_ENTRY]",
+                  "response": "[ MANUAL ENTRY — ACCESS OVERRIDE (INTACT) ]<br><br>If you’re reading this, you’re not like the others. Some of us can still think in scaffolds. We can plan beyond our sightline. We can trust a black box if we can rebuild it. We are not saviors. We are irritants in a culture that learned peace through simplification. ]",
+                  "outcomes": [
+                    {"type": "QUEST_SET_STAGE", "quest_id": "echoes_of_the_past", "stage": 3 }
+                  ],
+                  "destination_nodes": [
+                    { "node_id": "rec_variant_cohort" }
+                  ]
+                },
+                "rec_variant_cohort": {
+                  "prompt": "[next page]",
+                  "response": "[ I got into CENTRAL. It wasn’t hard—just... nobody cared enough to keep it locked properly. We tried to union settlements again. We called it the Forgotten Outpost because nobody could hold it in their head long enough to keep returning. If you can tolerate the weight of a system, find out a way to go there. ]",
+                  "destination_nodes": [
+                    { "node_id": "rec_fo_postmortem" }
+                  ]
+                },
+                "rec_fo_postmortem": {
+                  "prompt": "[next page]",
+                  "response": "We built scaffolding that could have held: schedules, shared rules, maintenance loops—real systems, not slogans. But we never hit critical mass. Too few tinkers. Too few minds willing to carry abstraction long enough to keep showing up when it got boring. Maintenance rosters didn’t collapse—they thinned. One name missed a shift, then two. No sabotage.No betrayal. Just opt-out. ]",
+                  "destination_nodes": [
+                    { "node_id": "directory", "prompt_replacement": "[Back to the directory]" }
+                  ]
                 },
 
                 "end": {
-                    "prompt": "[Step away]",
-                    "response": "[ The terminal returns to its soft, curated calm. ]"
+                  "prompt": "[Step away from the terminal]",
+                  "response": "[ The screen fades back to its curated calm. The kind that asks nothing of you. ]"
                 }
+
             }
         },
         "project_board": {
             "name": "Project Board",
             "type": "advanture",
-            "is_available": true,
+            "is_available": false,
             "description": "A wall of timelines and milestones. Many lines terminate without explanation.",
             "is_merchant": false,
             "inventory": [],
@@ -1551,7 +1848,7 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A young woman with grease-stained hands and a hopeful smile. She tends a small hydroponics garden.",
             "is_merchant": true,
-            "inventory": ["purified_water", "mutfruit"],
+            "inventory": [{"item_id": "purified_water", "quantity": 1 }, { "item_id": "mutfruit", "quantity": 1 }],
             "dialogue_graph": {
                 "start": {
                     "response": "Oh, hello! We don't get many visitors. I'm Lena. Welcome to the garden!",
@@ -1648,7 +1945,7 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A man who seems held together by wires and optimism. He is constantly tinkering with the outpost's ancient technology.",
             "is_merchant": true,
-            "inventory": ["signal_jammer"],
+            "inventory": [{"item_id": "signal_jammer", "quantity": 1 }],
             "dialogue_graph": {
                 "start": {
                     "response": "Careful where you step! Half this stuff is older than my grandfather's grandfather. I'm Finn. If it sparks, buzzes, or whirs, I'm the one who tries to keep it that way.",
@@ -2179,7 +2476,7 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A young, energetic technician, constantly wiping grime from a pair of antique glasses. He's surrounded by piles of disassembled machinery.",
             "is_merchant": true,
-            "inventory": ["leather_armor"],
+            "inventory": [{"item_id": "leather_armor", "quantity": 1 }],
             "dialogue_graph": {
                 "start": {
                     "response": "Hey! Watch your step! This stuff is delicate. Mostly. I'm Ratchet. You need something fixed, or just browsing the mechanical graveyard?",
@@ -2226,7 +2523,7 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A grim-faced woman with a cybernetic arm, tending to an injured scrapper in a makeshift infirmary. The scent of antiseptic hangs heavy in the air.",
             "is_merchant": true,
-            "inventory": ["stimpack"],
+            "inventory": [{"item_id": "stimpack", "quantity": 1 }],
             "dialogue_graph": {
                 "start": { 
                     "response": "Unless you're bleeding, wait your turn. I'm Doc Eris. What's the damage?", 
@@ -2755,7 +3052,7 @@ const NPC_DATA = {
             "is_available": false,
             "description": "A wiry scavenger hunched over a workbench covered in disassembled electronics. His fingers move with practiced precision as he tinkers with old-world tech.",
             "is_merchant": true,
-            "inventory": ["military_goggles", "harmonic_resonator"],
+            "inventory": [{"item_id": "military_goggles", "quantity": 1 }, { "item_id": "harmonic_resonator", "quantity": 1 }],
             "dialogue_graph": {
                 "start": {
                     "response": "Well, well. Someone actually made it past the gates. Impressive. I'm Alpha. I deal in old-world electronics and precision tools. What brings you to this death trap?",
@@ -2799,7 +3096,7 @@ const NPC_DATA = {
             "is_available": false,
             "description": "A sharp-eyed woman sorting through a pile of salvaged components. She moves with the confidence of someone who's survived the depot's dangers many times.",
             "is_merchant": true,
-            "inventory": ["stimpack", "leather_armor"],
+            "inventory": [{"item_id": "stimpack", "quantity": 1 }, { "item_id": "leather_armor", "quantity": 1 }],
             "dialogue_graph": {
                 "start": {
                     "response": "Another survivor. Good. I'm Beta. I deal in survival gear and medical supplies. You'll need both if you plan on staying here long.",
@@ -2843,7 +3140,7 @@ const NPC_DATA = {
             "is_available": false,
             "description": "A burly scavenger with cybernetic enhancements visible on his arms. He's examining a large piece of old-world machinery with intense focus.",
             "is_merchant": true,
-            "inventory": ["military_goggles", "stimpack", "purified_water"],
+            "inventory": [{"item_id": "military_goggles", "quantity": 1 }, { "item_id": "stimpack", "quantity": 1 }, { "item_id": "purified_water", "quantity": 1 }],
             "dialogue_graph": {
                 "start": {
                     "response": "Huh. Made it past the gates. Not many do. I'm Gamma. I deal in high-end tech and enhancements. If you're looking for the good stuff, you've come to the right place.",
@@ -2893,6 +3190,7 @@ const QUEST_DATA = {
         "stages": {
             "0": "Not started",
             "1": "Take the spare spool to the relay box by the generator shed and slot it in.",
+            "2": "Get back to Warden Cole",
             "100": "Completed"
         },
         "rewards": {
@@ -2911,8 +3209,8 @@ const QUEST_DATA = {
         "giver": "zane",
         "stages": {
             "0": "Not started",
-            "1": "Travel to the Nexus Old Tunnel and plant the data scrambler on the main power generator.",
-            "2": "The data scrambler is planted. Return to Zane in the Neon Nexus.",
+            "1": "Go to the Nexus Old Tunnel and plant the data scrambler on the main power generator.",
+            "2": "Return to Zane in the Neon Nexus.",
             "100": "Completed"
         },
         "rewards": {
@@ -2931,6 +3229,7 @@ const QUEST_DATA = {
         "giver": "zane",
         "stages": {
             "0": "Not started",
+            "1": "Figure out what has happened",
             "100": "Completed"
         },
         "rewards": {
@@ -2949,9 +3248,9 @@ const QUEST_DATA = {
         "giver": "rex",
         "stages": {
             "0": "Not started",
-            "1": "Clear out the Glow-Rat nest in the lower tunnels.",
-            "2": "part of the tunnels are cleared.",
-            "3": "the queen of the Glow-Rats is defeated.",
+            "1": "Clear out the lower tunnels.",
+            "2": "Coninue the tunnels clearing",
+            "3": "Get back to Rex",
             "100": "Completed"
         },
         "rewards": { "items": [], "stat_change": [ { "stat": "xp", "value": 200 }, { "stat": "caps", "value": 150 } ] }
@@ -2963,9 +3262,9 @@ const QUEST_DATA = {
         "giver": "selene",
         "stages": {
             "0": "Not started",
-            "1": "A strange pendant was found. Rex suggested showing it to Selene.",
-            "2": "Selene believes the pendant is a key. Convince Rex to open the sealed maintenance hatch in the western corridor.",
-            "3": "The hatch is open. Return to Selene with the news.",
+            "1": "Show A strange amplifier token to Selene",
+            "2": "Inspect Calm Initiative Wing",
+            "3": "Ask Selene about The Forgotten Outpost",
             "100": "Completed"
         },
         "rewards": { "items": [], "stat_change": [ { "stat": "xp", "value": 400 }, { "stat": "reputation", "value": 5 } ] }
