@@ -322,6 +322,10 @@ class DialogueScreen extends BaseScreen {
                         this.analyticsManager.firstQuestCompleted(outcome.quest_id);
                         rootUpdates.first_quest_completed_fired = true;
                     }
+                    // Track completion order so quest log can show "last completed" at top of completed block
+                    if (outcome.stage === 100) {
+                        rootUpdates.quest_completion_order = [...(state.quest_completion_order || []), outcome.quest_id];
+                    }
                     break;
             }
         });

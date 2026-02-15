@@ -29,24 +29,38 @@ class InventoryScreen extends BaseScreen {
         this.components.title = new ScreenTitle({ text: `${state.name} INVENTORY (${inventoryCount} / ${effectiveStats.carry_capacity})` });
         this.components.description = new ScreenDescription({ text: descriptionText });
 
-        // Quest log: list of quests with status (in progress / completed; completed = strikethrough)
+        // Quest log: new quests (stage 1) on top, then other in-progress; then completed (last completed at top of completed block)
         const fullState = this.stateManager.getState();
         const questsState = fullState.quests || {};
-        const questLogLines = [];
+        const completionOrder = fullState.quest_completion_order || [];
+        const newQuestLines = [];   // stage === 1
+        const inProgressLines = []; // stage > 1 && stage < 100
+        const completedEntries = []; // { questId, line } for sorting
         Object.keys(questsState).forEach(questId => {
             const stage = questsState[questId].stage;
-            if (stage === 0) return; // not started — don't list
+            if (stage === 0) return;
             const questMeta = typeof QUEST_DATA !== 'undefined' && QUEST_DATA[questId];
             const title = questMeta ? questMeta.title : questId;
             const stageDesc = questMeta && questMeta.stages && questMeta.stages[String(stage)];
             const stageLabel = stageDesc || (stage === 100 ? 'Completed' : 'In progress');
             const line = `${title}: ${stageLabel}`;
             if (stage === 100) {
-                questLogLines.push(`<s>${line}</s>`);
+                completedEntries.push({ questId, line: `<s>${line}</s>` });
+            } else if (stage === 1) {
+                newQuestLines.push(line);
             } else {
-                questLogLines.push(line);
+                inProgressLines.push(line);
             }
         });
+        // Completed: order by completion order (most recent last in array => show first in list)
+        const completedLines = completionOrder.slice().reverse()
+            .filter(questId => completedEntries.some(e => e.questId === questId))
+            .map(questId => completedEntries.find(e => e.questId === questId).line);
+        // Include any completed quests not in completionOrder (e.g. old save)
+        completedEntries.forEach(e => {
+            if (!completionOrder.includes(e.questId)) completedLines.push(e.line);
+        });
+        const questLogLines = newQuestLines.concat(inProgressLines).concat(completedLines);
         const questLogText = questLogLines.length
             ? '<strong>QUEST LOG</strong><br>' + questLogLines.join('<br>')
             : '<strong>QUEST LOG</strong><br>No active quests.';

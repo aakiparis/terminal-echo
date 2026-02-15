@@ -69,6 +69,7 @@ class StateManager {
             locked_npcs: {}, // Format: { "location_id": ["npc_id1", "npc_id2", ...] } - NPCs that were locked via NPC_LOCK
             currentScreen: 'MainMenu',
             quests: {},
+            quest_completion_order: [], // quest_id in order completed (most recent last); used to show "last completed" at top of completed block
             eventHistory: [],
             has_new_location_unlocked: false,
             newly_unlocked_location_id: null,
