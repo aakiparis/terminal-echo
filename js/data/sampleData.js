@@ -434,7 +434,7 @@ const NPC_DATA = {
             "name": "Zane",
             "type": "npc",
             "is_available": true,
-            "description": "A twitchy station custodian-technician with a cybernetic eye that never stops refocusing. He speaks in diagnostics, but there’s a historian hiding behind the jargon.",
+            "description": "A twitchy station custodian-technician with a cybernetic eye that never stops refocusing.",
             "is_merchant": true,
             "inventory": [
                 { "item_id": "stimpack", "quantity": 1 },
@@ -443,7 +443,7 @@ const NPC_DATA = {
             ],
             "dialogue_graph": {
                 "start": {
-                    "response": "Hold up—don’t touch the cables. People die that way. I'm Zane. I keep the Nexus breathing.<br>Trade, questions, or are you one of those types who looks at a system and feels the itch to <i>improve</i> it?",
+                    "response": "Hold up—don’t touch the cables. I'm Zane. I keep the Nexus breathing.<br>Trade, questions, or are you one of those types who looks at a system and feels the itch to <i>improve</i> it?",
                     "destination_nodes": [
                         { "node_id": "zane_story_1" },
                         //{ "node_id": "quest_gits_offer" },
@@ -875,6 +875,7 @@ const NPC_DATA = {
                   { "node_id": "provocation_grow_1" },
                   { "node_id": "gci_1" },
                   { "node_id": "quest_token_1" },
+                  { "node_id": "quest_fo_1" },
                   { "node_id": "end" }
                 ]
               },
@@ -1210,12 +1211,9 @@ const NPC_DATA = {
                     ]
                 },
 
-                // -------------------------
-                // Terminal + record list
-                // -------------------------
                 "terminal_intro": {
                 "prompt": "[Approach the terminal]",
-                    "response": "[ A service terminal is bolted into a cabinet, screen dark under a film of dust. You brush it clean and the display wakes slowly, as if surprised anyone still knows it exists.<br><br>The interface is maintenance-grade: no friendly graphics, just folders, timestamps, and error codes. Many entries are flagged <i>CORRUPT</i>. Not enough remain to tell you what this room really served. ]",
+                    "response": "[ A service terminal is bolted into a cabinet, screen dark under a film of dust. You brush it clean and the display wakes slowly, as if surprised anyone still knows it exists. Many entries are flagged <i>CORRUPT</i>. ]",
                     "destination_nodes": [
                         { "node_id": "terminal_index" },
                         { "node_id": "return", "prompt_replacement": "[Step away from terminal back to the room]" }
@@ -1224,15 +1222,13 @@ const NPC_DATA = {
 
                 "terminal_index": {
                     "prompt": "[Open the directory listing]",
-                    "response": "[ DIRECTORY: G.C.I. // NORTH SERVICE ROOM ]<br>• <i>OPS_LOG_14</i> (corrupt)<br>• <i>INCIDENT_NORTH_HALL</i> (corrupt)<br>• <i>MAINT_SOP_EMITTER_CAL</i> (intact)<br>• <i>OUTPUT_THRESHOLDS</i> (partial)<br>• <i>STAFF_NOTE__\"PLAN LESS\"</i> (partial)<br>• <i>ACCESS_CHANGE_RECORD</i> (partial)<br>[ The cursor blinks like it’s waiting for the next bad decision. ]",
+                    "response": "[ The cursor blinks like it’s waiting for the next bad decision. ]",
                     "destination_nodes": [
                         { "node_id": "rec_ops_log_14" },
                         { "node_id": "rec_incident_north_hall" },
-                        { "node_id": "rec_maint_sop" },
-                        { "node_id": "rec_output_thresholds" },
                         { "node_id": "rec_staff_note" },
                         { "node_id": "rec_access_change" },
-                        { "node_id": "return", "prompt_replacement": "[Close the direcoty. Step away from terminal back to the room]" }
+                        { "node_id": "return", "prompt_replacement": "[Close the directory. Step away from terminal back to the room]" }
                     ]
                 },
 
@@ -1252,22 +1248,6 @@ const NPC_DATA = {
                     ]
                 },
 
-                "rec_maint_sop": {
-                    "prompt": "[Open: MAINT_SOP_EMITTER_CAL]",
-                    "response": "[ INTACT FILE ]<br><br><i>\"Emitter Calibration Procedure — G.C.I. North Service\"</i><br>1) <i>Verify dampening frequency</i><br>2) <i>Flush medium line</i><br>3) <i>Confirm 'stability' output range</i><br>4) <i>Do not disclose parameters to non-staff</i><br><br>[ This is not a security protocol. It’s a social one. ]",
-                    "destination_nodes": [
-                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
-                    ]
-                },
-
-                "rec_output_thresholds": {
-                    "prompt": "[Open: OUTPUT_THRESHOLDS]",
-                    "response": "[ TEXT RECOVERY: 44% ]<br><br><i>\"Threshold A: De-escalation\"</i><br><i>\"Threshold B: Compliance assistance\"</i><br><i>\"Threshold C: Volitional dampening\"</i><br><br><i>\"C only under Incident conditions.\"</i><br><br>[ Someone built a dial that reaches into the part of a person that says: <b>not enough</b>. ]",
-                    "destination_nodes": [
-                        { "node_id": "terminal_index", "prompt_replacement": "Back." }
-                    ]
-                },
-
                 "rec_staff_note": {
                     "prompt": "[Open: STAFF_NOTE__\"PLAN LESS\"]",
                     "response": "[ TEXT RECOVERY: 23% ]<br><br><i>\"We reduced panic. It worked.\"</i><br><i>\"They don’t fight.\"</i><br><i>\"They don’t volunteer.\"</i><br><i>\"They don't ask for routes.\"</i><br><br><i>\"Maybe that’s the point.\"</i><br><br>[ The last line is cut off mid-word. ]",
@@ -1278,7 +1258,7 @@ const NPC_DATA = {
 
                 "rec_access_change": {
                     "prompt": "[Open: ACCESS_CHANGE_RECORD]",
-                    "response": "[ TEXT RECOVERY: 28% ]<br><br><i>\"…moved wing operations to RESTRICTED ACCESS MODE.\"</i><br><i>\"…reason: community agitation correlated with disclosure.\"</i><br><i>\"…directive: do not discuss incident narrative; provide comfort framing only.\"</i><br><br>[ So the sealed wing isn’t this room. This room is the quiet back-end—the place that kept the mood-machine serviced while the public story stayed gentle. ]",
+                    "response": "[ TEXT RECOVERY: 5% ]<br><br><i>\"…moved wing operations to RESTRICTED ACCESS MODE.\"</i><br><i>\"…directive: do not discuss incident narrative; provide comfort framing only.\"</i> ]",
                     "destination_nodes": [
                         { "node_id": "terminal_index", "prompt_replacement": "Back." }
                     ]
@@ -1458,7 +1438,7 @@ const NPC_DATA = {
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ The clinic terminal wakes with a gentle chime, as if calm can be enforced through user experience. A header fades in:<br><br><b>GCI CLINIC NODE: NN-04 // NEON NEXUS TRANSIT WING</b><br><b>PROGRAM:</b> CALM INITIATIVE (C.I.)<br><b>STATUS:</b> ARCHIVED / PARTIAL CORRUPTION<br><br><i>NOTE:</i> This terminal contains <b>local branch</b> distribution + observation logs. Research-level documentation was stored at <b>CENTRAL</b>. ]",
+                    "response": "[ The clinic terminal wakes with a gentle chime, as if calm can be enforced through user experience. A header fades in:<br><br><b>GCI CLINIC NODE: NN-04 // NEON NEXUS TRANSIT WING</b><br><b>PROGRAM:</b> CALM INITIATIVE (C.I.)<br><b>STATUS:</b> ARCHIVED / PARTIAL CORRUPTION ]",
                     "destination_nodes": [
                         { "node_id": "directory" },
                         { "node_id": "end" }
@@ -1632,7 +1612,7 @@ const NPC_DATA = {
             "inventory": [],
             "dialogue_graph": {
                 "start": {
-                    "response": "[ Project rows run across the board in clean print. Then, abruptly, the ink changes to handwriting.\"DEFER.\", \"NO LONG-TERM.\", \"LOCAL SATISFACTION THRESHOLD MET.\". One timeline ends mid-word: \"Federat...\" ]",
+                    "response": "[ Project rows run across the board in clean print. Then, abruptly, the ink changes to handwriting.\"DEFER.\", \"NO LONG-TERM.\", \"LOCAL SATISFACTION THRESHOLD MET.\"]",
                     "destination_nodes": [
                         { "node_id": "end" }
                     ]
