@@ -14,8 +14,8 @@ class InventoryScreen extends BaseScreen {
         }
         const state = this.stateManager.getPlayerStats();
         const effectiveStats = this.stateManager.getEffectivePlayerStats();
-        
-        const inventoryCount = effectiveStats.inventory ? effectiveStats.inventory.length : 0;
+        const inventorySlots = StateManager.normalizeInventory(state.inventory || []);
+        const inventoryCount = StateManager.getInventoryTotalCount(state.inventory || []);
 
         let descriptionText = `STR: ${effectiveStats.str} | INT: ${effectiveStats.int} | LCK: ${effectiveStats.lck} `;
         descriptionText += '<br>';
@@ -52,29 +52,27 @@ class InventoryScreen extends BaseScreen {
             : '<strong>QUEST LOG</strong><br>No active quests.';
         this.components.questLog = new ScreenDescription({ text: questLogText });
 
-        const menuItems = (state.inventory || []).map(itemId => {
-            const itemData = ITEMS_DATA[itemId];
+        const menuItems = inventorySlots.map((slot, index) => {
+            const itemData = ITEMS_DATA[slot.item_id];
             if (!itemData) {
-                console.error(`Inventory item "${itemId}" not found in ITEMS_DATA.`);
-                return null; // Gracefully handle missing item data
+                console.error(`Inventory item "${slot.item_id}" not found in ITEMS_DATA.`);
+                return null;
             }
-
+            const qty = slot.quantity || 1;
+            const qtySuffix = qty > 1 ? ` x${qty}` : '';
             let actionText = '[ DROP ]';
-            if (itemData.type === 'consumable') {
-                actionText = '[ USE ]';
-            }
-            if (itemData.type === 'quest') {
-                actionText = '[ QUEST ITEM ]';
-            }
-
+            if (itemData.type === 'consumable') actionText = '[ USE ]';
+            if (itemData.type === 'quest') actionText = '[ QUEST ITEM ]';
             return {
-                id: itemId,
-                label: `${actionText} ${itemData.name}${this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : ''} (CAP: ${itemData.price})`,
+                id: `slot-${index}-${slot.item_id}`,
+                item_id: slot.item_id,
+                quantity: qty,
+                label: `${actionText} ${itemData.name}${qtySuffix}${this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : ''} (CAP: ${itemData.price})`,
                 type: 'action',
                 item: itemData,
                 disabled: itemData.type === 'quest'
             };
-        }).filter(Boolean); // Remove any nulls from missing items
+        }).filter(Boolean);
 
         // Add a back button
         if (inventoryCount > 0) {
@@ -103,8 +101,8 @@ class InventoryScreen extends BaseScreen {
             return;
         }
 
-        const itemId = selectedItem.id;
-        const itemData = ITEMS_DATA[itemId];
+        const itemId = selectedItem.item_id || selectedItem.id;
+        const itemData = ITEMS_DATA[itemId] || selectedItem.item;
 
         // For now, we'll use a simple alert/prompt system for actions.
         // A more complex implementation would use a sub-menu.
@@ -183,10 +181,7 @@ class InventoryScreen extends BaseScreen {
             let newValue = Math.min(currentValue + change.value, state.maxHp); // Cap HP at maxHp
             updatedStats[change.stat] = newValue;
         });
-        
-        // Remove item from inventory
-        const newInventory = state.inventory.filter(id => id !== itemId);
-        updatedStats.inventory = newInventory;
+        updatedStats.inventory = StateManager.removeInventoryItem(state.inventory || [], itemId, 1);
 
         this.stateManager.updateState({ player: updatedStats });
         this.eventBus.emit('log', { text: `Used ${itemData.name}.`, type: 'system' });
@@ -202,8 +197,7 @@ class InventoryScreen extends BaseScreen {
         }
 
         const state = this.stateManager.getPlayerStats();
-        const newInventory = state.inventory.filter(id => id !== itemId);
-        
+        const newInventory = StateManager.removeInventoryItem(state.inventory || [], itemId, 1);
         this.stateManager.updateState({ player: { inventory: newInventory } });
         this.eventBus.emit('log', { text: `Dropped ${itemData.name}.`, type: 'system' });
 

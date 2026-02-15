@@ -9,6 +9,9 @@ class StateManager {
         const saved = this._loadFromStorage();
         if (saved && typeof saved === 'object' && saved.player && Array.isArray(saved.unlocked_locations)) {
             this.state = { ...this.getInitialState(), ...saved };
+            if (this.state.player && Array.isArray(this.state.player.inventory)) {
+                this.state.player.inventory = StateManager.normalizeInventory(this.state.player.inventory);
+            }
             this.restoredFromStorage = true;
         }
         this._saveDebounceTimer = null;
@@ -55,8 +58,8 @@ class StateManager {
                 int: 1,
                 lck: 1,
                 reputation: 0, // e.g., -100 (Shady) to +100 (Honorable)
-                inventory: [],
-                // inventory: ['stim_pack', 'nano_gloves'], // Will hold item IDs
+                // Array of { item_id: string, quantity: number }; supports multiple of same item
+            inventory: [],
                 convo_history: {},
             },
             gameMode: 'scripted',
@@ -113,6 +116,60 @@ class StateManager {
     }
 
     /**
+     * Normalize inventory to array of { item_id, quantity }. Accepts legacy format (array of strings).
+     * @param {Array} inv - Raw player.inventory
+     * @returns {Array<{ item_id: string, quantity: number }>}
+     */
+    static normalizeInventory(inv) {
+        if (!Array.isArray(inv)) return [];
+        return inv.map(entry => {
+            if (typeof entry === 'string') {
+                return { item_id: entry, quantity: 1 };
+            }
+            const q = Math.max(1, parseInt(entry.quantity, 10) || 1);
+            return { item_id: entry.item_id || entry.id || '', quantity: q };
+        }).filter(e => e.item_id);
+    }
+
+    /** Total number of items (sum of quantities). */
+    static getInventoryTotalCount(inv) {
+        return StateManager.normalizeInventory(inv).reduce((sum, e) => sum + e.quantity, 0);
+    }
+
+    /** Quantity of a specific item_id. */
+    static getInventoryQuantity(inv, itemId) {
+        const slot = StateManager.normalizeInventory(inv).find(e => e.item_id === itemId);
+        return slot ? slot.quantity : 0;
+    }
+
+    /** Add item(s). Returns new inventory array (same format). Merges into existing slot if present. */
+    static addInventoryItem(inv, itemId, quantity = 1) {
+        const normalized = StateManager.normalizeInventory(inv);
+        const idx = normalized.findIndex(e => e.item_id === itemId);
+        if (idx >= 0) {
+            const next = normalized.slice();
+            next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity };
+            return next;
+        }
+        return [...normalized, { item_id: itemId, quantity }];
+    }
+
+    /** Remove up to `quantity` of itemId. Returns new inventory array. */
+    static removeInventoryItem(inv, itemId, quantity = 1) {
+        const normalized = StateManager.normalizeInventory(inv);
+        const idx = normalized.findIndex(e => e.item_id === itemId);
+        if (idx < 0) return normalized;
+        const slot = normalized[idx];
+        const remove = Math.min(quantity, slot.quantity);
+        if (remove >= slot.quantity) {
+            return normalized.filter((_, i) => i !== idx);
+        }
+        const next = normalized.slice();
+        next[idx] = { ...slot, quantity: slot.quantity - remove };
+        return next;
+    }
+
+    /**
      * Records that a "once" dialogue node was visited. Updates state directly so it is not lost in merge.
      * @param {string} locationId
      * @param {string} npcId
@@ -149,7 +206,9 @@ class StateManager {
         // Merge saved state with current state to ensure all required fields exist
         const initialState = this.getInitialState();
         this.state = { ...initialState, ...savedState };
-        
+        if (this.state.player && Array.isArray(this.state.player.inventory)) {
+            this.state.player.inventory = StateManager.normalizeInventory(this.state.player.inventory);
+        }
         this._saveToStorage();
         console.log("State loaded from save file");
         this.eventBus.emit('stateUpdated', this.state);
@@ -161,11 +220,11 @@ class StateManager {
 
     getEffectivePlayerStats() {
         const baseStats = { ...this.getPlayerStats() };
-        const inventory = baseStats.inventory || [];
+        const inventory = StateManager.normalizeInventory(baseStats.inventory || []);
 
-        // Iterate through gear in inventory and apply bonuses
-        inventory.forEach(itemId => {
-            const itemData = ITEMS_DATA[itemId];
+        // Apply gear bonuses (once per slot; multiple of same gear don't stack)
+        inventory.forEach(entry => {
+            const itemData = ITEMS_DATA[entry.item_id];
             if (itemData && itemData.type === 'gear' && itemData.stat_change) {
                 itemData.stat_change.forEach(change => {
                     baseStats[change.stat] = (baseStats[change.stat] || 0) + change.value;

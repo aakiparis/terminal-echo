@@ -219,27 +219,28 @@ class DialogueScreen extends BaseScreen {
                     playerUpdates.reputation = (state.player.reputation || 0) + outcome.value;
                     this.eventBus.emit('log', { text: `[Reputation changed by ${outcome.value}]`, type: 'system' });
                     break;
-                case 'ITEM_GAIN':
-                    // Avoid adding duplicate quest items
-                    if (!state.player.inventory.includes(outcome.item_id)) {
-                        playerUpdates.inventory = [...state.player.inventory, outcome.item_id];
-                        this.eventBus.emit('log', { text: `[Received ${ITEMS_DATA[outcome.item_id].name}]`, type: 'system' });
-                        // First item (e.g. relay spool): show inventory at Still Quarter; pulse until first open; keep showing even if item used/lost
-                        if (state.player.inventory.length === 0) {
-                            rootUpdates.newly_unlocked_inventory = true;
-                            rootUpdates.inventory_unlocked_at_still_quarter = true;
-                        }
+                case 'ITEM_GAIN': {
+                    const qty = Math.max(1, outcome.quantity || 1);
+                    playerUpdates.inventory = StateManager.addInventoryItem(state.player.inventory || [], outcome.item_id, qty);
+                    const itemName = ITEMS_DATA[outcome.item_id]?.name || outcome.item_id;
+                    this.eventBus.emit('log', { text: `[Received ${qty > 1 ? qty + ' ' : ''}${itemName}]`, type: 'system' });
+                    if (StateManager.getInventoryTotalCount(state.player.inventory || []) === 0) {
+                        rootUpdates.newly_unlocked_inventory = true;
+                        rootUpdates.inventory_unlocked_at_still_quarter = true;
                     }
                     break;
-                case 'ITEM_LOSE':
-                    const itemIndex = state.player.inventory.indexOf(outcome.item_id);
-                    if (itemIndex > -1) {
-                        const newInventory = [...state.player.inventory];
-                        newInventory.splice(itemIndex, 1);
-                        playerUpdates.inventory = newInventory;
-                        this.eventBus.emit('log', { text: `[Gave ${ITEMS_DATA[outcome.item_id].name}]`, type: 'system' });
+                }
+                case 'ITEM_LOSE': {
+                    const loseQty = Math.max(1, outcome.quantity || 1);
+                    const currentQty = StateManager.getInventoryQuantity(state.player.inventory || [], outcome.item_id);
+                    if (currentQty > 0) {
+                        const remove = Math.min(loseQty, currentQty);
+                        playerUpdates.inventory = StateManager.removeInventoryItem(state.player.inventory || [], outcome.item_id, remove);
+                        const itemName = ITEMS_DATA[outcome.item_id]?.name || outcome.item_id;
+                        this.eventBus.emit('log', { text: `[Gave ${remove > 1 ? remove + ' ' : ''}${itemName}]`, type: 'system' });
                     }
                     break;
+                }
                 case 'LOCATION_UNLOCK':
                      if (!state.unlocked_locations.includes(outcome.location_id)) {
                         rootUpdates.unlocked_locations = [...state.unlocked_locations, outcome.location_id];
@@ -403,10 +404,12 @@ class DialogueScreen extends BaseScreen {
                         // Unknown operator, default to equality check
                         return questStage === condition.stage;
                 }
-            case 'HAVE_ITEM':
-                return state.player.inventory.includes(condition.item_id);
+            case 'HAVE_ITEM': {
+                const required = Math.max(1, condition.quantity || 1);
+                return StateManager.getInventoryQuantity(state.player.inventory || [], condition.item_id) >= required;
+            }
             case 'NO_ITEM':
-                return !state.player.inventory.includes(condition.item_id);
+                return StateManager.getInventoryQuantity(state.player.inventory || [], condition.item_id) === 0;
             default:
                 return true;
         }

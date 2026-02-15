@@ -69,7 +69,7 @@ class LocationScreen extends BaseScreen {
             });
 
         // At Still Quarter: show separator + inventory only after first item; once shown, keep showing even if inventory becomes empty
-        const hasAnyItems = (state.player.inventory || []).length > 0;
+        const hasAnyItems = StateManager.getInventoryTotalCount(state.player.inventory || []) > 0;
         const inventoryUnlockedAtStillQuarter = state.inventory_unlocked_at_still_quarter === true;
         const showInventoryBlock = locationId !== 'still_quarter' || hasAnyItems || inventoryUnlockedAtStillQuarter;
         const newlyUnlockedInventory = state.newly_unlocked_inventory === true;

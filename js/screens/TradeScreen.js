@@ -35,9 +35,9 @@ class TradeScreen extends BaseScreen {
 
     initComponents() {
         const playerState = this.stateManager.getEffectivePlayerStats();
-        // We need the base inventory to iterate over, not the one with calculated stats
         const basePlayerState = this.stateManager.getPlayerStats();
-        const inventoryCount = basePlayerState.inventory.length;
+        const inventoryCount = StateManager.getInventoryTotalCount(basePlayerState.inventory || []);
+        const playerInventorySlots = StateManager.normalizeInventory(basePlayerState.inventory || []);
 
         // --- Create a single array to hold all menu items ---
         let menuItems = [];
@@ -71,12 +71,11 @@ class TradeScreen extends BaseScreen {
             type: 'separator'
         });
         // 4. Add all items from the Player's inventory (or a disabled placeholder if none tradeable)
-        const playerInventory = basePlayerState.inventory || [];
-        const tradeablePlayerItems = playerInventory.filter(itemId => {
-            const itemData = ITEMS_DATA[itemId];
+        const tradeableSlots = playerInventorySlots.filter(slot => {
+            const itemData = ITEMS_DATA[slot.item_id];
             return itemData && itemData.tradeable !== false;
         });
-        if (tradeablePlayerItems.length === 0) {
+        if (tradeableSlots.length === 0) {
             menuItems.push({
                 id: 'no_tradeable_items',
                 label: 'No tradeable items',
@@ -85,16 +84,18 @@ class TradeScreen extends BaseScreen {
                 disabled: true
             });
         } else {
-            playerInventory.forEach(itemId => {
-                const itemData = ITEMS_DATA[itemId];
+            tradeableSlots.forEach(slot => {
+                const itemData = ITEMS_DATA[slot.item_id];
+                const qtySuffix = slot.quantity > 1 ? ` x${slot.quantity}` : '';
                 const effectSuffix = this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : '';
                 menuItems.push({
-                    id: itemId,
-                    source: 'player', // Mark item source
-                    label: `[ SELL ] ${itemData.name}${effectSuffix} - Value: ${itemData.price}`,
+                    id: slot.item_id,
+                    source: 'player',
+                    label: `[ SELL ] ${itemData.name}${qtySuffix}${effectSuffix} - Value: ${itemData.price}`,
                     actionText: '[ SELL ]',
                     disabled: itemData.tradeable === false,
-                    item: itemData
+                    item: itemData,
+                    quantity: slot.quantity
                 });
             });
         }
@@ -153,7 +154,7 @@ class TradeScreen extends BaseScreen {
         const effectiveStats = this.stateManager.getEffectivePlayerStats();
 
         // Safety checks
-        if (playerState.inventory.length >= effectiveStats.carry_capacity) {
+        if (StateManager.getInventoryTotalCount(playerState.inventory || []) >= effectiveStats.carry_capacity) {
             this.eventBus.emit('log', { text: "Inventory is full.", type: 'error' });
             return;
         }
@@ -161,13 +162,9 @@ class TradeScreen extends BaseScreen {
             this.eventBus.emit('log', { text: "Cannot afford this item.", type: 'error' });
             return;
         }
-
-        // Update player state via StateManager
-        const newPlayerInventory = [...playerState.inventory, item.id];
+        const newPlayerInventory = StateManager.addInventoryItem(playerState.inventory || [], item.id, 1);
         const newCaps = playerState.caps - item.item.price;
         this.stateManager.updateState({ player: { inventory: newPlayerInventory, caps: newCaps } });
-        
-        // Update the *session's* NPC inventory
         this.sessionNpcData.inventory = this.sessionNpcData.inventory.filter(id => id !== item.id);
 
         // Track buy item event
@@ -181,13 +178,9 @@ class TradeScreen extends BaseScreen {
 
     sellItem(item) {
         const playerState = this.stateManager.getPlayerStats();
-
-        // Update player state
-        const newPlayerInventory = playerState.inventory.filter(id => id !== item.id);
+        const newPlayerInventory = StateManager.removeInventoryItem(playerState.inventory || [], item.id, 1);
         const newCaps = playerState.caps + item.item.price;
         this.stateManager.updateState({ player: { inventory: newPlayerInventory, caps: newCaps } });
-
-        // Update the *session's* NPC inventory
         this.sessionNpcData.inventory.push(item.id);
         
         // Track sell item event
