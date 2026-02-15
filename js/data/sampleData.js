@@ -1347,7 +1347,8 @@ const NPC_DATA = {
                     "prompt": "[Follow the warmth to the source]",
                     "response": "[ The space opens into a relay junction cavern. In the center: a nest built from wire, tags, and bone—wrapped around an old signal coupler like it’s an altar. Atop it sits the queen, eyes bright with borrowed electricity. ]",
                     "destination_nodes": [
-                        { "node_id": "fight_queen" }
+                        { "node_id": "fight_queen" },
+                        { "node_id": "end" , "prompt_replacement": "[Back out and regroup]" }
                     ]
                 },
                 "fight_queen": {
@@ -3402,10 +3403,10 @@ const ENEMIES_DATA = {
     },
     "queen_rat": {
         "name": "Queen Rat",
-        "lck": 7,
+        "lck": 5,
         "health": 20,
-        "minDamage": 4,
-        "maxDamage": 15,
+        "minDamage": 3,
+        "maxDamage": 13,
         "xp": 200
     }
 };

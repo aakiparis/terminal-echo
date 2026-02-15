@@ -179,8 +179,8 @@ class BattleScreen extends BaseScreen {
     resolvePlayerTurn() {
         const state = this.stateManager.getState();
         const str = state.player?.str ?? 1;
-        const minD = Math.max(1, Math.floor(str * 0.7));
-        const maxD = Math.max(minD, Math.floor(str * 1.3));
+        const minD = Math.floor(1 + str * 0.7);
+        const maxD = Math.max(minD, Math.floor(1 + str * 1.3));
         const probs = this.getLuckProbabilities(state.player?.lck ?? 1);
         const outcome = this.rollOutcome(probs);
         const name = this.enemyName;
