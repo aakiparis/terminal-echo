@@ -218,6 +218,11 @@ body {
     margin-left: 4px;
 }
 
+.menu-item.focused .location-pulse-indicator {
+    background-color: var(--color-text-inverse);
+    box-shadow: 0 0 8px var(--color-text-inverse);
+}
+
 @keyframes locationPulse {
     0%, 100% {
         opacity: 1;

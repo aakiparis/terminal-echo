@@ -130,7 +130,7 @@ class NavigationManager {
         const levelUpPopup = new PopupComponent({
             eventBus: this.eventBus,
             title: `LEVEL UP!`,
-            message: `Congratulations! You reached Level ${data.level}!\n\nAllocate 1 point to an attribute:`,
+            message: `Congratulations! You reached Level ${data.level}!<br>Allocate 1 point to an attribute:`,
             menuItems: [
                 {
                     id: 'str',

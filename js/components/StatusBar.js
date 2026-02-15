@@ -8,7 +8,7 @@ class StatusBar extends BaseComponent {
         const { name, hp, maxHp, xp, level, caps, reputation } = this.state.stats || {};
         const currentHp = hp || 0;
         const currentMaxHp = maxHp || 0;
-        const isLowHp = currentMaxHp > 0 && currentHp <= currentMaxHp * 0.25;
+        const isLowHp = currentMaxHp > 0 && currentHp <= currentMaxHp * 0.3;
         const hpClass = isLowHp ? 'hp-low' : '';
         const pulseCircle = isLowHp ? '<span class="hp-pulse-indicator"></span>' : '';
         const html = `

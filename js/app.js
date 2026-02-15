@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 navigationManager.navigateTo({ screen: 'MainMenu' });
             }
             eventBus.emit('log', { text: 'POST checks.' });
-            eventBus.emit('log', { text: 'Welcome to Terminal Echo. v26-2.' });
+            eventBus.emit('log', { text: 'Welcome to Terminal Echo v26-2' });
         }
     }
 
