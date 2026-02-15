@@ -435,7 +435,11 @@ const NPC_DATA = {
             "is_available": true,
             "description": "A twitchy station custodian-technician with a cybernetic eye that never stops refocusing. He speaks in diagnostics, but there’s a historian hiding behind the jargon.",
             "is_merchant": true,
-            "inventory": ["stimpack", "military_goggles", "purified_water"],
+            "inventory": [
+                { "item_id": "stimpack", "quantity": 3 },
+                { "item_id": "military_goggles", "quantity": 1 },
+                { "item_id": "purified_water", "quantity": 1 }
+            ],
             "dialogue_graph": {
                 "start": {
                     "response": "Hold up—don’t touch the cables. People die that way. I'm Zane. I keep the Nexus breathing.<br>Trade, questions, or are you one of those types who looks at a system and feels the itch to <i>improve</i> it?",

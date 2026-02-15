@@ -8,16 +8,19 @@ class TradeScreen extends BaseScreen {
     }
 
     enter(params) {
-        // Store the context passed from the DialogueScreen
         this.locationId = params.locationId;
         this.npcId = params.npcId;
-        
-        // IMPORTANT: Create a temporary, mutable copy of the NPC's data.
-        // This ensures that changes made during this trade session don't
-        // permanently alter the master data in `NPC_DATA`.
-        this.sessionNpcData = JSON.parse(JSON.stringify(NPC_DATA[this.locationId][this.npcId]));
-        
-        super.enter(params); // This will call initComponents()
+        const npcKey = `${this.locationId}|${this.npcId}`;
+        const state = this.stateManager.getState();
+        const npcData = NPC_DATA[this.locationId][this.npcId];
+        // Use persisted NPC inventory if we have one, else normalize from data (supports string[] or { item_id, quantity }[])
+        const hasSaved = state.npc_inventories && Object.prototype.hasOwnProperty.call(state.npc_inventories, npcKey);
+        const npcInventory = hasSaved
+            ? StateManager.normalizeNpcInventory(state.npc_inventories[npcKey])
+            : StateManager.normalizeNpcInventory(npcData.inventory || []);
+        this.sessionNpcData = JSON.parse(JSON.stringify(npcData));
+        this.sessionNpcData.inventory = npcInventory;
+        super.enter(params);
     }
 
     refresh() {
@@ -49,15 +52,18 @@ class TradeScreen extends BaseScreen {
             type: 'separator'
         });
 
-        // 2. Add all items from the NPC's inventory
-        (this.sessionNpcData.inventory || []).forEach(itemId => {
-            const itemData = ITEMS_DATA[itemId];
+        // 2. Add all items from the NPC's inventory (slots with quantity)
+        const npcSlots = StateManager.normalizeNpcInventory(this.sessionNpcData.inventory || []);
+        npcSlots.forEach(slot => {
+            const itemData = ITEMS_DATA[slot.item_id];
+            if (!itemData) return;
             const canAfford = playerState.caps >= itemData.price;
             const effectSuffix = this.getItemEffectText(itemData) ? ` (${this.getItemEffectText(itemData)})` : '';
+            const qtySuffix = slot.quantity > 1 ? ` x${slot.quantity}` : '';
             menuItems.push({
-                id: itemId,
-                source: 'npc', // Mark item source for action logic
-                label: `[ BUY ] ${itemData.name}${effectSuffix} - Price: ${itemData.price}`,
+                id: slot.item_id,
+                source: 'npc',
+                label: `[ BUY ] ${itemData.name}${qtySuffix}${effectSuffix} - Price: ${itemData.price}`,
                 actionText: canAfford ? '[ BUY ]' : '[ TOO EXPENSIVE ]',
                 disabled: !canAfford,
                 item: itemData
@@ -164,8 +170,12 @@ class TradeScreen extends BaseScreen {
         }
         const newPlayerInventory = StateManager.addInventoryItem(playerState.inventory || [], item.id, 1);
         const newCaps = playerState.caps - item.item.price;
-        this.stateManager.updateState({ player: { inventory: newPlayerInventory, caps: newCaps } });
-        this.sessionNpcData.inventory = this.sessionNpcData.inventory.filter(id => id !== item.id);
+        this.sessionNpcData.inventory = StateManager.removeInventoryItem(this.sessionNpcData.inventory || [], item.id, 1);
+        const npcKey = `${this.locationId}|${this.npcId}`;
+        this.stateManager.updateState({
+            player: { inventory: newPlayerInventory, caps: newCaps },
+            npc_inventories: { ...this.stateManager.getState().npc_inventories, [npcKey]: this.sessionNpcData.inventory }
+        });
 
         // Track buy item event
         if (this.analyticsManager) {
@@ -180,8 +190,12 @@ class TradeScreen extends BaseScreen {
         const playerState = this.stateManager.getPlayerStats();
         const newPlayerInventory = StateManager.removeInventoryItem(playerState.inventory || [], item.id, 1);
         const newCaps = playerState.caps + item.item.price;
-        this.stateManager.updateState({ player: { inventory: newPlayerInventory, caps: newCaps } });
-        this.sessionNpcData.inventory.push(item.id);
+        this.sessionNpcData.inventory = StateManager.addInventoryItem(this.sessionNpcData.inventory || [], item.id, 1);
+        const npcKey = `${this.locationId}|${this.npcId}`;
+        this.stateManager.updateState({
+            player: { inventory: newPlayerInventory, caps: newCaps },
+            npc_inventories: { ...this.stateManager.getState().npc_inventories, [npcKey]: this.sessionNpcData.inventory }
+        });
         
         // Track sell item event
         if (this.analyticsManager) {

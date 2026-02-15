@@ -12,6 +12,11 @@ class StateManager {
             if (this.state.player && Array.isArray(this.state.player.inventory)) {
                 this.state.player.inventory = StateManager.normalizeInventory(this.state.player.inventory);
             }
+            if (this.state.npc_inventories && typeof this.state.npc_inventories === 'object') {
+                Object.keys(this.state.npc_inventories).forEach(key => {
+                    this.state.npc_inventories[key] = StateManager.normalizeNpcInventory(this.state.npc_inventories[key]);
+                });
+            }
             this.restoredFromStorage = true;
         }
         this._saveDebounceTimer = null;
@@ -81,7 +86,9 @@ class StateManager {
             newly_unlocked_inventory: false, // pulse on inventory at Still Quarter until player opens inventory once
             inventory_unlocked_at_still_quarter: false, // once true, always show inventory block at Still Quarter even if empty
             // Dialogue "once" nodes: player can enter only once per NPC. Key: "locationId|npcId", value: ["node_id", ...]
-            dialogue_nodes_visited_once: {}
+            dialogue_nodes_visited_once: {},
+            // NPC inventories persist between trading sessions. Key: "locationId|npcId", value: [{ item_id, quantity }, ...]
+            npc_inventories: {}
         };
     }
 
@@ -171,6 +178,25 @@ class StateManager {
     }
 
     /**
+     * Normalize NPC inventory from data (strings or { item_id, quantity }) and merge by item_id (one slot per item).
+     * @param {Array} inv - Raw NPC inventory from data
+     * @returns {Array<{ item_id: string, quantity: number }>}
+     */
+    static normalizeNpcInventory(inv) {
+        if (!Array.isArray(inv)) return [];
+        const normalized = inv.map(entry => {
+            if (typeof entry === 'string') return { item_id: entry, quantity: 1 };
+            const q = Math.max(1, parseInt(entry.quantity, 10) || 1);
+            return { item_id: entry.item_id || entry.id || '', quantity: q };
+        }).filter(e => e.item_id);
+        const byId = {};
+        normalized.forEach(e => {
+            byId[e.item_id] = (byId[e.item_id] || 0) + e.quantity;
+        });
+        return Object.entries(byId).map(([item_id, quantity]) => ({ item_id, quantity }));
+    }
+
+    /**
      * Records that a "once" dialogue node was visited. Updates state directly so it is not lost in merge.
      * @param {string} locationId
      * @param {string} npcId
@@ -209,6 +235,11 @@ class StateManager {
         this.state = { ...initialState, ...savedState };
         if (this.state.player && Array.isArray(this.state.player.inventory)) {
             this.state.player.inventory = StateManager.normalizeInventory(this.state.player.inventory);
+        }
+        if (this.state.npc_inventories && typeof this.state.npc_inventories === 'object') {
+            Object.keys(this.state.npc_inventories).forEach(key => {
+                this.state.npc_inventories[key] = StateManager.normalizeNpcInventory(this.state.npc_inventories[key]);
+            });
         }
         this._saveToStorage();
         console.log("State loaded from save file");
