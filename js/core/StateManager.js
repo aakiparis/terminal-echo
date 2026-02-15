@@ -279,11 +279,12 @@ class StateManager {
         const player = this.state.player;
         const xpThresholds = [
             null,      // Level 0 doesn't exist
-            1000,      // From level 1 to 2
-            2000,      // From level 2 to 3
-            5000,      // From level 3 to 4
-            10000,     // From level 4 to 5
-            20000      // From level 5 to 6
+            500,        // From level 1 to 2
+            1000,      // From level 2 to 3
+            2000,      // From level 3 to 4
+            5000,      // From level 4 to 5
+            10000,     // From level 5 to 6
+            20000,     // From level 6 to 7
             // Add more thresholds for higher levels
         ];
 
