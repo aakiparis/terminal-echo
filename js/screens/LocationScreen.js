@@ -1,4 +1,75 @@
 class LocationScreen extends BaseScreen {
+    enter(params) {
+        super.enter(params);
+        const locationId = params?.id || this.stateManager.getState().currentLocation;
+        const state = this.stateManager.getState();
+        if (locationId === 'the_forgotten_outpost' && !state.forgotten_outpost_waitlist_shown) {
+            this._forgottenOutpostWaitlistTimer = setTimeout(() => {
+                this._forgottenOutpostWaitlistTimer = null;
+                const currentState = this.stateManager.getState();
+                if (!currentState.forgotten_outpost_waitlist_shown) {
+                    this.showWaitingListPopup();
+                    this.stateManager.updateState({ forgotten_outpost_waitlist_shown: true });
+                }
+            }, 2000);
+        }
+    }
+
+    exit() {
+        if (this._forgottenOutpostWaitlistTimer) {
+            clearTimeout(this._forgottenOutpostWaitlistTimer);
+            this._forgottenOutpostWaitlistTimer = null;
+        }
+        super.exit();
+    }
+
+    showWaitingListPopup() {
+        const emailPopup = new PopupComponent({
+            eventBus: this.eventBus,
+            title: 'JOIN WAITING LIST',
+            message: 'Indefinite mode is coming soon! Enter your email to be notified when AI-generated adventures are available.',
+            menuItems: [
+                {
+                    id: 'email_input',
+                    label: 'Email:',
+                    type: 'input',
+                    value: ''
+                },
+                {
+                    id: 'submit_email',
+                    label: '[ SUBMIT ]',
+                    type: 'action',
+                    action: () => {
+                        const emailInput = emailPopup.menu.element?.querySelector('#email_input');
+                        const email = emailInput?.value?.trim();
+                        if (!email || !email.includes('@')) {
+                            this.eventBus.emit('log', { text: 'Please enter a valid email address.', type: 'error' });
+                            return;
+                        }
+                        const surveyId = '019c068e-3e42-0000-188b-9dec52c98e15';
+                        if (this.analyticsManager) {
+                            this.analyticsManager.waitlistSubmitted(email, surveyId);
+                        }
+                        this.navigationManager.closePopup();
+                        this.eventBus.emit('log', { text: 'Thank you! You\'ve been added to the waiting list.', type: 'system' });
+                    }
+                },
+                {
+                    id: 'cancel',
+                    label: '[ CANCEL ]',
+                    type: 'action',
+                    action: () => this.navigationManager.closePopup()
+                }
+            ]
+        });
+        this.navigationManager.activePopup = emailPopup;
+        this.navigationManager.renderCurrentScreen();
+        setTimeout(() => {
+            const emailInput = emailPopup.menu.element?.querySelector('#email_input');
+            if (emailInput) emailInput.focus();
+        }, 100);
+    }
+
     // This method is called by BaseScreen.enter() to build the screen's content.
     initComponents(params) {
         const locationId = params.id || this.stateManager.getState().currentLocation;

@@ -350,13 +350,25 @@ const NPC_DATA = {
                 },
                 "signal_0": {
                     "prompt": "[ Randomly push some buttons ]",
-                    "response": "[ The screen flickers to life. Something appers on the screen. Not a welcome message — a pulse. ]",
+                    "response": "[ The screen flickers to life. Something appers on the screen. Not a welcome message — a pulse. <br> Accidentaly, a few bats fly out of the shed's roof and bites you up. ]",
+                    "destination_nodes": [
+                        { "node_id": "the_bats_attack" }
+                    ]
+                },
+                "the_bats_attack": {
+                    "mode": "battle",
+                    "enemy": "bat",
+                    "prompt": "[Fight the bats]",
+                    "response": "[ One bat hits the ground and other are flying away. No one else is around. ]",
+                    "outcomes": [
+                        { "type": "STAT_CHANGE", "stat": "xp", "value": 50 }
+                    ],
                     "destination_nodes": [
                         { "node_id": "signal_1" }
                     ]
                 },
                 "signal_1": {
-                    "prompt": "[ Look into it ]",
+                    "prompt": "[Look into the terminal's screen]",
                     "response": "[ It's not a distress call. No voice. Just a system heartbeat. Something that was built to talk to other places. Still trying. Still there. ]",
                     "destination_nodes": [
                         { "node_id": "signal_2" }
@@ -3393,6 +3405,14 @@ const ITEMS_DATA = {
 };
 
 const ENEMIES_DATA = {
+    "bat": {
+        "name": "Bat",
+        "lck": 5,
+        "health": 5,
+        "minDamage": 1,
+        "maxDamage": 3,
+        "xp": 50
+    },
     "rat": {
         "name": "Rat",
         "lck": 1,

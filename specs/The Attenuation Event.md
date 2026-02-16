@@ -247,170 +247,120 @@ The player leaves not to save anyone — but because they cannot ignore an unfin
 That’s the core of your onboarding.
 
 ### 2. Neon Nexus – First Clues
-Purpose:
+#### Purpose
 Reveal that the world did not simply break — it was softened. Introduce attenuation as an intentional act.
 
 This should be the last place that tried to remain complex.
- • Flickering holographic signage
- • Semi-functional transit logic
- • Overgrown but still pulsing infrastructure
- • Not dead — exhausted
+- Flickering holographic signage
+- Semi-functional transit logic
+- Overgrown but still pulsing infrastructure
+- Not dead — exhausted
 
-The name “Neon Nexus” should feel ironic now.
-Neon Nexus is where:
- • Pre-collapse abstraction lingered longest
- • Early attenuation effects were noticed
- • The first trade-offs were consciously made
+The name “Neon Nexus” should feel ironic now. Neon Nexus is where:
+- Pre-collapse abstraction lingered longest
+- Early attenuation effects were noticed
+- The first trade-offs were consciously made
 
-How it gives clues
-
-Through misaligned artefacts, not exposition:
-
+How it gives clues - Through misaligned artefacts, not exposition:
 Environmental storytelling
- • Terminals full of abandoned future plans
- • Project timelines that stop mid-sentence
- • Research logs about “emotional stability improvements”
+- Terminals full of abandoned future plans
+- Project timelines that stop mid-sentence
+- Research logs about “emotional stability improvements”
 
 Nothing says “DNA mutation” outright yet.
 
-⸻
-
-NPC tone shift
-
+#### NPC tone shift
 NPCs here:
- • Are more articulate than elsewhere
- • But deeply suspicious of “big ideas”
- • Many are descendants of system engineers
+- Are more articulate than elsewhere
+- But deeply suspicious of “big ideas”
+- Many are descendants of system engineers
 
 They say things like:
-
-“We finally stopped panicking.”
-“The world became quieter.”
-“That wasn’t a mistake.”
-
-⸻
+- “We finally stopped panicking.”
+- “The world became quieter.”
+- “That wasn’t a mistake.”
 
 Suggested changes to existing context
-
 If Neon Nexus already has:
- • Trade → make it local-loop trade, no long routes
- • Tech → make it maintenance tech, not innovation
- • Factions → make them custodians, not builders
-
+- Trade → make it local-loop trade, no long routes
+- Tech → make it maintenance tech, not innovation
+- Factions → make them custodians, not builders
 Add:
- • A defunct Global Calm Initiative wing
- • An archive terminal that reacts unusually to the player (biometric resonance)
+- A defunct Global Calm Initiative wing
+- An archive terminal that reacts unusually to the player (biometric resonance)
+This is where the player first suspects: “Something was changed in us — on purpose.”
 
-This is where the player first suspects:
 
-“Something was changed in us — on purpose.”
+### 3. Forgotten Outpost – Crystallising the Dilemma
 
-⸻
-
-3. Forgotten Outpost – Crystallising the Dilemma
-
-Purpose:
+#### Purpose
 Force the philosophical conflict into the open. No more ambiguity.
 
-⸻
-
-What Forgotten Outpost is
-
 A place where reassembly almost happened.
-
-• Old junction of trade routes
- • Partial federated governance ruins
- • Half-built infrastructure linking multiple settlements
-
+- Old junction of trade routes
+- Partial federated governance ruins
+- Half-built infrastructure linking multiple settlements
 It failed — not violently, but politely.
 
-⸻
-
-Core narrative
-
-Long ago, a group like the player tried to:
- • Reintroduce abstraction
- • Build shared systems
- • Coordinate beyond locality
+Core narrative: Long ago, a group like the player tried to:
+- Reintroduce abstraction
+- Build shared systems
+- Coordinate beyond locality
 
 The effort collapsed when:
- • People opted out
- • Maintenance participation declined
- • Nobody sabotaged it — they just stopped caring
+- People opted out
+- Maintenance participation declined
+- Nobody sabotaged it — they just stopped caring
 
-⸻
-
-Key NPC archetypes here
- • The Burnt Architect – former system-builder, now bitter
- • The Comfort Keeper – ensures local peace, opposes expansion
- • The Silent Ally – another reversion like the player, unsure
-
-They all believe they are right.
-
-⸻
-
-How quests support the dilemma
-
-Existing quests (reframed)
- • Repair tasks → reveal why no one wanted to maintain them
- • Retrieval quests → uncover abandoned coordination protocols
- • Dialogue quests → force the player to argue for abstraction
-
-⸻
-
-New quest ideas
-
-“The Unfinished Charter”
-The player can:
- • Complete a federated agreement
- • Simplify it into local rules
- • Or archive it permanently
-
-Each choice shapes how NPCs view future systems.
-
-⸻
-
-Narrative payoff
-
-This location makes it explicit:
-
-The world isn’t broken.
-It’s traumatised — and adapted.
+Narrative payoff: The world isn’t broken. It’s traumatised — and adapted.
 
 This is where the player realises:
+- Rebuilding will hurt people emotionally.
 
-Rebuilding will hurt people emotionally.
+#### NPC & Quests
+Key NPC archetypes here
+- The Burnt Architect – former system-builder, now bitter
+- The Comfort Keeper – ensures local peace, opposes expansion
+- The Silent Ally – another reversion like the player, unsure
+They all believe they are right.
 
-⸻
+Existing quests (reframed)
+- Repair tasks → reveal why no one wanted to maintain them
+- Retrieval quests → uncover abandoned coordination protocols
+- Dialogue quests → force the player to argue for abstraction
 
-4. Rust Pit & Tech Depot – Full Moral Spectrum
+New quest ideas: “The Unfinished Charter”. The player can:
+- Complete a federated agreement
+- Simplify it into local rules
+- Or archive it permanently
+Each choice shapes how NPCs view future systems.
+
+
+### 4. Rust Pit & Tech Depot – Full Moral Spectrum
 
 Purpose:
 Show the consequences of each ideological response.
 
-⸻
-
 Rust Pit – Enforced Progress
 
 Theme: “Complexity through control”
- • Harsh efficiency
- • Strict protocols
- • Little consent
+- Harsh efficiency
+- Strict protocols
+- Little consent
 
 Run by a reversion NPC who believes:
 
 “Humanity won’t choose the future. It has to be dragged into it.”
 
 Quest ideas
- • Enforce maintenance quotas
- • Suppress local opt-outs
- • Optimise at human cost
+- Enforce maintenance quotas
+- Suppress local opt-outs
+- Optimise at human cost
 
 You see progress — and resentment.
 
-⸻
 
-Tech Depot – Comforted Limbo
+### Tech Depot – Comforted Limbo
 
 Theme: “Stability through refusal”
  • Comfortable lives
@@ -428,8 +378,6 @@ Quest ideas
 
 You see peace — and slow erosion.
 
-⸻
-
 The player’s position
 
 You are pulled between:
@@ -439,25 +387,18 @@ You are pulled between:
 Neither is wrong.
 Neither is enough.
 
-⸻
 
-Final Narrative Spine
+## Final Narrative Spine
 
-The world is not static.
-It is slowed by biology, trauma, and learned caution.
+The world is not static. It is slowed by biology, trauma, and learned caution.
 
-The player is not a saviour.
-They are a reintroduced trait.
+The player is not a saviour. They are a reintroduced trait.
 
-The conflict is not:
+The conflict is not: “Will humanity survive?”
+It is: “What kind of humanity is allowed to exist again?”
 
-“Will humanity survive?”
+And the final moral weight is this: Progress is not free. Comfort is not neutral.
 
-It is:
 
-“What kind of humanity is allowed to exist again?”
 
-And the final moral weight is this:
 
-Progress is not free.
-Comfort is not neutral.

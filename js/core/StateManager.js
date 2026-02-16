@@ -88,7 +88,9 @@ class StateManager {
             // Dialogue "once" nodes: player can enter only once per NPC. Key: "locationId|npcId", value: ["node_id", ...]
             dialogue_nodes_visited_once: {},
             // NPC inventories persist between trading sessions. Key: "locationId|npcId", value: [{ item_id, quantity }, ...]
-            npc_inventories: {}
+            npc_inventories: {},
+            // Show waitlist popup once when player first arrives at The Forgotten Outpost
+            forgotten_outpost_waitlist_shown: false
         };
     }
 
