@@ -131,10 +131,10 @@ const NPC_DATA = {
                 "return": {
                     "response": "Back. What do you need?",
                     "destination_nodes": [
-                        { "node_id": "story_1", "prompt_replacement": "Remind me — the relay, how we're dealing with it." },
                         //{ "node_id": "quest_intro", "prompt_replacement": "Anything I can do for the relay?" },
-                        { "node_id": "quest_reminder" },
                         { "node_id": "quest_completion" },
+                        { "node_id": "quest_reminder" },
+                        { "node_id": "story_1", "prompt_replacement": "Remind me — the relay, how we're dealing with it." },
                         { "node_id": "end" }
                     ]
                 },
@@ -467,10 +467,10 @@ const NPC_DATA = {
                 "return": {
                     "response": "Back again. The hum didn’t scare you off. Good. Most people prefer places that don't remind them the world used to be bigger.",
                     "destination_nodes": [
+                        { "node_id": "quest_gits_completion" },
+                        { "node_id": "quest_gits_reminder" },
                         { "node_id": "zane_story_1", "prompt_replacement": "Remind me what keeps this place running." },
                         { "node_id": "quest_gits_offer" },
-                        { "node_id": "quest_gits_reminder" },
-                        { "node_id": "quest_gits_completion" },
                         { "node_id": "trade" },
                         { "node_id": "end" }
                     ]
@@ -734,10 +734,10 @@ const NPC_DATA = {
                 "return": {
                     "response": "You keeping your footprint light?",
                     "destination_nodes": [
-                        { "node_id": "rex_story_1", "prompt_replacement": "Why are you so strict about 'keeping it small'?" },
-                        { "node_id": "quest_pest_offer" },
+                        { "node_id": "quest_pest_completion" },
                         { "node_id": "quest_pest_reminder" },
-                        // { "node_id": "quest_pest_completion" },
+                        { "node_id": "quest_pest_offer" },
+                        { "node_id": "rex_story_1", "prompt_replacement": "Why are you so strict about 'keeping it small'?" },
                         { "node_id": "selene_reaction" }, //?
                         { "node_id": "end" }
                     ]
@@ -798,10 +798,10 @@ const NPC_DATA = {
 
                 "quest_pest_reminder": {
                     "conditions": {
-                        "op": "AND",
+                        "op": "OR",
                         "condition": [
-                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1, "op": "gte" },
-                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 100, "op": "neq" }
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 1 },
+                            { "type": "QUEST_STAGE", "quest_id": "pest_control", "stage": 2 }
                         ]
                     },
                     "prompt": "About the chewed relays…",
@@ -3418,7 +3418,7 @@ const ENEMIES_DATA = {
         "lck": 3,
         "health": 10,
         "minDamage": 2,
-        "maxDamage": 7,
+        "maxDamage": 6,
         "xp": 100
     },
     "queen_rat": {
@@ -3426,7 +3426,7 @@ const ENEMIES_DATA = {
         "lck": 5,
         "health": 15,
         "minDamage": 3,
-        "maxDamage": 10,
+        "maxDamage": 9,
         "xp": 200
     }
 };

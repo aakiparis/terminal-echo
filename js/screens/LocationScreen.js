@@ -27,7 +27,7 @@ class LocationScreen extends BaseScreen {
         const emailPopup = new PopupComponent({
             eventBus: this.eventBus,
             title: 'JOIN WAITING LIST',
-            message: 'Indefinite mode is coming soon! Enter your email to be notified when AI-generated adventures are available.',
+            message: 'New story chapters are coming. Enter your email to be notified when they are available.',
             menuItems: [
                 {
                     id: 'email_input',
