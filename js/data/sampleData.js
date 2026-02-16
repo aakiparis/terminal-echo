@@ -613,9 +613,9 @@ const NPC_DATA = {
                 "return": {
                     "response": "You again. What is it?",
                     "destination_nodes": [
+                        { "node_id": "partner_item_story" },
                         { "node_id": "mara_story_1", "prompt_replacement": "Tell me about yourself again." },
                         // { "node_id": "mara_react_gci" },
-                        { "node_id": "partner_item_story" },
                         { "node_id": "end" }
                     ]
                 },
@@ -882,13 +882,13 @@ const NPC_DATA = {
               "return": {
                 "response": "You again. Tell me—are you still looking for a reason, or have you started looking for a pattern?",
                 "destination_nodes": [
-                  { "node_id": "story_small_1" },
-                  { "node_id": "story_calm_1" },
-                  { "node_id": "provocation_grow_1" },
-                  { "node_id": "gci_1" },
-                  { "node_id": "quest_token_1" },
-                  { "node_id": "quest_fo_1" },
-                  { "node_id": "end" }
+                    { "node_id": "quest_token_1" },
+                    { "node_id": "quest_fo_1" },
+                    { "node_id": "story_small_1" },
+                    { "node_id": "story_calm_1" },
+                    { "node_id": "provocation_grow_1" },
+                    { "node_id": "gci_1" },
+                    { "node_id": "end" }
                 ]
               },
               "end": {
@@ -3407,26 +3407,26 @@ const ITEMS_DATA = {
 const ENEMIES_DATA = {
     "bat": {
         "name": "Bat",
-        "lck": 5,
-        "health": 5,
+        "lck": 4,
+        "health": 4,
         "minDamage": 1,
-        "maxDamage": 3,
+        "maxDamage": 2,
         "xp": 50
     },
     "rat": {
         "name": "Rat",
-        "lck": 1,
+        "lck": 3,
         "health": 10,
         "minDamage": 2,
-        "maxDamage": 8,
+        "maxDamage": 7,
         "xp": 100
     },
     "queen_rat": {
         "name": "Queen Rat",
         "lck": 5,
-        "health": 20,
+        "health": 15,
         "minDamage": 3,
-        "maxDamage": 12,
+        "maxDamage": 10,
         "xp": 200
     }
 };
